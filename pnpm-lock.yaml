@@ -8,19 +8,19 @@ importers:
 
   .:
     dependencies:
-      vite-plugin-dts:
-        specifier: ^4.5.4
-        version: 4.5.4(@types/node@22.15.27)(rollup@4.41.1)(typescript@5.7.3)(vite@6.3.5(@types/node@22.15.27))
-    devDependencies:
       '@microtsm/cli':
-        specifier: ^0.0.7
-        version: 0.0.7(@types/node@22.15.27)
+        specifier: ^0.0.10
+        version: 0.0.10(@types/node@22.15.27)
+    devDependencies:
       '@types/node':
         specifier: ^22.15.27
         version: 22.15.27
       typescript:
         specifier: ~5.7.3
         version: 5.7.3
+      vite-plugin-dts:
+        specifier: ^4.5.4
+        version: 4.5.4(@types/node@22.15.27)(rollup@4.41.1)(typescript@5.7.3)(vite@6.3.5(@types/node@22.15.27))
 
   playground/navbar:
     dependencies:
@@ -423,12 +423,12 @@ packages:
   '@microsoft/tsdoc@0.15.1':
     resolution: {integrity: sha512-4aErSrCR/On/e5G2hDP0wjooqDdauzEbIq8hIkIe5pXV0rtWJZvdCEKL0ykZxex+IxIwBp0eGeV48hQN07dXtw==}
 
-  '@microtsm/cli@0.0.3':
-    resolution: {integrity: sha512-SFdsUJAf9ZIIiph9zOfsyhIPwbfULopX9tftUqcTMh4CqXFNUf+z5sfLDTYv9u8O7SM/i37c+ONStjNPH4g7PA==}
+  '@microtsm/cli@0.0.10':
+    resolution: {integrity: sha512-JavBigVQnPDLI/WIRqmcTklQ2tW3VeHMvcRI48Pa/0M/Qpn4KVLVfcy7S/9XY1hIA+B6z6akJMIk4hipw0PALg==}
     hasBin: true
 
-  '@microtsm/cli@0.0.7':
-    resolution: {integrity: sha512-0WlntlkYKDSypmr53qRj8kSOA2u5jqEkkLFAiNaI1ONazf9ZY5nMdAZ5Qvg0QQX6x4wiK2ajJQ/hMGtHijkxAw==}
+  '@microtsm/cli@0.0.3':
+    resolution: {integrity: sha512-SFdsUJAf9ZIIiph9zOfsyhIPwbfULopX9tftUqcTMh4CqXFNUf+z5sfLDTYv9u8O7SM/i37c+ONStjNPH4g7PA==}
     hasBin: true
 
   '@microtsm/vue@0.0.12':
@@ -1812,7 +1812,7 @@ snapshots:
 
   '@microsoft/tsdoc@0.15.1': {}
 
-  '@microtsm/cli@0.0.3(@types/node@22.15.27)':
+  '@microtsm/cli@0.0.10(@types/node@22.15.27)':
     dependencies:
       picocolors: 1.1.1
       vite: 6.3.5(@types/node@22.15.27)
@@ -1829,7 +1829,7 @@ snapshots:
       - tsx
       - yaml
 
-  '@microtsm/cli@0.0.7(@types/node@22.15.27)':
+  '@microtsm/cli@0.0.3(@types/node@22.15.27)':
     dependencies:
       picocolors: 1.1.1
       vite: 6.3.5(@types/node@22.15.27)

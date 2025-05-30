@@ -1,7 +1,7 @@
 /**
  * Interface representing the structure of import maps configuration.
  */
-interface EngineWiring {
+export interface EngineWiring {
     imports: Record<string, string>;
 }
 
@@ -11,9 +11,7 @@ interface EngineWiring {
  */
 export async function wireEngine(): Promise<void> {
     const path = "/importmaps/imports.json"; // 🔒 Fixed path for now, future update may allow customization
-    const wiring: EngineWiring = await import( /* @vite-ignore */  path, {
-        with: {type: "json"}
-    });
+    const wiring: EngineWiring = await fetch(path).then(res => res.json());
 
     const script = document.createElement('script');
     script.type = 'importmap';

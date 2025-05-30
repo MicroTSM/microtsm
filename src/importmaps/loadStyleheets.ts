@@ -6,9 +6,8 @@
  */
 export async function gearUp(): Promise<void> {
     const stylesPath = "/importmaps/stylesheets.json"; // 🔒 Fixed path for now, future update may allow customization
-    const styles: string[] = await import( /* @vite-ignore */ stylesPath, {
-        with: {type: "json"}
-    });
+    const response = await fetch(stylesPath);
+    const styles: string[] = await response.json();
 
     if (!Array.isArray(styles) || styles.length === 0) {
         return console.warn("⚠️ No styles provided for the ride.");

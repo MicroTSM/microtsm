@@ -1,4 +1,4 @@
-import * as layoutCss from './layout.css?raw';
+import layoutCss from './layout.css?raw';
 
 /**
  * Kick-starts MicroTSM by registering custom elements and injecting styles.
@@ -11,8 +11,7 @@ export async function kickstartEngine(): Promise<void> {
     if (!customElements.get("microtsm-application")) await import("./appCustomElement");
 
     const style = document.createElement("style");
-    style.innerHTML = layoutCss.default;
-    console.log("🚀 ~ kickstartEngine ~ layoutCss: ", layoutCss);
+    style.innerHTML = layoutCss;
     document.head.appendChild(style);
 
     console.log("✅ Engine is running, custom elements registered.");
