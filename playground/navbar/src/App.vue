@@ -3,15 +3,19 @@ import {ref} from "vue";
 
 const fontFamily = `"Work Sans", "Noto Sans", sans-serif`;
 const searchQuery = ref("");
+
+const navigateHome = () => {
+  history.pushState(history.state, '', '/')
+}
 </script>
 
 <template>
-  <div class="relative flex size-full min-h-screen flex-col bg-slate-50 group/design-root overflow-x-hidden"
+  <div class="relative flex size-full flex-col bg-slate-50 group/design-root overflow-x-hidden"
        :style="{ fontFamily: fontFamily }">
     <div class="layout-container flex h-full grow flex-col">
       <header
           class="flex items-center justify-between whitespace-nowrap border-b border-solid border-b-[#e7edf4] px-10 py-3">
-        <div class="flex items-center gap-4 text-[#0d141c]">
+        <div class="flex items-center gap-4 text-[#0d141c] cursor-pointer" @click="navigateHome">
           <div class="size-4">
             <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
               <g clip-path="url(#clip0_6_319)">
@@ -59,7 +63,6 @@ const searchQuery = ref("");
           </button>
         </div>
       </header>
-      <div class="px-40 flex flex-1 justify-center py-5"></div>
     </div>
   </div>
 </template>

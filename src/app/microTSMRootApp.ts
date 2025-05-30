@@ -108,7 +108,6 @@ export default class MicroTSMRootApp {
 
         this.engineStarted = Promise.all([wireEngine(), gearUp(), kickstartEngine()]);
         this.engineStarted.then(() => console.log("✅ Engine started!"));
-        this.watchRoad();
 
         return this; // Allow chaining
     }
@@ -132,6 +131,7 @@ export default class MicroTSMRootApp {
         this.trigger("onLoad");
         twistThrottle(this.layout)
         this.launched = true;
+        this.attachMiddleware();
         console.log("✅ App is live!");
     }
 
@@ -148,7 +148,7 @@ export default class MicroTSMRootApp {
      * @param url - URL to validate
      * @returns Whether route change is allowed
      */
-    private async checkRoute(url: string) {
+    private async checkRoute(url: URL) {
         const route = new URL(url, window.location.origin);
 
         for (const middleware of this.routeMiddlewares) {
@@ -164,29 +164,16 @@ export default class MicroTSMRootApp {
     }
 
     /**
-     * Sets up route change monitoring
-     * Intercepts history API calls and popstate events
+     * TODO: review this implementation, it's not working as expected
+     * Attaches route middleware to the layout element
+     * ERR: chunk-[hash].js:132 Throttling navigation to prevent the browser from hanging.
+     * See https://crbug.com/1038223. Command line switch --disable-ipc-flooding-protection
+     * can be used to bypass the protection
+     * @private
      */
-    private watchRoad() {
-        const originalPushState = history.pushState;
-        const originalReplaceState = history.replaceState;
+    private attachMiddleware() {
+        const layoutElement = document.querySelector<any>("microtsm-layout");
 
-        history.pushState = async (data, unused, url) => {
-            if (typeof url === "string" && await this.checkRoute(url)) {
-                originalPushState.call(history, data, unused, url);
-            }
-        };
-
-        history.replaceState = async (data, unused, url) => {
-            if (typeof url === "string" && await this.checkRoute(url)) {
-                originalReplaceState.call(history, data, unused, url);
-            }
-        };
-
-        window.addEventListener("popstate", async () => {
-            await this.checkRoute(window.location.href);
-        });
-
-        console.log("👀 Watching the road for navigation changes...");
+        layoutElement?.attachRouteMiddleware?.(this.checkRoute.bind(this));
     }
 }

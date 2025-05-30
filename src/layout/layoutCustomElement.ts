@@ -53,6 +53,8 @@ class MicroTSMLayout extends HTMLElement {
         }
 
         this.cachedRouteForUpdateApp = this.currentRoute;
+        let matchAppFound = false;
+        let defaultApp: AppTemplateInfo | null = null;
 
         console.log("🔄 Checking which apps should be mounted/unmounted.");
         this.appTemplates.forEach(({template, parent, nextSibling}, id) => {
@@ -61,21 +63,35 @@ class MicroTSMLayout extends HTMLElement {
             );
 
             const route = template.getAttribute("route");
+            const isDefault = template.hasAttribute("default"); // ✅ Fixes boolean check
             const name = template.getAttribute("name");
+
+            if (isDefault && currentInstance) {
+                defaultApp = {template, parent, nextSibling};
+                return currentInstance.remove();
+            }
 
             if (!route || !name) return; // Skip persistent apps
 
             const shouldBeMounted = this.isRouteMatched(route);
+            matchAppFound = shouldBeMounted || matchAppFound;
             console.log(`🔎 Checking route: "${route}" | Should Mount: ${shouldBeMounted}`);
 
             if (shouldBeMounted && !currentInstance) {
                 console.log(`🟢 Mounting app with route: ${route}`);
-                parent.insertBefore(template, nextSibling)
+                parent.insertBefore(template, nextSibling);
             } else if (!shouldBeMounted && currentInstance) {
                 console.log(`🔴 Unmounting app with route: ${route}`);
-                currentInstance.remove()
+                currentInstance.remove();
             }
         });
+
+        // ✅ Render default app only if no other apps matched
+        if (!matchAppFound && defaultApp) {
+            console.log(`🟢 No matches found—Mounting default app`);
+            defaultApp = (defaultApp as AppTemplateInfo);
+            this.insertBefore(defaultApp.template, defaultApp.nextSibling);
+        }
     }
 
     /** Caches micro-app templates */
@@ -83,7 +99,8 @@ class MicroTSMLayout extends HTMLElement {
         console.log("📌 cacheTemplates: Storing initial micro-app templates.");
         this.querySelectorAll("microtsm-application").forEach((app) => {
             const route = app.getAttribute("route");
-            if (!route) return; // Skip persistent apps
+            const isDefault = app.hasAttribute("default");
+            if (!route && !isDefault) return; // Skip persistent apps
 
             let id = (app as any)[this.microtsmIdSym];
             if (!id) {
