@@ -1,19 +1,24 @@
 /**
  * Interface representing the structure of import maps configuration.
  */
-interface ImportMaps {
+interface EngineWiring {
     imports: Record<string, string>;
 }
 
 /**
- * Injects import maps configuration into the document head as a script tag.
- * The import maps are used to define module specifier remapping for JavaScript imports.
- *
- * @param importMaps - The import maps configuration object
+ * Wires the engine by injecting the module import map configuration.
+ * Ensures all dependencies are linked before kick-starting the ride.
  */
-export default function insertImportMaps(importMaps: ImportMaps): void {
+export async function wireEngine(): Promise<void> {
+    const path = "/importmaps/imports.json"; // 🔒 Fixed path for now, future update may allow customization
+    const wiring: EngineWiring = await import( /* @vite-ignore */  path, {
+        with: {type: "json"}
+    });
+
     const script = document.createElement('script');
     script.type = 'importmap';
-    script.textContent = JSON.stringify(importMaps, null, 2);
+    script.textContent = JSON.stringify(wiring, null, 2);
     document.head.appendChild(script);
+
+    console.log("⚙️ Engine wired, dependencies mapped!");
 }

@@ -16,7 +16,7 @@ class MicroTSMApplication extends HTMLElement {
      * Holds the micro app's lifecycle interface once the module is loaded.
      * @private
      */
-    private app: MicroAppLifecycle | null = null;
+    private app: MicroAppLifecycle<any> | null = null;
 
     /**
      * Creates an instance of the MicroTSMApplication element.

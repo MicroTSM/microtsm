@@ -1,5 +1,5 @@
-import {MicroTSMRootConfig} from "../types/config";
+import {MicroTSMRootAppBuildConfig} from "../types/config";
 
-export default function defineConfig(config: MicroTSMRootConfig) {
+export default function defineConfig(config: MicroTSMRootAppBuildConfig) {
     return config;
 }

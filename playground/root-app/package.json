@@ -2,8 +2,9 @@
   "name": "playgorund",
   "private": true,
   "version": "0.0.0",
+  "type": "module",
   "scripts": {
-    "build": "vite build"
+    "build": "microtsm build"
   },
   "dependencies": {
     "microtsm": "workspace:*"

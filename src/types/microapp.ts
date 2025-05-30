@@ -25,7 +25,7 @@ export interface MicroAppProps {
  * Defines the standard lifecycle methods that a micro app must implement.
  * These methods manage the app's lifecycle from bootstrap to unmount.
  */
-export interface MicroAppLifecycle {
+export interface MicroAppLifecycle<App> {
     /**
      * Initializes the micro app.
      * Currently, it resolves immediately but can be extended for setup needs.

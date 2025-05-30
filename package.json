@@ -9,12 +9,14 @@
   "module": "./dist/main.js",
   "types": "./dist/main.d.ts",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build"
+    "dev": "microtsm",
+    "build": "microtsm build",
+    "release:patch": "pnpm build && npm version patch && npm publish --access public && git push --follow-tags"
   },
   "devDependencies": {
-    "typescript": "~5.7.3",
-    "vite": "^6.3.5"
+    "@microtsm/cli": "^0.0.7",
+    "@types/node": "^22.15.27",
+    "typescript": "~5.7.3"
   },
   "dependencies": {
     "vite-plugin-dts": "^4.5.4"

@@ -1,3 +1,6 @@
-import {defineConfig} from "dist/main";
+import {defineConfig} from "microtsm";
 
-export default defineConfig({})
+export default defineConfig({
+    cssImportMap: ['src/stylesheets.json'],
+    importMap: ['src/importmaps/core-importmap.json', 'src/importmaps/modules-importmap.json']
+});
