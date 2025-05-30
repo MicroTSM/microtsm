@@ -33,8 +33,11 @@ App.useRouteMiddleware((route) => {
     return true;
 });
 
-/** 🔹 Start the Engine & Observe Navigation */
-App.startEngine();
+/*
+* 🔹 Start the Engine & Observe Navigation
+*
+*/
 
-/** 🔹 Twist the Throttle (Render Layout) */
-App.launch();
+App.startEngine().launch() // Methods can be chained or called individually, as below.
+// App.startEngine();
+// App.launch()

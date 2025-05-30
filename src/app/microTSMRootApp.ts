@@ -43,7 +43,7 @@ export default class MicroTSMRootApp {
     };
 
     /** Flag indicating if the engine has been started */
-    private engineStarted = false;
+    private engineStarted: Promise<any> | undefined;
 
     /** Flag indicating if the app has been launched */
     private launched = false;
@@ -98,20 +98,19 @@ export default class MicroTSMRootApp {
      * Starts the application engine
      * Initializes custom elements and sets up route watching
      */
-    async startEngine() {
+    startEngine() {
         if (this.engineStarted) {
             console.warn("⚠️ Engine already started!");
-            return;
+            return this;
         }
 
         console.log("🏍️ Starting engine...");
 
-        await wireEngine();
-        await gearUp()
-        await kickstartEngine();
-        this.engineStarted = true;
-        console.log("✅ Engine ready!");
+        this.engineStarted = Promise.all([wireEngine(), gearUp(), kickstartEngine()]);
+        this.engineStarted.then(() => console.log("✅ Engine started!"));
         this.watchRoad();
+
+        return this; // Allow chaining
     }
 
     /**
@@ -121,8 +120,9 @@ export default class MicroTSMRootApp {
     async launch() {
         if (!this.engineStarted) {
             return console.warn("⚠️ Engine not started yet! Call startEngine() first.");
-
         }
+
+        await this.engineStarted;
 
         if (this.launched) {
             return console.warn("⚠️ App already launched!");
