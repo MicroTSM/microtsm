@@ -8,6 +8,9 @@
   ],
   "module": "./dist/main.js",
   "types": "./dist/main.d.ts",
+  "exports": {
+    ".": "./dist/main.js"
+  },
   "scripts": {
     "dev": "microtsm",
     "build": "microtsm build",
