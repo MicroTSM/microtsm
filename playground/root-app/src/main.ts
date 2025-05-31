@@ -5,11 +5,23 @@ import layout from './layout.html?raw';
 const App = new MicroTSMRootApp({ layout });
 
 /** 🔹 Register Lifecycle Hooks */
+// TODO: Add lifecycle hooks before load
 App.onLoad(() => console.log('✅ App has loaded'));
 App.onBeforeUnload(() => console.log('⚠️ App is about to unload'));
 App.onUnload(() => console.log('❌ App has been unloaded'));
 App.onBeforeDestroy(() => console.log('🛑 App is preparing to shut down'));
 App.onDestroy(() => console.log('🔥 App destroyed'));
+
+console.log('registering MicroApps', App.registeredMicroApps);
+
+App.configureMicroApps((microApp) => {
+    if (microApp.name === '@microtsm/navbar') {
+        microApp.shouldMount = ({ currentRoute }) => {
+            console.log('🧭 Checking if navbar should be mounted');
+            return currentRoute.startsWith('/vue-2');
+        };
+    }
+});
 
 /** 🔹 Register Middleware for Navigation */
 App.useRouteMiddleware(async (route) => {

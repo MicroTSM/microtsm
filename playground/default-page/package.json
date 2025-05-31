@@ -11,7 +11,7 @@
     },
     "dependencies": {
         "@microtsm/cli": "^0.0.12",
-        "@microtsm/vue": "^0.0.13",
+        "@microtsm/vue": "^0.0.14",
         "vue": "^3.5.13"
     },
     "devDependencies": {

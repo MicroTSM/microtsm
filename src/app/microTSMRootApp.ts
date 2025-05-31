@@ -1,6 +1,8 @@
 import { kickstartEngine, twistThrottle } from '../layout/startLayoutEngine';
 import { wireEngine } from '../importmaps/insertImportMaps';
 import { gearUp } from '../importmaps/loadStyleheets';
+import { MicroTSMApplication } from '../layout/appCustomElement.ts';
+import { MicroTSMLayout } from '../layout/layoutCustomElement.ts';
 
 /**
  * Type definitions for lifecycle events and route middleware
@@ -24,15 +26,21 @@ export interface MicroTSMRootAppConfig {
  * Handles lifecycle events, routing middleware and application initialization
  */
 export default class MicroTSMRootApp {
+    /** Stores all micro-app elements referenced from `this.layout` */
+    public registeredMicroApps: MicroTSMApplication[] = [];
     /** Base URL for the application */
     protected baseUrl: string | undefined;
 
-    /** HTML layout string for the application layout */
-    private readonly layout: string;
+    /**
+     * The layout element before it is upgraded as a custom element.
+     *
+     * This holds the initial layout structure but lacks custom element behavior
+     * until `customElements.upgrade()` is called.
+     */
+    private layout: MicroTSMLayout | null = null;
 
     /** Set of registered route middleware functions */
     private routeMiddlewares: Set<RouteMiddleware> = new Set();
-
     /** Map of lifecycle event handlers */
     private lifecycleEvents: Record<LifecycleEvent, Set<() => void>> = {
         onLoad: new Set(),
@@ -41,10 +49,8 @@ export default class MicroTSMRootApp {
         onBeforeDestroy: new Set(),
         onDestroy: new Set(),
     };
-
     /** Flag indicating if the engine has been started */
     private engineStarted: Promise<any> | undefined;
-
     /** Flag indicating if the app has been launched */
     private launched = false;
 
@@ -53,7 +59,7 @@ export default class MicroTSMRootApp {
      */
     constructor({ layout, baseUrl }: MicroTSMRootAppConfig) {
         this.baseUrl = baseUrl;
-        this.layout = layout;
+        this.registerMicroApps(layout);
     }
 
     /**
@@ -96,7 +102,15 @@ export default class MicroTSMRootApp {
 
     /**
      * Starts the application engine
-     * Initializes custom elements and sets up route watching
+     *
+     * This method ensures the framework components are correctly set up,
+     * including custom elements and route monitoring. If the engine has
+     * already been started, a warning is displayed to prevent duplicate execution.
+     *
+     * Allows method chaining after starting the engine.
+     * @example
+     * const app = new MicroTSMRootApp(config);
+     * app.startEngine().launch(); // Chain startEngine() with launch()
      */
     startEngine() {
         if (this.engineStarted) {
@@ -113,8 +127,10 @@ export default class MicroTSMRootApp {
     }
 
     /**
-     * Launches the application
-     * Triggers initial lifecycle events and renders layout
+     * Launches the application by rendering the upgraded layout.
+     *
+     * This method ensures that `virtualLayout` is upgraded **before being attached to the DOM**,
+     * preventing unnecessary module execution and ensuring only the filtered micro-apps are mounted.
      */
     async launch() {
         if (!this.engineStarted) {
@@ -128,11 +144,68 @@ export default class MicroTSMRootApp {
         }
 
         console.log('🚀 Launching MicroTSMRootApp...');
-        this.trigger('onLoad');
-        twistThrottle(this.layout);
-        this.launched = true;
         this.attachMiddleware();
+        await twistThrottle(this.layout!);
+        this.launched = true;
+        this.trigger('onLoad');
         console.log('✅ App is live!');
+    }
+
+    /**
+     * Configures all registered micro-apps before the application engine starts.
+     *
+     * This method allows customization of micro-app instances before they are initialized.
+     * It should be called **before `startEngine()`** to ensure configurations are applied
+     * before micro-apps begin lifecycle execution.
+     *
+     * @param callback - A function that receives each micro-app for configuration.
+     *
+     * @example
+     * app.configureMicroApps((microApp) => {
+     *     if (microApp.name === '@microtsm/navbar') {
+     *         microApp.shouldMount = ({ currentRoute }) => currentRoute != '/login';
+     *     }
+     * });
+     * app.startEngine();
+     */
+    public configureMicroApps(callback: (microApp: MicroTSMApplication) => void) {
+        console.log('🔄 Configuring micro-apps...');
+
+        this.registeredMicroApps.forEach((microApp) => {
+            const name = microApp.getAttribute('name');
+            const route = microApp.getAttribute('route');
+            const isDefault = microApp.hasAttribute('default');
+
+            Object.assign(microApp, { name, route, isDefault });
+            callback(microApp);
+        });
+    }
+
+    /**
+     * Parses the provided layout string and updates `registeredMicroApps`.
+     *
+     * This method extracts all `<microtsm-application>` elements from the given layout string
+     * and stores them in `registeredMicroApps`.
+     *
+     * @param {string} layout - The HTML string defining the application structure.
+     * @throws {Error} If no layout is provided, preventing invalid initialization.
+     */
+    private registerMicroApps(layout: string) {
+        let container: HTMLDivElement | null = document.createElement('div');
+        container.innerHTML = layout;
+
+        this.layout = container.querySelector('microtsm-layout')?.cloneNode(true) as MicroTSMLayout;
+
+        if (!layout) {
+            throw new Error(
+                '🚨 MicroTSM initialization failed: No layout provided! ' +
+                    'Ensure a <microtsm-layout> element is defined and passed into MicroTSMRootApp.',
+            );
+        }
+
+        this.registeredMicroApps = Array.from(this.layout.querySelectorAll('microtsm-application'));
+
+        container = null; // Frees up memory
     }
 
     /**
@@ -172,8 +245,6 @@ export default class MicroTSMRootApp {
      * @private
      */
     private attachMiddleware() {
-        const layoutElement = document.querySelector<any>('microtsm-layout');
-
-        layoutElement?.attachRouteMiddleware?.(this.checkRoute.bind(this));
+        this.layout?.attachRouteMiddleware?.(this.checkRoute.bind(this));
     }
 }

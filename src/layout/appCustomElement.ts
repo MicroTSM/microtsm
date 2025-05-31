@@ -11,7 +11,11 @@ import { MicroAppLifecycle } from '../types/microapp';
  * @example
  * <microtsm-application name="@microtsm/navbar"></microtsm-application>
  */
-class MicroTSMApplication extends HTMLElement {
+export class MicroTSMApplication extends HTMLElement {
+    public readonly name: string | null;
+    public readonly route: string | null;
+    public readonly isDefault: boolean = false;
+
     /**
      * Holds the micro app's lifecycle interface once the module is loaded.
      * @private
@@ -23,6 +27,12 @@ class MicroTSMApplication extends HTMLElement {
      */
     constructor() {
         super();
+        this.name = this.getAttribute('name');
+        this.route = this.getAttribute('route');
+        this.isDefault = this.hasAttribute('default');
+
+        this.removeAttribute('route');
+        this.removeAttribute('default');
     }
 
     /**
@@ -60,8 +70,8 @@ class MicroTSMApplication extends HTMLElement {
      * @returns {Promise<void>}
      */
     async renderMicroApp(): Promise<void> {
-        const name = this.getAttribute('name');
-        const route = this.getAttribute('route');
+        const name = this.name;
+        const route = this.route;
 
         if (!name) {
             return console.error(`❌ Missing micro app name attribute for route: ${route}`);
@@ -97,6 +107,23 @@ class MicroTSMApplication extends HTMLElement {
 
         // Completely remove this element from the DOM.
         this.remove();
+    }
+
+    /**
+     * Determines whether the micro app should be mounted.
+     *
+     * This hook can be customized via {@link MicroTSMRootApp.configureMicroApps} to conditionally
+     * enable mounting based on the current route or other criteria.
+     *
+     * @param {Object} _ - An object containing route details.
+     * @param {string} _.currentRoute - The current route.
+     * @returns {boolean} True if the application should mount; otherwise, false.
+     *
+     * @note Only synchronous functions are supported. Using asynchronous implementations may interfere
+     * with navigation control via the History API.
+     */
+    public shouldMount(_: { currentRoute: string }): boolean {
+        return true;
     }
 }
 

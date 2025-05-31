@@ -1,35 +1,45 @@
-interface AppTemplateInfo {
-    template: HTMLElement;
+import { MicroTSMApplication } from './appCustomElement.ts';
+
+export interface AppTemplateInfo {
+    template: MicroTSMApplication;
     parent: Node;
     nextSibling: ChildNode | null;
 }
+
+const microtsmIdSym = Symbol('microtsmId');
 
 /**
  * Custom element that manages the layout and routing of micro-applications.
  * Handles mounting/unmounting of route-specific applications while maintaining
  * persistent apps.
  */
-class MicroTSMLayout extends HTMLElement {
+export class MicroTSMLayout extends HTMLElement {
     private originalPushState = history.pushState;
     private originalReplaceState = history.replaceState;
 
-    private microtsmIdSym = Symbol('microtsmId');
     private currentRoute: string = window.location.pathname;
-    private appTemplates: Map<string, AppTemplateInfo> = new Map();
-
     private previousMicroAppRoute: string | null = null;
+    private readonly isReadyPromise: Promise<void> | null = null;
+    private isReadyPromiseResolve: (() => void) | null = null;
 
     /** Initializes the layout element */
     constructor() {
         super();
-        console.log('🛠 MicroTSMLayout Initialized.');
+        this.isReadyPromise = new Promise((resolve) => {
+            this.isReadyPromiseResolve = resolve;
+        });
+
+        this.initialize();
+    }
+
+    private _appTemplates: Map<string, AppTemplateInfo> = new Map();
+
+    get appTemplates(): Map<string, AppTemplateInfo> {
+        return this._appTemplates;
     }
 
     /** Called when the element is inserted into the DOM */
     connectedCallback() {
-        console.log('✅ connectedCallback: Component mounted.');
-        this.cacheTemplates();
-        this.updateApplications();
         this.patchHistoryStateEvents();
     }
 
@@ -40,29 +50,73 @@ class MicroTSMLayout extends HTMLElement {
         this.restoreHistoryState();
     }
 
-    /** Updates applications based on the current route */
-    updateApplications() {
+    /**
+     * Caches micro-app layout for later use.
+     *
+     * This element is rendered on memory and not appended to the DOM Tree.
+     * See {@link MicroTSMRootApp.registerMicroApps}
+     */
+    public cacheLayout() {
+        console.log('📌 cacheLayout: Storing initial micro-app templates.');
+        this.querySelectorAll<MicroTSMApplication>('microtsm-application').forEach((app) => {
+            let id = (app as any)[microtsmIdSym];
+            if (!id) {
+                id = crypto.randomUUID();
+                (app as any)[microtsmIdSym] = id;
+            }
+
+            this.appTemplates.set(id, {
+                template: app,
+                parent: app.parentNode as Node,
+                nextSibling: app.nextSibling,
+            });
+        });
+
+        console.log(this.appTemplates);
+    }
+
+    /**
+     * TODO: review this implementation, it's not working as expected
+     * Attaches route middleware to the layout element
+     * @param middleware
+     */
+    public attachRouteMiddleware(middleware: (url: URL) => boolean | Promise<boolean>) {
+        return middleware;
+    }
+
+    public async waitForReady() {
+        await this.isReadyPromise;
+    }
+
+    private initialize() {
+        this.cacheLayout();
+        this.updateApplications().then(this.isReadyPromiseResolve);
+    }
+
+    /**
+     * Updates applications based on the current route.
+     */
+    private async updateApplications() {
         let matchAppFound = false;
         let defaultApp: AppTemplateInfo | null = null;
 
         console.log('🔄 Checking which apps should be mounted/unmounted.');
-        this.appTemplates.forEach(({ template, parent, nextSibling }, id) => {
-            const currentInstance = Array.from(this.children).find(
-                (child) => (child as any)[this.microtsmIdSym] === id,
+        for (const [id, { template, parent, nextSibling }] of this.appTemplates) {
+            const currentInstance = Array.from(this.querySelectorAll('microtsm-application')).find(
+                (child) => (child as any)[microtsmIdSym] === id,
             );
 
-            const route = template.getAttribute('route');
-            const isDefault = template.hasAttribute('default'); // ✅ Fixes boolean check
-            const name = template.getAttribute('name');
+            const { route = template.getAttribute('route'), isDefault = template.hasAttribute('default') } = template;
 
-            if (isDefault && currentInstance) {
+            if (isDefault) {
                 defaultApp = { template, parent, nextSibling };
-                return currentInstance.remove();
+                return currentInstance?.remove();
             }
 
-            if (!route || !name) return; // Skip persistent apps
+            const isRouteMatched = !route || (!!route && this.isRouteMatched(route));
+            const shouldMountHookPassed = template.shouldMount?.({ currentRoute: this.currentRoute }) ?? true;
+            const shouldBeMounted = isRouteMatched && shouldMountHookPassed;
 
-            const shouldBeMounted = this.isRouteMatched(route);
             matchAppFound = shouldBeMounted || matchAppFound;
             console.log(`🔎 Checking route: "${route}" | Should Mount: ${shouldBeMounted}`);
 
@@ -73,7 +127,7 @@ class MicroTSMLayout extends HTMLElement {
                 console.log(`🔴 Unmounting app with route: ${route}`);
                 currentInstance.remove();
             }
-        });
+        }
 
         // ✅ Render default app only if no other apps matched
         if (!matchAppFound && defaultApp) {
@@ -81,28 +135,6 @@ class MicroTSMLayout extends HTMLElement {
             defaultApp = defaultApp as AppTemplateInfo;
             this.insertBefore(defaultApp.template, defaultApp.nextSibling);
         }
-    }
-
-    /** Caches micro-app templates */
-    private cacheTemplates() {
-        console.log('📌 cacheTemplates: Storing initial micro-app templates.');
-        this.querySelectorAll('microtsm-application').forEach((app) => {
-            const route = app.getAttribute('route');
-            const isDefault = app.hasAttribute('default');
-            if (!route && !isDefault) return; // Skip persistent apps
-
-            let id = (app as any)[this.microtsmIdSym];
-            if (!id) {
-                id = crypto.randomUUID();
-                (app as any)[this.microtsmIdSym] = id;
-            }
-
-            this.appTemplates.set(id, {
-                template: app as HTMLElement,
-                parent: app.parentNode as Node,
-                nextSibling: app.nextSibling,
-            });
-        });
     }
 
     /** Handles navigation changes */

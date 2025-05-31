@@ -1,4 +1,5 @@
 import layoutCss from './layout.css?raw';
+import { MicroTSMLayout } from './layoutCustomElement';
 
 /**
  * Kick-starts MicroTSM by registering custom elements and injecting styles.
@@ -18,11 +19,16 @@ export async function kickstartEngine(): Promise<void> {
 }
 
 /**
- * Twists the throttle by applying the HTML template to the document body.
+ * 🚀 Twists the throttle by upgrading the provided virtual layout and applying it to the document body.
  *
- * @param {string} template - The HTML layout template string.
+ * This function ensures that only the necessary applications are mounted by upgrading `virtualLayout`
+ * before inserting it into the DOM.
+ *
+ * @param virtualLayout {MicroTSMLayout} - The pre-rendered layout element that lacks custom element behavior.
  */
-export function twistThrottle(template: string): void {
-    document.body.innerHTML = template;
+export async function twistThrottle(virtualLayout: MicroTSMLayout): Promise<void> {
+    customElements.upgrade(virtualLayout);
+    await virtualLayout.waitForReady();
+    document.body.appendChild(virtualLayout);
     console.log('🏎️ Throttle twisted, layout applied!');
 }
