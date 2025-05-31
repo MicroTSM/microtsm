@@ -71,8 +71,6 @@ export class MicroTSMLayout extends HTMLElement {
                 nextSibling: app.nextSibling,
             });
         });
-
-        console.log(this.appTemplates);
     }
 
     /**
@@ -110,7 +108,8 @@ export class MicroTSMLayout extends HTMLElement {
 
             if (isDefault) {
                 defaultApp = { template, parent, nextSibling };
-                return currentInstance?.remove();
+                currentInstance?.remove();
+                continue;
             }
 
             const isRouteMatched = !route || (!!route && this.isRouteMatched(route));
