@@ -1,5 +1,5 @@
-import {fileURLToPath, URL} from 'node:url';
-import {defineConfig} from '@microtsm/cli';
+import { fileURLToPath, URL } from 'node:url';
+import { defineConfig } from '@microtsm/cli';
 import vuePlugin from '@vitejs/plugin-vue';
 
 export default defineConfig({
@@ -10,9 +10,9 @@ export default defineConfig({
         },
     },
     server: {
-        port: 4177
+        port: 4177,
     },
     preview: {
         port: 4177,
-    }
-})
+    },
+});

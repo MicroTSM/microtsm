@@ -10,7 +10,7 @@ export function deepEqual(a: any, b: any): boolean {
     if (typeof a !== typeof b) return false;
     if (a == null || b == null) return false;
 
-    if (typeof a === "object") {
+    if (typeof a === 'object') {
         const keysA = Object.keys(a);
         const keysB = Object.keys(b);
 

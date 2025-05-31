@@ -1,11 +1,11 @@
-import {kickstartEngine, twistThrottle} from "../layout/startLayoutEngine";
-import {wireEngine} from "../importmaps/insertImportMaps";
-import {gearUp} from "../importmaps/loadStyleheets";
+import { kickstartEngine, twistThrottle } from '../layout/startLayoutEngine';
+import { wireEngine } from '../importmaps/insertImportMaps';
+import { gearUp } from '../importmaps/loadStyleheets';
 
 /**
  * Type definitions for lifecycle events and route middleware
  */
-export type LifecycleEvent = "onLoad" | "onBeforeUnload" | "onUnload" | "onBeforeDestroy" | "onDestroy";
+export type LifecycleEvent = 'onLoad' | 'onBeforeUnload' | 'onUnload' | 'onBeforeDestroy' | 'onDestroy';
 export type RouteMiddleware = (route: URL) => Promise<boolean> | boolean;
 
 export interface MicroTSMRootAppConfig {
@@ -51,7 +51,7 @@ export default class MicroTSMRootApp {
     /**
      * Creates a new MicroTSMRootApp instance
      */
-    constructor({layout, baseUrl}: MicroTSMRootAppConfig) {
+    constructor({ layout, baseUrl }: MicroTSMRootAppConfig) {
         this.baseUrl = baseUrl;
         this.layout = layout;
     }
@@ -67,23 +67,23 @@ export default class MicroTSMRootApp {
 
     /** Shortcut methods for registering lifecycle event handlers */
     onLoad(callback: () => void): void {
-        this.on("onLoad", callback);
+        this.on('onLoad', callback);
     }
 
     onBeforeUnload(callback: () => void): void {
-        this.on("onBeforeUnload", callback);
+        this.on('onBeforeUnload', callback);
     }
 
     onUnload(callback: () => void): void {
-        this.on("onUnload", callback);
+        this.on('onUnload', callback);
     }
 
     onBeforeDestroy(callback: () => void): void {
-        this.on("onBeforeDestroy", callback);
+        this.on('onBeforeDestroy', callback);
     }
 
     onDestroy(callback: () => void): void {
-        this.on("onDestroy", callback);
+        this.on('onDestroy', callback);
     }
 
     /**
@@ -100,14 +100,14 @@ export default class MicroTSMRootApp {
      */
     startEngine() {
         if (this.engineStarted) {
-            console.warn("⚠️ Engine already started!");
+            console.warn('⚠️ Engine already started!');
             return this;
         }
 
-        console.log("🏍️ Starting engine...");
+        console.log('🏍️ Starting engine...');
 
         this.engineStarted = Promise.all([wireEngine(), gearUp(), kickstartEngine()]);
-        this.engineStarted.then(() => console.log("✅ Engine started!"));
+        this.engineStarted.then(() => console.log('✅ Engine started!'));
 
         return this; // Allow chaining
     }
@@ -118,21 +118,21 @@ export default class MicroTSMRootApp {
      */
     async launch() {
         if (!this.engineStarted) {
-            return console.warn("⚠️ Engine not started yet! Call startEngine() first.");
+            return console.warn('⚠️ Engine not started yet! Call startEngine() first.');
         }
 
         await this.engineStarted;
 
         if (this.launched) {
-            return console.warn("⚠️ App already launched!");
+            return console.warn('⚠️ App already launched!');
         }
 
-        console.log("🚀 Launching MicroTSMRootApp...");
-        this.trigger("onLoad");
-        twistThrottle(this.layout)
+        console.log('🚀 Launching MicroTSMRootApp...');
+        this.trigger('onLoad');
+        twistThrottle(this.layout);
         this.launched = true;
         this.attachMiddleware();
-        console.log("✅ App is live!");
+        console.log('✅ App is live!');
     }
 
     /**
@@ -140,7 +140,7 @@ export default class MicroTSMRootApp {
      * @param event - Event to trigger
      */
     private trigger(event: LifecycleEvent) {
-        this.lifecycleEvents[event].forEach(callback => callback());
+        this.lifecycleEvents[event].forEach((callback) => callback());
     }
 
     /**
@@ -172,7 +172,7 @@ export default class MicroTSMRootApp {
      * @private
      */
     private attachMiddleware() {
-        const layoutElement = document.querySelector<any>("microtsm-layout");
+        const layoutElement = document.querySelector<any>('microtsm-layout');
 
         layoutElement?.attachRouteMiddleware?.(this.checkRoute.bind(this));
     }

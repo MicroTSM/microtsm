@@ -13,7 +13,7 @@ class MicroTSMLayout extends HTMLElement {
     private originalPushState = history.pushState;
     private originalReplaceState = history.replaceState;
 
-    private microtsmIdSym = Symbol("microtsmId");
+    private microtsmIdSym = Symbol('microtsmId');
     private currentRoute: string = window.location.pathname;
     private appTemplates: Map<string, AppTemplateInfo> = new Map();
 
@@ -22,12 +22,12 @@ class MicroTSMLayout extends HTMLElement {
     /** Initializes the layout element */
     constructor() {
         super();
-        console.log("🛠 MicroTSMLayout Initialized.");
+        console.log('🛠 MicroTSMLayout Initialized.');
     }
 
     /** Called when the element is inserted into the DOM */
     connectedCallback() {
-        console.log("✅ connectedCallback: Component mounted.");
+        console.log('✅ connectedCallback: Component mounted.');
         this.cacheTemplates();
         this.updateApplications();
         this.patchHistoryStateEvents();
@@ -35,7 +35,7 @@ class MicroTSMLayout extends HTMLElement {
 
     /** Called when the element is removed from the DOM */
     disconnectedCallback() {
-        console.log("❌ disconnectedCallback: Cleaning up component.");
+        console.log('❌ disconnectedCallback: Cleaning up component.');
         this.appTemplates.clear();
         this.restoreHistoryState();
     }
@@ -45,18 +45,18 @@ class MicroTSMLayout extends HTMLElement {
         let matchAppFound = false;
         let defaultApp: AppTemplateInfo | null = null;
 
-        console.log("🔄 Checking which apps should be mounted/unmounted.");
-        this.appTemplates.forEach(({template, parent, nextSibling}, id) => {
+        console.log('🔄 Checking which apps should be mounted/unmounted.');
+        this.appTemplates.forEach(({ template, parent, nextSibling }, id) => {
             const currentInstance = Array.from(this.children).find(
-                (child) => (child as any)[this.microtsmIdSym] === id
+                (child) => (child as any)[this.microtsmIdSym] === id,
             );
 
-            const route = template.getAttribute("route");
-            const isDefault = template.hasAttribute("default"); // ✅ Fixes boolean check
-            const name = template.getAttribute("name");
+            const route = template.getAttribute('route');
+            const isDefault = template.hasAttribute('default'); // ✅ Fixes boolean check
+            const name = template.getAttribute('name');
 
             if (isDefault && currentInstance) {
-                defaultApp = {template, parent, nextSibling};
+                defaultApp = { template, parent, nextSibling };
                 return currentInstance.remove();
             }
 
@@ -78,17 +78,17 @@ class MicroTSMLayout extends HTMLElement {
         // ✅ Render default app only if no other apps matched
         if (!matchAppFound && defaultApp) {
             console.log(`🟢 No matches found—Mounting default app`);
-            defaultApp = (defaultApp as AppTemplateInfo);
+            defaultApp = defaultApp as AppTemplateInfo;
             this.insertBefore(defaultApp.template, defaultApp.nextSibling);
         }
     }
 
     /** Caches micro-app templates */
     private cacheTemplates() {
-        console.log("📌 cacheTemplates: Storing initial micro-app templates.");
-        this.querySelectorAll("microtsm-application").forEach((app) => {
-            const route = app.getAttribute("route");
-            const isDefault = app.hasAttribute("default");
+        console.log('📌 cacheTemplates: Storing initial micro-app templates.');
+        this.querySelectorAll('microtsm-application').forEach((app) => {
+            const route = app.getAttribute('route');
+            const isDefault = app.hasAttribute('default');
             if (!route && !isDefault) return; // Skip persistent apps
 
             let id = (app as any)[this.microtsmIdSym];
@@ -109,36 +109,37 @@ class MicroTSMLayout extends HTMLElement {
     private handleRouteChange() {
         console.log(`🚀 handleRouteChange: Route changed to ${window.location.pathname}`);
         this.currentRoute = window.location.pathname;
-        this.microAppChanged(this.currentRoute) && this.updateApplications() || console.log("⚠️ Skipping application update: No app change detected.");
+        (this.microAppChanged(this.currentRoute) && this.updateApplications()) ||
+            console.log('⚠️ Skipping application update: No app change detected.');
     }
 
     /** Restores original history state before unload or disconnection */
     private restoreHistoryState() {
         history.pushState = this.originalPushState;
         history.replaceState = this.originalReplaceState;
-        console.log("♻️ restoreHistoryState: History state reset before unload.");
+        console.log('♻️ restoreHistoryState: History state reset before unload.');
     }
 
     /** Overrides history methods to track navigation changes */
     private patchHistoryStateEvents() {
-        console.log("🔧 patchHistoryStateEvents: Modifying history.pushState and history.replaceState.");
+        console.log('🔧 patchHistoryStateEvents: Modifying history.pushState and history.replaceState.');
 
         const historyPushState = history.pushState;
         const historyReplaceState = history.replaceState;
 
         history.pushState = (...args) => {
-            console.log("📢 pushState triggered:", args);
+            console.log('📢 pushState triggered:', args);
             historyPushState.apply(history, args);
             this.handleRouteChange();
         };
 
         history.replaceState = (...args) => {
-            console.log("📢 replaceState triggered:", args);
+            console.log('📢 replaceState triggered:', args);
             historyReplaceState.apply(history, args);
             this.handleRouteChange();
         };
 
-        window.addEventListener("beforeunload", this.restoreHistoryState.bind(this), {once: true});
+        window.addEventListener('beforeunload', this.restoreHistoryState.bind(this), { once: true });
     }
 
     /**
@@ -163,12 +164,12 @@ class MicroTSMLayout extends HTMLElement {
      * Adjust this logic based on your app's routing structure.
      */
     private getMicroAppRoute(route: string): string {
-        return route.split("/")[1] || ""; // Assumes micro-apps are at the first path segment ("/dashboard", "/settings", etc.)
+        return route.split('/')[1] || ''; // Assumes micro-apps are at the first path segment ("/dashboard", "/settings", etc.)
     }
 
     /** Checks if the given route matches the current path */
     private isRouteMatched(route: string, options: { exactMatch?: boolean; caseSensitive?: boolean } = {}): boolean {
-        const {exactMatch = false, caseSensitive = false} = options;
+        const { exactMatch = false, caseSensitive = false } = options;
         let currentPath = this.currentRoute;
 
         if (!caseSensitive) {
@@ -177,12 +178,12 @@ class MicroTSMLayout extends HTMLElement {
         }
 
         // Remove trailing slashes for consistency
-        route = route.replace(/\/$/, "");
-        currentPath = currentPath.replace(/\/$/, "");
+        route = route.replace(/\/$/, '');
+        currentPath = currentPath.replace(/\/$/, '');
 
         if (exactMatch) return currentPath === route;
-        return currentPath === route || currentPath.startsWith(route + "/");
+        return currentPath === route || currentPath.startsWith(route + '/');
     }
 }
 
-customElements.define("microtsm-layout", MicroTSMLayout);
+customElements.define('microtsm-layout', MicroTSMLayout);

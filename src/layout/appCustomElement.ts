@@ -1,4 +1,4 @@
-import {MicroAppLifecycle} from "../types/microapp";
+import { MicroAppLifecycle } from '../types/microapp';
 
 /**
  * Custom element that loads and renders a micro app.
@@ -60,8 +60,8 @@ class MicroTSMApplication extends HTMLElement {
      * @returns {Promise<void>}
      */
     async renderMicroApp(): Promise<void> {
-        const name = this.getAttribute("name");
-        const route = this.getAttribute("route");
+        const name = this.getAttribute('name');
+        const route = this.getAttribute('route');
 
         if (!name) {
             return console.error(`❌ Missing micro app name attribute for route: ${route}`);
@@ -72,7 +72,7 @@ class MicroTSMApplication extends HTMLElement {
             this.app = await import(/* @vite-ignore */ name);
             if (this.app?.mount) {
                 // Mount the micro app and pass this element as its host.
-                await this.app.mount({domElement: this, name});
+                await this.app.mount({ domElement: this, name });
             }
         } catch (error) {
             console.error(`❌ Failed to load Micro App: ${name}`, error);
@@ -100,4 +100,4 @@ class MicroTSMApplication extends HTMLElement {
     }
 }
 
-customElements.define("microtsm-application", MicroTSMApplication);
+customElements.define('microtsm-application', MicroTSMApplication);

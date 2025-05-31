@@ -1,30 +1,30 @@
-import {MicroTSMRootApp} from "microtsm";
-import layout from "./layout.html?raw";
+import { MicroTSMRootApp } from 'microtsm';
+import layout from './layout.html?raw';
 
 // Initialize the MicroTSM app with the required layout
-const App = new MicroTSMRootApp({layout});
+const App = new MicroTSMRootApp({ layout });
 
 /** 🔹 Register Lifecycle Hooks */
-App.onLoad(() => console.log("✅ App has loaded"));
-App.onBeforeUnload(() => console.log("⚠️ App is about to unload"));
-App.onUnload(() => console.log("❌ App has been unloaded"));
-App.onBeforeDestroy(() => console.log("🛑 App is preparing to shut down"));
-App.onDestroy(() => console.log("🔥 App destroyed"));
+App.onLoad(() => console.log('✅ App has loaded'));
+App.onBeforeUnload(() => console.log('⚠️ App is about to unload'));
+App.onUnload(() => console.log('❌ App has been unloaded'));
+App.onBeforeDestroy(() => console.log('🛑 App is preparing to shut down'));
+App.onDestroy(() => console.log('🔥 App destroyed'));
 
 /** 🔹 Register Middleware for Navigation */
 App.useRouteMiddleware(async (route) => {
     console.log(`🧭 Checking access for ${route.pathname}`);
 
-    const protectedRoute = route.pathname.startsWith("/dashboard");
-    const userLoggedIn = !!localStorage.getItem("userToken");
+    const protectedRoute = route.pathname.startsWith('/dashboard');
+    const userLoggedIn = !!localStorage.getItem('userToken');
 
     if (protectedRoute && !userLoggedIn) {
-        console.warn("🚫 Access denied! Redirecting to login.");
-        window.location.href = "/login";
+        console.warn('🚫 Access denied! Redirecting to login.');
+        window.location.href = '/login';
         return false;
     }
 
-    console.log("✅ Access granted!");
+    console.log('✅ Access granted!');
     return true;
 });
 
@@ -34,10 +34,10 @@ App.useRouteMiddleware((route) => {
 });
 
 /*
-* 🔹 Start the Engine & Observe Navigation
-*
-*/
+ * 🔹 Start the Engine & Observe Navigation
+ *
+ */
 
-App.startEngine().launch() // Methods can be chained or called individually, as below.
+App.startEngine().launch(); // Methods can be chained or called individually, as below.
 // App.startEngine();
 // App.launch()

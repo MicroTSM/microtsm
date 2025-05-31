@@ -1,5 +1,5 @@
-import {defineConfig} from '@microtsm/cli'
-import dtsPlugin from "vite-plugin-dts";
+import { defineConfig } from '@microtsm/cli';
+import dtsPlugin from 'vite-plugin-dts';
 
 export default defineConfig({
     build: {
@@ -11,7 +11,5 @@ export default defineConfig({
         },
         minify: false,
     },
-    plugins: [
-        dtsPlugin({entryRoot: 'src'})
-    ],
-})
+    plugins: [dtsPlugin({ entryRoot: 'src' })],
+});
