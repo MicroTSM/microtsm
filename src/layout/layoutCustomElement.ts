@@ -1,5 +1,3 @@
-import {deepEqual} from "../utils/object.ts";
-
 interface AppTemplateInfo {
     template: HTMLElement;
     parent: Node;
@@ -19,10 +17,7 @@ class MicroTSMLayout extends HTMLElement {
     private currentRoute: string = window.location.pathname;
     private appTemplates: Map<string, AppTemplateInfo> = new Map();
 
-    private lastPushStateArgs: any[] | null = null;
-    private lastReplaceStateArgs: any[] | null = null;
-    private cachedRouteForUpdateApp: string | null = null
-
+    private previousMicroAppRoute: string | null = null;
 
     /** Initializes the layout element */
     constructor() {
@@ -47,12 +42,6 @@ class MicroTSMLayout extends HTMLElement {
 
     /** Updates applications based on the current route */
     updateApplications() {
-        // Prevent unnecessary app update on the same route
-        if (this.cachedRouteForUpdateApp === this.currentRoute) {
-            return console.log("⚠️ Skipping application update: Route has not changed.");
-        }
-
-        this.cachedRouteForUpdateApp = this.currentRoute;
         let matchAppFound = false;
         let defaultApp: AppTemplateInfo | null = null;
 
@@ -120,7 +109,7 @@ class MicroTSMLayout extends HTMLElement {
     private handleRouteChange() {
         console.log(`🚀 handleRouteChange: Route changed to ${window.location.pathname}`);
         this.currentRoute = window.location.pathname;
-        this.updateApplications();
+        this.microAppChanged(this.currentRoute) && this.updateApplications() || console.log("⚠️ Skipping application update: No app change detected.");
     }
 
     /** Restores original history state before unload or disconnection */
@@ -140,22 +129,41 @@ class MicroTSMLayout extends HTMLElement {
         history.pushState = (...args) => {
             console.log("📢 pushState triggered:", args);
             historyPushState.apply(history, args);
-            if (!deepEqual(args, this.lastPushStateArgs)) {
-                this.lastPushStateArgs = args;
-                this.handleRouteChange();
-            }
+            this.handleRouteChange();
         };
 
         history.replaceState = (...args) => {
             console.log("📢 replaceState triggered:", args);
             historyReplaceState.apply(history, args);
-            if (!deepEqual(args, this.lastReplaceStateArgs)) {
-                this.lastReplaceStateArgs = args;
-                this.handleRouteChange();
-            }
+            this.handleRouteChange();
         };
 
         window.addEventListener("beforeunload", this.restoreHistoryState.bind(this), {once: true});
+    }
+
+    /**
+     * Determines if the route change affects a different micro-app.
+     * This ensures `updateApplications()` is only triggered when switching between apps,
+     * not when navigating internally within the same app.
+     */
+    private microAppChanged(newRoute: string): boolean {
+        const currentMicroAppRoute = this.getMicroAppRoute(newRoute);
+
+        // 🚀 Only update if switching micro-apps
+        if (this.previousMicroAppRoute !== currentMicroAppRoute) {
+            this.previousMicroAppRoute = currentMicroAppRoute;
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Extracts the micro-app route prefix from a given URL.
+     * Adjust this logic based on your app's routing structure.
+     */
+    private getMicroAppRoute(route: string): string {
+        return route.split("/")[1] || ""; // Assumes micro-apps are at the first path segment ("/dashboard", "/settings", etc.)
     }
 
     /** Checks if the given route matches the current path */
