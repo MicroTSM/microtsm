@@ -18,7 +18,7 @@ App.configureMicroApps((microApp) => {
     if (microApp.name === '@microtsm/navbar') {
         microApp.shouldMount = ({ currentRoute }) => {
             console.log('🧭 Checking if navbar should be mounted');
-            return currentRoute.startsWith('/vue-2');
+            return currentRoute === '/';
         };
     }
 });
