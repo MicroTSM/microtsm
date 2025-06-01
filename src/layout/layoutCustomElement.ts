@@ -105,7 +105,15 @@ export class MicroTSMLayout extends HTMLElement {
                 (child) => (child as any)[microtsmIdSym] === id,
             );
 
-            const { route = template.getAttribute('route'), isDefault = template.hasAttribute('default') } = template;
+            debugger;
+
+            const {
+                route = template.getAttribute('route'),
+                name = template.getAttribute('name'),
+                isDefault = template.hasAttribute('default'),
+            } = template;
+
+            debugger;
 
             if (isDefault) {
                 defaultApp = { template, parent, nextSibling };
@@ -118,7 +126,8 @@ export class MicroTSMLayout extends HTMLElement {
             const shouldBeMounted = isRouteMatched && shouldMountHookPassed;
 
             hasRoutedAppMatch = (!!route && shouldBeMounted) || hasRoutedAppMatch;
-            console.log(`🔎 Checking route: "${route}" | Should Mount: ${shouldBeMounted}`);
+            console.log(`🔎 Checking route: "${route}" | Name: "${name}" | Should Mount: ${shouldBeMounted}`);
+            debugger;
 
             if (shouldBeMounted && !currentInstance) {
                 console.log(`🟢 Mounting app with route: ${route}`);
