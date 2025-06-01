@@ -151,6 +151,8 @@ export default class MicroTSMRootApp {
      * preventing unnecessary module execution and ensuring only the filtered micro-apps are mounted.
      */
     async launch() {
+        await this.trigger('onBeforeLaunch');
+
         if (!this.engineStarted) {
             return console.warn('⚠️ Engine not started yet! Call startEngine() first.');
         }
@@ -165,7 +167,7 @@ export default class MicroTSMRootApp {
         this.attachMiddleware();
         await twistThrottle(this.layout!);
         this.launched = true;
-        this.trigger('onLaunch');
+        await this.trigger('onLaunch');
         console.log('✅ App is live!');
     }
 
@@ -230,8 +232,9 @@ export default class MicroTSMRootApp {
      * Triggers a lifecycle event by calling all registered callbacks
      * @param event - Event to trigger
      */
-    private trigger(event: LifecycleEvent) {
-        this.lifecycleEvents[event].forEach((callback) => callback());
+    private async trigger(event: LifecycleEvent): Promise<void> {
+        const callbacks = this.lifecycleEvents[event];
+        await Promise.all([...callbacks].map(async (callback) => callback()));
     }
 
     /**
