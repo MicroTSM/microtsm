@@ -152,13 +152,12 @@ export default class MicroTSMRootApp {
      * preventing unnecessary module execution and ensuring only the filtered micro-apps are mounted.
      */
     async launch() {
-        await this.trigger('onBeforeLaunch');
-
         if (!this.engineStarted) {
             return console.warn('⚠️ Engine not started yet! Call startEngine() first.');
         }
 
         await this.engineStarted;
+        await this.trigger('onBeforeLaunch');
 
         if (this.launched) {
             return console.warn('⚠️ App already launched!');
