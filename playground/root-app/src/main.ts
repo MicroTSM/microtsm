@@ -6,9 +6,7 @@ const App = new MicroTSMRootApp({ layout });
 
 /** 🔹 Register Lifecycle Hooks */
 // TODO: Add lifecycle hooks before load
-App.onLoad(() => console.log('✅ App has loaded'));
-App.onBeforeUnload(() => console.log('⚠️ App is about to unload'));
-App.onUnload(() => console.log('❌ App has been unloaded'));
+App.onLaunch(() => console.log('✅ App has launched'));
 App.onBeforeDestroy(() => console.log('🛑 App is preparing to shut down'));
 App.onDestroy(() => console.log('🔥 App destroyed'));
 

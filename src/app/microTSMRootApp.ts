@@ -7,7 +7,14 @@ import { MicroTSMLayout } from '../layout/layoutCustomElement.ts';
 /**
  * Type definitions for lifecycle events and route middleware
  */
-export type LifecycleEvent = 'onLoad' | 'onBeforeUnload' | 'onUnload' | 'onBeforeDestroy' | 'onDestroy';
+export type LifecycleEvent =
+    | 'onBeforeLaunch'
+    | 'onLaunch'
+    | 'onBeforeUpdate'
+    | 'onUpdate'
+    | 'onBeforeDestroy'
+    | 'onDestroy';
+
 export type RouteMiddleware = (route: URL) => Promise<boolean> | boolean;
 
 export interface MicroTSMRootAppConfig {
@@ -43,9 +50,10 @@ export default class MicroTSMRootApp {
     private routeMiddlewares: Set<RouteMiddleware> = new Set();
     /** Map of lifecycle event handlers */
     private lifecycleEvents: Record<LifecycleEvent, Set<() => void>> = {
-        onLoad: new Set(),
-        onBeforeUnload: new Set(),
-        onUnload: new Set(),
+        onBeforeLaunch: new Set(),
+        onLaunch: new Set(),
+        onBeforeUpdate: new Set(),
+        onUpdate: new Set(),
         onBeforeDestroy: new Set(),
         onDestroy: new Set(),
     };
@@ -71,19 +79,29 @@ export default class MicroTSMRootApp {
         this.lifecycleEvents[event].add(callback);
     }
 
-    /** Shortcut methods for registering lifecycle event handlers */
-    onLoad(callback: () => void): void {
-        this.on('onLoad', callback);
+    /** 🔄 **Initialization Stage** */
+    onBeforeLaunch(callback: () => void): void {
+        // Runs before anything loads
+        this.on('onBeforeLaunch', callback);
     }
 
-    onBeforeUnload(callback: () => void): void {
-        this.on('onBeforeUnload', callback);
+    onLaunch(callback: () => void): void {
+        // When the app is fully loaded
+        this.on('onLaunch', callback);
     }
 
-    onUnload(callback: () => void): void {
-        this.on('onUnload', callback);
+    /** ⚡ **Active Runtime Stage** */
+    onBeforeUpdate(callback: () => void): void {
+        // Before state or props update
+        this.on('onBeforeUpdate', callback);
     }
 
+    onUpdate(callback: () => void): void {
+        // When an update occurs
+        this.on('onUpdate', callback);
+    }
+
+    /** 🔻 **Cleanup & Teardown Stage** */
     onBeforeDestroy(callback: () => void): void {
         this.on('onBeforeDestroy', callback);
     }
@@ -147,7 +165,7 @@ export default class MicroTSMRootApp {
         this.attachMiddleware();
         await twistThrottle(this.layout!);
         this.launched = true;
-        this.trigger('onLoad');
+        this.trigger('onLaunch');
         console.log('✅ App is live!');
     }
 
