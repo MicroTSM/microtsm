@@ -16,6 +16,7 @@ export type LifecycleEvent =
     | 'onDestroy';
 
 export type RouteMiddleware = (route: URL) => Promise<boolean> | boolean;
+export type LifeCycleCallback = () => Promise<void> | void;
 
 export interface MicroTSMRootAppConfig {
     /**
@@ -75,38 +76,38 @@ export default class MicroTSMRootApp {
      * @param event - Lifecycle event to register for
      * @param callback - Function to call when event occurs
      */
-    on(event: LifecycleEvent, callback: () => void): void {
+    on(event: LifecycleEvent, callback: LifeCycleCallback): void {
         this.lifecycleEvents[event].add(callback);
     }
 
     /** 🔄 **Initialization Stage** */
-    onBeforeLaunch(callback: () => void): void {
+    onBeforeLaunch(callback: LifeCycleCallback): void {
         // Runs before anything loads
         this.on('onBeforeLaunch', callback);
     }
 
-    onLaunch(callback: () => void): void {
+    onLaunch(callback: LifeCycleCallback): void {
         // When the app is fully loaded
         this.on('onLaunch', callback);
     }
 
     /** ⚡ **Active Runtime Stage** */
-    onBeforeUpdate(callback: () => void): void {
+    onBeforeUpdate(callback: LifeCycleCallback): void {
         // Before state or props update
         this.on('onBeforeUpdate', callback);
     }
 
-    onUpdate(callback: () => void): void {
+    onUpdate(callback: LifeCycleCallback): void {
         // When an update occurs
         this.on('onUpdate', callback);
     }
 
     /** 🔻 **Cleanup & Teardown Stage** */
-    onBeforeDestroy(callback: () => void): void {
+    onBeforeDestroy(callback: LifeCycleCallback): void {
         this.on('onBeforeDestroy', callback);
     }
 
-    onDestroy(callback: () => void): void {
+    onDestroy(callback: LifeCycleCallback): void {
         this.on('onDestroy', callback);
     }
 
