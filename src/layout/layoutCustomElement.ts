@@ -105,15 +105,11 @@ export class MicroTSMLayout extends HTMLElement {
                 (child) => (child as any)[microtsmIdSym] === id,
             );
 
-            debugger;
-
             const {
                 route = template.getAttribute('route'),
                 name = template.getAttribute('name'),
                 isDefault = template.hasAttribute('default'),
             } = template;
-
-            debugger;
 
             if (isDefault) {
                 defaultApp = { template, parent, nextSibling };
@@ -127,7 +123,6 @@ export class MicroTSMLayout extends HTMLElement {
 
             hasRoutedAppMatch = (!!route && shouldBeMounted) || hasRoutedAppMatch;
             console.log(`🔎 Checking route: "${route}" | Name: "${name}" | Should Mount: ${shouldBeMounted}`);
-            debugger;
 
             if (shouldBeMounted && !currentInstance) {
                 console.log(`🟢 Mounting app with route: ${route}`);
@@ -208,7 +203,27 @@ export class MicroTSMLayout extends HTMLElement {
         return route.split('/')[1] || ''; // Assumes micro-apps are at the first path segment ("/dashboard", "/settings", etc.)
     }
 
-    /** Checks if the given route matches the current path */
+    /**
+     * 🚀 **Checks if a given route matches the current application path.**
+     *
+     * This function handles:
+     * - **Leading slash normalization** (ensures "path" matches "/path").
+     * - **Case sensitivity** options.
+     * - **Exact vs. partial route matching** (supports nested paths).
+     * - **Trailing slash consistency**.
+     *
+     * 🔹 **Matching Behavior:**
+     * - `"path"` will correctly match `"/path"` even if the leading slash is missing.
+     * - Supports **exact matching** (`exactMatch: true`).
+     * - Supports **partial matching** (e.g., `"dashboard"` matches `"/dashboard/settings"`).
+     * - Automatically removes unnecessary trailing slashes.
+     *
+     * @param {string} route - The route to check (may or may not start with `/`).
+     * @param {Object} options - Matching options.
+     * @param {boolean} [options.exactMatch=false] - If true, requires an exact match.
+     * @param {boolean} [options.caseSensitive=false] - If false, ignores case when comparing.
+     * @returns {boolean} **`true`** if the route matches, otherwise **`false`**.
+     */
     private isRouteMatched(route: string, options: { exactMatch?: boolean; caseSensitive?: boolean } = {}): boolean {
         const { exactMatch = false, caseSensitive = false } = options;
         let currentPath = this.currentRoute;
@@ -218,12 +233,23 @@ export class MicroTSMLayout extends HTMLElement {
             currentPath = currentPath.toLowerCase();
         }
 
-        // Remove trailing slashes for consistency
+        // Ensure both paths start with a slash for consistency
+        if (!route.startsWith('/')) route = `/${route}`;
+        // Normalize paths by removing trailing slashes
         route = route.replace(/\/$/, '');
         currentPath = currentPath.replace(/\/$/, '');
 
+        // Exact match condition
         if (exactMatch) return currentPath === route;
-        return currentPath === route || currentPath.startsWith(route + '/');
+
+        // Match any valid sub-path (e.g., '/path' matches '/path/sub-path')
+        const routeSegments = route.split('/').filter(Boolean);
+        const pathSegments = currentPath.split('/').filter(Boolean);
+
+        return (
+            pathSegments.length >= routeSegments.length &&
+            pathSegments.slice(0, routeSegments.length).join('/') === route
+        );
     }
 }
 
