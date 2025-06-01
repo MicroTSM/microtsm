@@ -17,6 +17,7 @@ export class MicroTSMLayout extends HTMLElement {
     private originalPushState = history.pushState;
     private originalReplaceState = history.replaceState;
 
+    // TODO: make the route is object route with other property like query
     private currentRoute: string = window.location.pathname;
     private previousMicroAppRoute: string | null = null;
     private readonly isReadyPromise: Promise<void> | null = null;
