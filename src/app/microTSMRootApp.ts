@@ -1,5 +1,4 @@
 import { kickstartEngine, twistThrottle } from '../layout/startLayoutEngine';
-import { wireEngine } from '../importmaps/insertImportMaps';
 import { gearUp } from '../importmaps/loadStyleheets';
 import { MicroTSMApplication } from '../layout/appCustomElement.ts';
 import { MicroTSMLayout } from '../layout/layoutCustomElement.ts';
@@ -139,7 +138,7 @@ export default class MicroTSMRootApp {
 
         console.log('🏍️ Starting engine...');
 
-        this.engineStarted = Promise.all([wireEngine(), gearUp(), kickstartEngine()]);
+        this.engineStarted = Promise.all([gearUp(), kickstartEngine()]);
         this.engineStarted.then(() => console.log('✅ Engine started!'));
 
         return this; // Allow chaining
