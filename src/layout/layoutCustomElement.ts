@@ -235,6 +235,7 @@ export class MicroTSMLayout extends HTMLElement {
 
         // Ensure both paths start with a slash for consistency
         if (!route.startsWith('/')) route = `/${route}`;
+
         // Normalize paths by removing trailing slashes
         route = route.replace(/\/$/, '');
         currentPath = currentPath.replace(/\/$/, '');
@@ -242,14 +243,8 @@ export class MicroTSMLayout extends HTMLElement {
         // Exact match condition
         if (exactMatch) return currentPath === route;
 
-        // Match any valid sub-path (e.g., '/path' matches '/path/sub-path')
-        const routeSegments = route.split('/').filter(Boolean);
-        const pathSegments = currentPath.split('/').filter(Boolean);
-
-        return (
-            pathSegments.length >= routeSegments.length &&
-            pathSegments.slice(0, routeSegments.length).join('/') === route
-        );
+        // Match any valid sub-path (e.g., "dashboard" matches "/dashboard/settings")
+        return currentPath.startsWith(route + '/') || currentPath === route;
     }
 }
 
