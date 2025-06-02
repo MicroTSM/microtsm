@@ -2,9 +2,19 @@
     "name": "microtsm",
     "private": false,
     "version": "0.0.14",
+    "license": "MIT",
+    "author": {
+        "name": "Zain Kurnia",
+        "email": "zainkurniaa@gmail.com"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/MicroTSM/microtsm.git"
+    },
     "type": "module",
     "files": [
-        "dist"
+        "dist",
+        "LICENSE"
     ],
     "module": "./dist/main.js",
     "types": "./dist/main.d.ts",
@@ -14,7 +24,7 @@
     "scripts": {
         "dev": "microtsm",
         "build": "microtsm build",
-        "release:patch": "pnpm build && npm version patch && npm publish --access public && git push --follow-tags",
+        "release:patch": "npm version patch && pnpm build && npm publish --access public && git push --follow-tags",
         "format": "prettier . --write"
     },
     "devDependencies": {
