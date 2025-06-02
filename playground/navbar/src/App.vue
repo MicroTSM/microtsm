@@ -5,7 +5,11 @@ const fontFamily = `"Work Sans", "Noto Sans", sans-serif`;
 const searchQuery = ref('');
 
 const navigateHome = () => {
-    history.pushState(history.state, '', '/');
+    navigateTo('/vue');
+};
+
+const navigateTo = (path) => {
+    history.pushState(history.state, '', path);
 };
 </script>
 
@@ -36,6 +40,22 @@ const navigateHome = () => {
                     </div>
                     <h2 class="text-[#0d141c] text-lg font-bold leading-tight tracking-[-0.015em]">Acme Co</h2>
                 </div>
+
+                <div class="flex items-center gap-2 ml-4">
+                    <a
+                        href="/vue"
+                        class="!text-[#0d141c] text-base font-medium hover:text-[#49709c]"
+                        @click.prevent="navigateTo('/vue')"
+                        >Vue
+                    </a>
+                    <a
+                        href="/another-path"
+                        class="!text-[#0d141c] text-base font-medium hover:text-[#49709c]"
+                        @click.prevent="navigateTo('/another-path')"
+                        >Another Path
+                    </a>
+                </div>
+
                 <div class="flex flex-1 justify-end gap-8">
                     <label class="flex flex-col min-w-40 !h-10 max-w-64">
                         <div class="flex w-full flex-1 items-stretch rounded-lg h-full">

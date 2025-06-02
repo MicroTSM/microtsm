@@ -82,7 +82,7 @@ export class MicroTSMApplication extends HTMLElement {
             this.app = await import(/* @vite-ignore */ name);
             if (this.app?.mount) {
                 // Mount the micro app and pass this element as its host.
-                await this.app.mount({ domElement: this, name });
+                await this.app.mount({ domElement: this, name, route });
             }
         } catch (error) {
             console.error(`❌ Failed to load Micro App: ${name}`, error);

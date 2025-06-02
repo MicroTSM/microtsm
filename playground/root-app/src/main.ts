@@ -16,7 +16,7 @@ App.configureMicroApps((microApp) => {
     if (microApp.name === '@microtsm/navbar') {
         microApp.shouldMount = ({ currentRoute }) => {
             console.log('🧭 Checking if navbar should be mounted');
-            return currentRoute === '/';
+            return currentRoute !== '/';
         };
     }
 });
