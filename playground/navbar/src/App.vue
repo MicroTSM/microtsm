@@ -5,7 +5,7 @@ const fontFamily = `"Work Sans", "Noto Sans", sans-serif`;
 const searchQuery = ref('');
 
 const navigateHome = () => {
-    navigateTo('/vue');
+    navigateTo('/');
 };
 
 const navigateTo = (path) => {
