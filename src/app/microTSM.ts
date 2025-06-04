@@ -34,7 +34,7 @@ export default class MicroTSM {
      * @param {string} specifier - The bare module specifier.
      */
     async import(specifier: string): Promise<any> {
-        const moduleUrl = MicroTSM.importMap[specifier];
+        const moduleUrl = MicroTSM.importMap[specifier] || specifier;
         if (!moduleUrl) {
             return Promise.reject(new Error(`Module "${specifier}" not found in the MicroTSM import map.`));
         }
