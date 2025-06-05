@@ -32,8 +32,10 @@ class MicroTSMModuleLoader {
     /**
      * Dynamically imports a module using the stored import map.
      * @param {string} specifier - The bare module specifier.
+     *
+     * Note: In Safari, 'import' cannot be used as a method name, so we use 'load' instead.
      */
-    async import(specifier: string): Promise<any> {
+    async load(specifier: string): Promise<any> {
         const moduleUrl = MicroTSMModuleLoader.importMap[specifier] || specifier;
         if (!moduleUrl) {
             return Promise.reject(new Error(`Module "${specifier}" not found in the MicroTSM import map.`));

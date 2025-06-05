@@ -1,4 +1,5 @@
 import { MicroTSMApplication } from './appCustomElement.ts';
+import crypto from '../utils/crypto.ts';
 
 export interface AppTemplateInfo {
     template: MicroTSMApplication;

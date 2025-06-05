@@ -24,6 +24,7 @@
     "scripts": {
         "dev": "microtsm",
         "build": "microtsm build",
+        "serve": "microtsm serve",
         "release:patch": "npm version patch && pnpm build && npm publish --access public && git push --follow-tags",
         "format": "prettier . --write"
     },
