@@ -28,5 +28,8 @@ export default defineConfig({
             },
         },
     },
+    preview: {
+        cors: true,
+    },
     plugins: [dtsPlugin({ entryRoot: 'src' })],
 });
