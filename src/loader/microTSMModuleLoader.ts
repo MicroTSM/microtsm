@@ -41,6 +41,8 @@ class MicroTSMModuleLoader {
             return Promise.reject(new Error(`Module "${specifier}" not found in the MicroTSM import map.`));
         }
 
+        console.trace('Stack trace:');
+
         // Delegate to dynamic import(); the browser handles caching.
         return import(moduleUrl);
     }
