@@ -46,7 +46,12 @@ class MicroTSMModuleLoader {
     }
 }
 
-window.MicroTSM = new MicroTSMModuleLoader();
+Object.defineProperty(window, 'MicroTSM', {
+    value: new MicroTSMModuleLoader(),
+    writable: false,
+    enumerable: false,
+    configurable: true, // Allows future modifications
+});
 
 declare global {
     interface Window {
