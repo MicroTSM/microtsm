@@ -4,7 +4,7 @@ interface ImportMap {
 
 const EMPTY_IMPORTMAP = Object.freeze({ imports: {} });
 
-export default class MicroTSM {
+class MicroTSMModuleLoader {
     static importMap: ImportMap['imports'] = {};
 
     constructor() {
@@ -24,7 +24,7 @@ export default class MicroTSM {
         const importMap = importMapElement.textContent;
         // Parse its content as JSON. The structure should follow the "imports" pattern.
         const importMapData: ImportMap = importMap ? JSON.parse(importMap) : EMPTY_IMPORTMAP;
-        MicroTSM.importMap = Object.freeze(importMapData.imports);
+        MicroTSMModuleLoader.importMap = Object.freeze(importMapData.imports);
 
         window.MicroTSM = this;
     }
@@ -34,7 +34,7 @@ export default class MicroTSM {
      * @param {string} specifier - The bare module specifier.
      */
     async import(specifier: string): Promise<any> {
-        const moduleUrl = MicroTSM.importMap[specifier] || specifier;
+        const moduleUrl = MicroTSMModuleLoader.importMap[specifier] || specifier;
         if (!moduleUrl) {
             return Promise.reject(new Error(`Module "${specifier}" not found in the MicroTSM import map.`));
         }
@@ -44,8 +44,10 @@ export default class MicroTSM {
     }
 }
 
+window.MicroTSM = new MicroTSMModuleLoader();
+
 declare global {
     interface Window {
-        MicroTSM: MicroTSM;
+        MicroTSM: MicroTSMModuleLoader;
     }
 }

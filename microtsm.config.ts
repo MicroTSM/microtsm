@@ -14,12 +14,17 @@ export default defineConfig({
             entry: './src/main.ts',
             name: 'microtsm',
             formats: ['es'],
-            fileName: 'main',
         },
         minify: false,
         rollupOptions: {
+            input: {
+                'main': './src/main.ts',
+                'module-loader': './src/loader/microTSMModuleLoader.ts',
+            },
             output: {
                 banner,
+                entryFileNames: '[name].js',
+                chunkFileNames: '[name]-[hash].js',
             },
         },
     },
