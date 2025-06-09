@@ -1,4 +1,4 @@
-import { MicroAppLifecycle } from '../types/microapp';
+import {MicroAppLifecycle} from '../types/microapp';
 
 /**
  * Custom element that loads and renders a micro app.
@@ -79,7 +79,7 @@ export class MicroTSMApplication extends HTMLElement {
 
         try {
             // Dynamically import the micro app's entry module.
-            this.app = await import(/* @vite-ignore */ name);
+            this.app = await window.MicroTSM.load(name);
             if (this.app?.mount) {
                 // Mount the micro app and pass this element as its host.
                 await this.app.mount({ domElement: this, name, route });

@@ -4,7 +4,7 @@ interface ImportMap {
 
 const EMPTY_IMPORTMAP = Object.freeze({ imports: {} });
 
-class MicroTSMModuleLoader {
+export default class MicroTSMModuleLoader {
     static importMap: ImportMap['imports'] = {};
 
     constructor() {
@@ -52,13 +52,6 @@ class MicroTSMModuleLoader {
         return import(moduleUrl);
     }
 }
-
-Object.defineProperty(window, 'MicroTSM', {
-    value: new MicroTSMModuleLoader(),
-    writable: false,
-    enumerable: false,
-    configurable: true, // Allows future modifications
-});
 
 declare global {
     interface Window {
