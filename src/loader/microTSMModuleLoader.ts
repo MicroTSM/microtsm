@@ -41,7 +41,7 @@ class MicroTSMModuleLoader {
         const callerUrl = callerMatch ? callerMatch[1] : window.location.href; // Use the first valid URL
 
         const moduleUrl =
-            specifier.startsWith('./') || specifier.startsWith('../')
+            specifier.startsWith('.') || specifier.startsWith('/')
                 ? new URL(specifier, callerUrl).href
                 : MicroTSMModuleLoader.importMap[specifier] || specifier;
 
