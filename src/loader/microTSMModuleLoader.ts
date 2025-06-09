@@ -35,16 +35,21 @@ class MicroTSMModuleLoader {
      *
      * Note: In Safari, 'import' cannot be used as a method name, so we use 'load' instead.
      */
-    async load(specifier: string): Promise<any> {
-        const moduleUrl = MicroTSMModuleLoader.importMap[specifier] || specifier;
+    async load(specifier: string) {
+        const stack = new Error().stack || '';
+        const callerMatch = stack.match(/https?:\/\/\S+/g);
+        const callerUrl = callerMatch ? callerMatch[1] : window.location.href; // Use the first valid URL
+
+        const moduleUrl =
+            specifier.startsWith('./') || specifier.startsWith('../')
+                ? new URL(specifier, callerUrl).href
+                : MicroTSMModuleLoader.importMap[specifier] || specifier;
+
         if (!moduleUrl) {
-            return Promise.reject(new Error(`Module "${specifier}" not found in the MicroTSM import map.`));
+            throw new Error(`Module '${specifier}' not found in MicroTSM import map.`);
         }
 
-        console.trace('Stack trace:');
-
-        // Delegate to dynamic import(); the browser handles caching.
-        return import(/* @microtsm-ignore-transform */ moduleUrl);
+        return import(moduleUrl);
     }
 }
 
