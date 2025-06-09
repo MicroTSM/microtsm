@@ -34,15 +34,12 @@ class MicroTSMModuleLoader {
      * @param {string} specifier - The bare module specifier.
      *
      * Note: In Safari, 'import' cannot be used as a method name, so we use 'load' instead.
+     * @param baseUrl - The base URL to use when resolving relative URLs.
      */
-    async load(specifier: string) {
+    async load(specifier: string, baseUrl = import.meta.url): Promise<any> {
         specifier = MicroTSMModuleLoader.importMap[specifier] || specifier;
-        const stack = new Error().stack || '';
-        const callerMatch = stack.match(/https?:\/\/\S+/g);
-        const callerUrl = callerMatch ? callerMatch[1] : window.location.href; // Use the first valid URL
-
         const moduleUrl =
-            specifier.startsWith('.') || specifier.startsWith('/') ? new URL(specifier, callerUrl).href : specifier;
+            specifier.startsWith('.') || specifier.startsWith('/') ? new URL(specifier, baseUrl).href : specifier;
 
         if (!moduleUrl) {
             throw new Error(`Module '${specifier}' not found in MicroTSM import map.`);
