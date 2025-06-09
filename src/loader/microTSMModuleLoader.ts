@@ -44,7 +44,7 @@ class MicroTSMModuleLoader {
         console.trace('Stack trace:');
 
         // Delegate to dynamic import(); the browser handles caching.
-        return import(moduleUrl);
+        return import(/* @microtsm-ignore-transform */ moduleUrl);
     }
 }
 
