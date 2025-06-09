@@ -2,7 +2,6 @@ import {kickstartEngine, twistThrottle} from '../layout/startLayoutEngine';
 import {gearUp} from '../importmaps/loadStyleheets';
 import {MicroTSMApplication} from '../layout/appCustomElement.ts';
 import {MicroTSMLayout} from '../layout/layoutCustomElement.ts';
-import MicroTSMModuleLoader from '../loader/microTSMModuleLoader.ts';
 
 /**
  * Type definitions for lifecycle events and route middleware
@@ -136,8 +135,6 @@ export default class MicroTSMRootApp {
             console.warn('⚠️ Engine already started!');
             return this;
         }
-
-        new MicroTSMModuleLoader();
 
         console.log('🏍️ Starting engine...');
 
