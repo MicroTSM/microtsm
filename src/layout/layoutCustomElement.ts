@@ -138,7 +138,7 @@ export class MicroTSMLayout extends HTMLElement {
         if (!hasRoutedAppMatch && defaultApp) {
             console.log(`🟢 No matches found—Mounting default app`);
             defaultApp = defaultApp as AppTemplateInfo;
-            this.insertBefore(defaultApp.template, defaultApp.nextSibling);
+            defaultApp.parent.insertBefore(defaultApp.template, defaultApp.nextSibling);
         }
     }
 
