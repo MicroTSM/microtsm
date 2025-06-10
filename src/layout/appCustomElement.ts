@@ -79,7 +79,7 @@ export class MicroTSMApplication extends HTMLElement {
 
         try {
             // Dynamically import the micro app's entry module.
-            this.app = await window.MicroTSM.load(name, import.meta.url);
+            this.app = await window.MicroTSM.load(name, location.origin); // Since this package is externalized by MicroTSM Cli, the base url should be the current origin
             if (this.app?.mount) {
                 // Mount the micro app and pass this element as its host.
                 await this.app.mount({ domElement: this, name, route });
