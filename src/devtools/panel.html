@@ -1,0 +1,461 @@
+<div
+        class="fixed bottom-4 right-4 w-[850px] max-h-[calc(100vh-32px)] flex flex-col bg-white rounded-xl shadow-2xl overflow-hidden transition-all duration-300 ease-in-out devtools-panel-compact"
+        id="devtools-panel"
+>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+
+    <header class="bg-slate-800 text-white p-3 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+            <iconify-icon icon="ic:outline-build-circle" width="24" height="24"></iconify-icon>
+            <h1 class="text-md font-semibold">MicroTSM Developer Tools</h1>
+        </div>
+        <div class="flex items-center gap-1">
+            <button
+                    class="text-white hover:bg-slate-700 p-1 h-[26px] rounded-full"
+                    id="toggle-fullscreen-btn"
+                    title="Toggle Fullscreen"
+            >
+                <iconify-icon class="text-lg" icon="mdi:fullscreen"></iconify-icon>
+            </button>
+            <button
+                    class="text-white hover:bg-slate-700 p-1 h-[26px] rounded-full"
+                    id="close-panel-btn"
+                    title="Close Panel"
+            >
+                <iconify-icon class="text-lg" icon="mdi:close"></iconify-icon>
+            </button>
+        </div>
+    </header>
+    <div class="flex flex-grow overflow-hidden">
+        <aside class="bg-slate-50 border-r border-slate-200 p-1 transition-all duration-300 ease-in-out">
+            <nav class="space-y-0.5">
+                <button
+                        class="w-full flex items-center gap-3 px-3 py-2 text-left text-sm font-medium text-slate-700 hover:bg-slate-100 rounded-md border-l-4 border-transparent transition-colors duration-150 tab-active"
+                        data-tab="import-map-overrides"
+                >
+                    <iconify-icon class="text-lg" icon="mdi:tune"></iconify-icon>
+                    <span class="tab-label">Import Map Overrides</span>
+                </button>
+                <button
+                        class="w-full flex items-center gap-3 px-3 py-2 text-left text-sm font-medium text-slate-700 hover:bg-slate-100 rounded-md border-l-4 border-transparent transition-colors duration-150"
+                        data-tab="module-loader-log"
+                >
+                    <iconify-icon class="text-lg" icon="mdi:file-document-outline"></iconify-icon>
+                    <span class="tab-label">Module Loader Log</span>
+                </button>
+                <button
+                        class="w-full flex items-center gap-3 px-3 py-2 text-left text-sm font-medium text-slate-700 hover:bg-slate-100 rounded-md border-l-4 border-transparent transition-colors duration-150"
+                        data-tab="performance-metrics"
+                >
+                    <iconify-icon class="text-lg" icon="ic:outline-speed"></iconify-icon>
+                    <span class="tab-label">Performance Metrics</span>
+                </button>
+                <button
+                        class="w-full flex items-center gap-3 px-3 py-2 text-left text-sm font-medium text-slate-700 hover:bg-slate-100 rounded-md border-l-4 border-transparent transition-colors duration-150"
+                        data-tab="contextual-information"
+                >
+                    <iconify-icon class="text-lg" icon="mdi:information-outline"></iconify-icon>
+                    <span class="tab-label">Contextual Info</span>
+                </button>
+            </nav>
+        </aside>
+        <main class="w-3/4 p-3 flex-grow overflow-y-auto">
+            <div class="tab-pane active" id="tab-content-import-map-overrides">
+                <section class="mb-6">
+                    <div class="bg-white p-3 rounded-lg shadow">
+                        <div class="flex justify-between items-center mb-3">
+                            <h2 class="text-lg font-semibold text-slate-700">Import Map Overrides</h2>
+                            <span
+                                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-700"
+                                    id="persisted-status"
+                            >
+                                <iconify-icon
+                                        class="text-base mr-1"
+                                        icon="mdi:content-save-check-outline"
+                                ></iconify-icon>
+                                Overrides Persisted
+                            </span>
+                        </div>
+                        <div class="relative mb-3">
+                            <iconify-icon
+                                    class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-base"
+                                    icon="mdi:magnify"
+                            ></iconify-icon>
+                            <input
+                                    class="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 outline-none transition-colors text-sm"
+                                    id="search-modules-input"
+                                    placeholder="Search modules by name or domain..."
+                                    type="text"
+                            />
+                        </div>
+                        <div class="table-container rounded-lg border border-slate-200">
+                            <table class="min-w-full divide-y divide-slate-200 text-sm">
+                                <thead class="bg-slate-50 sticky top-0 z-10">
+                                <tr>
+                                    <th
+                                            class="px-3 py-2.5 text-left text-xs font-medium text-slate-500 uppercase tracking-wider"
+                                            scope="col"
+                                    >
+                                        Module Name
+                                    </th>
+                                    <th
+                                            class="px-3 py-2.5 text-left text-xs font-medium text-slate-500 uppercase tracking-wider"
+                                            scope="col"
+                                    >
+                                        Original URL
+                                    </th>
+                                    <th
+                                            class="px-3 py-2.5 text-left text-xs font-medium text-slate-500 uppercase tracking-wider"
+                                            scope="col"
+                                    >
+                                        Override URL
+                                    </th>
+                                    <th
+                                            class="px-3 py-2.5 text-left text-xs font-medium text-slate-500 uppercase tracking-wider"
+                                            scope="col"
+                                    >
+                                        Load Time
+                                    </th>
+                                    <th
+                                            class="px-3 py-2.5 text-left text-xs font-medium text-slate-500 uppercase tracking-wider"
+                                            scope="col"
+                                    >
+                                        Status
+                                    </th>
+                                    <th
+                                            class="px-3 py-2.5 text-left text-xs font-medium text-slate-500 uppercase tracking-wider"
+                                            scope="col"
+                                    >
+                                        Actions
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-slate-200" id="modules-tbody">
+                                <tr>
+                                    <td class="px-3 py-2.5 whitespace-nowrap text-slate-700 font-medium">
+                                        @microtsm/core
+                                    </td>
+                                    <td
+                                            class="px-3 py-2.5 whitespace-nowrap text-slate-500 text-xs max-w-[100px] truncate"
+                                            title="https://cdn.jsdelivr.net/npm/@microtsm/core@1.2.3/dist/index.js"
+                                    >
+                                        https://cdn.jsdelivr.net/npm/@microtsm/core@1.2.3/dist/index.js
+                                    </td>
+                                    <td class="px-3 py-2.5 whitespace-nowrap">
+                                        <input
+                                                class="module-override-url w-full px-2 py-1.5 border border-slate-300 rounded-md focus:ring-1 focus:ring-sky-500 focus:border-sky-500 outline-none transition-colors text-xs"
+                                                placeholder="Enter override URL"
+                                                type="text"
+                                                value="http://localhost:8080/core.js"
+                                        />
+                                    </td>
+                                    <td class="px-3 py-2.5 whitespace-nowrap text-slate-500">120ms</td>
+                                    <td class="px-3 py-2.5 whitespace-nowrap">
+                                            <span
+                                                    class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-700"
+                                            >
+                                                <iconify-icon
+                                                        class="text-sm mr-1"
+                                                        icon="mdi:check-circle-outline"
+                                                ></iconify-icon>
+                                                Loaded
+                                            </span>
+                                    </td>
+                                    <td class="px-3 py-2.5 whitespace-nowrap space-x-1.5">
+                                        <button
+                                                class="save-override-btn text-sky-600 hover:text-sky-800"
+                                                title="Save Override"
+                                        >
+                                            <iconify-icon
+                                                    class="text-lg"
+                                                    icon="mdi:content-save-outline"
+                                            ></iconify-icon>
+                                        </button>
+                                        <button
+                                                class="reset-override-btn text-slate-500 hover:text-slate-700"
+                                                title="Reset to Default"
+                                        >
+                                            <iconify-icon class="text-lg" icon="mdi:undo"></iconify-icon>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="px-3 py-2.5 whitespace-nowrap text-slate-700 font-medium">
+                                        @microtsm/utils
+                                    </td>
+                                    <td
+                                            class="px-3 py-2.5 whitespace-nowrap text-slate-500 text-xs max-w-[100px] truncate"
+                                            title="https://cdn.jsdelivr.net/npm/@microtsm/utils@0.5.1/dist/index.js"
+                                    >
+                                        https://cdn.jsdelivr.net/npm/@microtsm/utils@0.5.1/dist/index.js
+                                    </td>
+                                    <td class="px-3 py-2.5 whitespace-nowrap">
+                                        <input
+                                                class="module-override-url w-full px-2 py-1.5 border border-slate-300 rounded-md focus:ring-1 focus:ring-sky-500 focus:border-sky-500 outline-none transition-colors text-xs"
+                                                placeholder="Enter override URL"
+                                                type="text"
+                                        />
+                                    </td>
+                                    <td class="px-3 py-2.5 whitespace-nowrap text-slate-500">-</td>
+                                    <td class="px-3 py-2.5 whitespace-nowrap">
+                                            <span
+                                                    class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-700"
+                                            >
+                                                <iconify-icon class="text-sm mr-1" icon="mdi:timer-sand"></iconify-icon>
+                                                Pending
+                                            </span>
+                                    </td>
+                                    <td class="px-3 py-2.5 whitespace-nowrap space-x-1.5">
+                                        <button
+                                                class="save-override-btn text-sky-600 hover:text-sky-800"
+                                                title="Save Override"
+                                        >
+                                            <iconify-icon
+                                                    class="text-lg"
+                                                    icon="mdi:content-save-outline"
+                                            ></iconify-icon>
+                                        </button>
+                                        <button
+                                                class="reset-override-btn text-slate-500 hover:text-slate-700"
+                                                title="Reset to Default"
+                                        >
+                                            <iconify-icon class="text-lg" icon="mdi:undo"></iconify-icon>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="px-3 py-2.5 whitespace-nowrap text-slate-700 font-medium">
+                                        @microtsm/ui-components
+                                    </td>
+                                    <td
+                                            class="px-3 py-2.5 whitespace-nowrap text-slate-500 text-xs max-w-[100px] truncate"
+                                            title="https://cdn.jsdelivr.net/npm/@microtsm/ui-components@2.0.0/dist/main.js"
+                                    >
+                                        https://cdn.jsdelivr.net/npm/@microtsm/ui-components@2.0.0/dist/main.js
+                                    </td>
+                                    <td class="px-3 py-2.5 whitespace-nowrap">
+                                        <input
+                                                class="module-override-url w-full px-2 py-1.5 border border-slate-300 rounded-md focus:ring-1 focus:ring-sky-500 focus:border-sky-500 outline-none transition-colors text-xs"
+                                                placeholder="Enter override URL"
+                                                type="text"
+                                                value="http://localhost:9001/ui.js"
+                                        />
+                                    </td>
+                                    <td class="px-3 py-2.5 whitespace-nowrap text-slate-500">-</td>
+                                    <td class="px-3 py-2.5 whitespace-nowrap">
+                                            <span
+                                                    class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-700"
+                                            >
+                                                <iconify-icon
+                                                        class="text-sm mr-1"
+                                                        icon="mdi:alert-circle-outline"
+                                                ></iconify-icon>
+                                                Error
+                                            </span>
+                                    </td>
+                                    <td class="px-3 py-2.5 whitespace-nowrap space-x-1.5">
+                                        <button
+                                                class="save-override-btn text-sky-600 hover:text-sky-800"
+                                                title="Save Override"
+                                        >
+                                            <iconify-icon
+                                                    class="text-lg"
+                                                    icon="mdi:content-save-outline"
+                                            ></iconify-icon>
+                                        </button>
+                                        <button
+                                                class="reset-override-btn text-slate-500 hover:text-slate-700"
+                                                title="Reset to Default"
+                                        >
+                                            <iconify-icon class="text-lg" icon="mdi:undo"></iconify-icon>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="px-3 py-2.5 whitespace-nowrap text-slate-700 font-medium">
+                                        @another/module
+                                    </td>
+                                    <td
+                                            class="px-3 py-2.5 whitespace-nowrap text-slate-500 text-xs max-w-[100px] truncate"
+                                            title="https://cdn.jsdelivr.net/npm/@another/module@1.0.0/index.js"
+                                    >
+                                        https://cdn.jsdelivr.net/npm/@another/module@1.0.0/index.js
+                                    </td>
+                                    <td class="px-3 py-2.5 whitespace-nowrap">
+                                        <input
+                                                class="module-override-url w-full px-2 py-1.5 border border-slate-300 rounded-md focus:ring-1 focus:ring-sky-500 focus:border-sky-500 outline-none transition-colors text-xs"
+                                                placeholder="Enter override URL"
+                                                type="text"
+                                        />
+                                    </td>
+                                    <td class="px-3 py-2.5 whitespace-nowrap text-slate-500">80ms</td>
+                                    <td class="px-3 py-2.5 whitespace-nowrap">
+                                            <span
+                                                    class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-700"
+                                            >
+                                                <iconify-icon
+                                                        class="text-sm mr-1"
+                                                        icon="mdi:check-circle-outline"
+                                                ></iconify-icon>
+                                                Loaded
+                                            </span>
+                                    </td>
+                                    <td class="px-3 py-2.5 whitespace-nowrap space-x-1.5">
+                                        <button
+                                                class="save-override-btn text-sky-600 hover:text-sky-800"
+                                                title="Save Override"
+                                        >
+                                            <iconify-icon
+                                                    class="text-lg"
+                                                    icon="mdi:content-save-outline"
+                                            ></iconify-icon>
+                                        </button>
+                                        <button
+                                                class="reset-override-btn text-slate-500 hover:text-slate-700"
+                                                title="Reset to Default"
+                                        >
+                                            <iconify-icon class="text-lg" icon="mdi:undo"></iconify-icon>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="px-3 py-2.5 whitespace-nowrap text-slate-700 font-medium">
+                                        @yet-another/lib
+                                    </td>
+                                    <td
+                                            class="px-3 py-2.5 whitespace-nowrap text-slate-500 text-xs max-w-[100px] truncate"
+                                            title="https://cdn.jsdelivr.net/npm/@yet-another/lib@3.2.1/main.js"
+                                    >
+                                        https://cdn.jsdelivr.net/npm/@yet-another/lib@3.2.1/main.js
+                                    </td>
+                                    <td class="px-3 py-2.5 whitespace-nowrap">
+                                        <input
+                                                class="module-override-url w-full px-2 py-1.5 border border-slate-300 rounded-md focus:ring-1 focus:ring-sky-500 focus:border-sky-500 outline-none transition-colors text-xs"
+                                                placeholder="Enter override URL"
+                                                type="text"
+                                        />
+                                    </td>
+                                    <td class="px-3 py-2.5 whitespace-nowrap text-slate-500">-</td>
+                                    <td class="px-3 py-2.5 whitespace-nowrap">
+                                            <span
+                                                    class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-700"
+                                            >
+                                                <iconify-icon
+                                                        class="text-sm mr-1"
+                                                        icon="mdi:clock-outline"
+                                                ></iconify-icon>
+                                                Not Loaded
+                                            </span>
+                                    </td>
+                                    <td class="px-3 py-2.5 whitespace-nowrap space-x-1.5">
+                                        <button
+                                                class="save-override-btn text-sky-600 hover:text-sky-800"
+                                                title="Save Override"
+                                        >
+                                            <iconify-icon
+                                                    class="text-lg"
+                                                    icon="mdi:content-save-outline"
+                                            ></iconify-icon>
+                                        </button>
+                                        <button
+                                                class="reset-override-btn text-slate-500 hover:text-slate-700"
+                                                title="Reset to Default"
+                                        >
+                                            <iconify-icon class="text-lg" icon="mdi:undo"></iconify-icon>
+                                        </button>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            <div class="tab-pane hidden" id="tab-content-module-loader-log">
+                <section class="mb-6">
+                    <div class="bg-white p-3 rounded-lg shadow">
+                        <h2 class="text-lg font-semibold text-slate-700 mb-3">Module Loader Debug Log</h2>
+                        <div
+                                class="bg-slate-900 text-slate-100 p-3 rounded-lg font-mono text-xs max-h-48 overflow-y-auto"
+                        >
+                            <p><span class="text-sky-400">[INFO]</span> MicroTSM DevTools activated.</p>
+                            <p>
+                                <span class="text-green-400">[LOAD]</span> Module @microtsm/core requested from
+                                <span class="text-yellow-300"
+                                >https://cdn.jsdelivr.net/npm/@microtsm/core@1.2.3/dist/index.js</span
+                                >
+                            </p>
+                            <p>
+                                <span class="text-green-400">[LOAD]</span> Module @microtsm/core loaded in
+                                <span class="text-purple-400">120ms</span>.
+                            </p>
+                            <p>
+                                <span class="text-green-400">[LOAD]</span> Module @microtsm/utils requested from
+                                <span class="text-yellow-300"
+                                >https://cdn.jsdelivr.net/npm/@microtsm/utils@0.5.1/dist/index.js</span
+                                >
+                            </p>
+                            <p>
+                                <span class="text-yellow-400">[WARN]</span> Override for @microtsm/utils:
+                                <span class="text-yellow-300">http://localhost:8081/utils.js</span>
+                            </p>
+                            <p>
+                                <span class="text-red-400">[ERROR]</span> Failed to load module @microtsm/ui-components:
+                                NetworkError.
+                                <a class="text-sky-400 underline hover:text-sky-300" href="#">View stack trace</a>
+                            </p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            <div class="tab-pane hidden" id="tab-content-performance-metrics">
+                <section>
+                    <div class="bg-white p-3 rounded-lg shadow">
+                        <h2 class="text-lg font-semibold text-slate-700 mb-3">Performance Metrics</h2>
+                        <div class="bg-slate-50 p-3 rounded-lg space-y-2 text-sm">
+                            <div class="flex justify-between">
+                                <span class="text-slate-600">Total Modules Loaded:</span>
+                                <span class="font-medium text-slate-800">1 / 3</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-slate-600">Overall Load Time:</span>
+                                <span class="font-medium text-slate-800">250ms</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-slate-600">Average Load Time:</span>
+                                <span class="font-medium text-slate-800">120ms</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            <div class="tab-pane hidden" id="tab-content-contextual-information">
+                <section>
+                    <div class="bg-white p-3 rounded-lg shadow">
+                        <h2 class="text-lg font-semibold text-slate-700 mb-3">Contextual Information</h2>
+                        <div class="bg-slate-50 p-3 rounded-lg space-y-2 text-sm">
+                            <div class="flex justify-between">
+                                <span class="text-slate-600">Base URL (import.meta.url):</span>
+                            </div>
+                            <div class="bg-white p-2 rounded text-xs text-slate-700 truncate">
+                                http://localhost:3000/app/
+                            </div>
+                            <div class="flex justify-between pt-1">
+                                <span class="text-slate-600">Active Local Storage Key:</span>
+                            </div>
+                            <div class="bg-white p-2 rounded text-xs text-slate-700 truncate">MicroTSM_DEV=1</div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+    <footer class="bg-slate-100 text-slate-500 p-2.5 text-xs text-center border-t border-slate-200">
+        MicroTSM Developer Tools v1.0.0 © 2025. For development use only.
+    </footer>
+</div>
+
+

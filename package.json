@@ -19,7 +19,14 @@
     "module": "./dist/main.js",
     "types": "./dist/main.d.ts",
     "exports": {
-        ".": "./dist/main.js"
+        ".": {
+            "types": "./dist/main.d.ts",
+            "import": "./dist/main.js"
+        },
+        "./devtools": {
+            "types": "./dist/devtools/index.d.ts",
+            "import": "./dist/devtools/index.js"
+        }
     },
     "scripts": {
         "dev": "microtsm",
@@ -35,6 +42,6 @@
         "vite-plugin-dts": "^4.5.4"
     },
     "dependencies": {
-        "@microtsm/cli": "^0.0.41"
+        "@microtsm/cli": "^0.0.66"
     }
 }

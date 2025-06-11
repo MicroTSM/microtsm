@@ -20,6 +20,8 @@ export default defineConfig({
             input: {
                 'main': './src/main.ts',
                 'module-loader': './src/loader/microTSMModuleLoader.ts',
+                'devtools/index': './src/devtools/index.ts',
+                'devtools/panel': './src/devtools/panel.ts',
             },
             output: {
                 banner,

@@ -1,4 +1,4 @@
-import {MicroAppLifecycle} from '../types/microapp';
+import { MicroAppLifecycle } from '../types/microapp';
 
 /**
  * Custom element that loads and renders a micro app.
