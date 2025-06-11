@@ -1,25 +1,10 @@
-import panelHtml from './panel.html?raw';
-import panelCss from './panel.css?raw';
+import { createApp } from 'vue';
+import DevToolsPanel from './DevToolsPanel.vue';
 
-(async () => {
-    const iconifyScript = document.createElement('script');
-    iconifyScript.src = 'https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js';
-    document.head.appendChild(iconifyScript);
+import './style.css';
 
-    const wrapper = document.createElement('div');
-    wrapper.innerHTML = panelHtml;
+const iconifyScript = document.createElement('script');
+iconifyScript.src = 'https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js';
+document.head.appendChild(iconifyScript);
 
-    const panel = wrapper.querySelector('#devtools-panel')!;
-
-    const styleTag = document.createElement('style');
-    styleTag.innerHTML = panelCss;
-    panel.prepend(styleTag);
-
-    const scriptTag = document.createElement('script');
-    const panelUrl = import.meta.url.replace(/[^/]+\.js$/, 'panel.js');
-    const res = await fetch(panelUrl);
-    scriptTag.innerHTML = await res.text();
-    panel.prepend(scriptTag);
-
-    document.body.prepend(wrapper.children[0]);
-})();
+createApp(DevToolsPanel).mount('body');

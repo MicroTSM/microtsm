@@ -1,4 +1,4 @@
-import { MicroTSMApplication } from './appCustomElement.ts';
+import { MicroTSMApplication } from '../app/appCustomElement.ts';
 import crypto from '../utils/crypto.ts';
 
 export interface AppTemplateInfo {
@@ -131,6 +131,7 @@ export class MicroTSMLayout extends HTMLElement {
             } else if (!shouldBeMounted && currentInstance) {
                 console.log(`🔴 Unmounting app with route: ${route}`);
                 currentInstance.remove();
+                name && window.MicroTSM.unload(name);
             }
         }
 

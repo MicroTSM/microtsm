@@ -85,6 +85,7 @@ export class MicroTSMApplication extends HTMLElement {
                 await this.app.mount({ domElement: this, name, route });
             }
         } catch (error) {
+            window.MicroTSM.errorLoadedModules.push(name);
             console.error(`❌ Failed to load Micro App: ${name}`, error);
         }
     }

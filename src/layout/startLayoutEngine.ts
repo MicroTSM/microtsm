@@ -1,5 +1,5 @@
 import layoutCss from './layout.css?raw';
-import { MicroTSMLayout } from './layoutCustomElement';
+import {MicroTSMLayout} from './layoutCustomElement';
 
 /**
  * Kick-starts MicroTSM by registering custom elements and injecting styles.
@@ -9,7 +9,7 @@ import { MicroTSMLayout } from './layoutCustomElement';
 export async function kickstartEngine(): Promise<void> {
     console.log('🏍️ Kick-starting engine with layout custom elements:');
     if (!customElements.get('microtsm-layout')) await import('./layoutCustomElement');
-    if (!customElements.get('microtsm-application')) await import('./appCustomElement');
+    if (!customElements.get('microtsm-application')) await import('../app/appCustomElement');
 
     const style = document.createElement('style');
     style.innerHTML = layoutCss;
