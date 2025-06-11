@@ -1,15 +1,18 @@
-import {defineConfig} from '@microtsm/cli';
+import { defineConfig } from '@microtsm/cli';
 import dtsPlugin from 'vite-plugin-dts';
 import pkg from './package.json';
 import pluginVue from '@vitejs/plugin-vue';
 
 const banner = (entry: string) => `/**
- * ${pkg.name}${entry != 'main' ? entry.replace('index', '') : ''} v${pkg.version}
+ * ${pkg.name}${entry != 'main' ? '/' + entry.replace('/index', '') : ''} v${pkg.version}
  * (c) ${new Date().getFullYear()} ${pkg.author.name}
  * @license ${pkg.license}
  */`;
 
 export default defineConfig({
+    define: {
+        'process.env.NODE_ENV': JSON.stringify('production'),
+    },
     build: {
         lib: {
             entry: './src/main.ts',
