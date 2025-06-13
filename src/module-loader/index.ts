@@ -51,7 +51,7 @@ class MicroTSMModuleLoader {
 
     set importMapOverrides(value: ImportMap['imports']) {
         const stack = new Error().stack || '';
-        if (!stack.includes('devtools')) {
+        if (!stack.includes('devtools') && !stack.includes('ImportMapOverrides')) {
             throw new Error('ImportMap Overrides can only be set through devtools');
         }
 

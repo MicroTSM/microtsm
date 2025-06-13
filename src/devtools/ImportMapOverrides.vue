@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue';
+import eventBus from '../event-bus';
 
 interface Module {
     name: string;
@@ -8,29 +9,29 @@ interface Module {
     status: string;
     loadTime?: string;
     persisted?: boolean;
+    temporaryOverrideUrl: string;
 }
-
-const persistedIcon = 'mdi:content-save-check-outline';
-const notPersistedIcon = 'mdi:alert-circle-outline';
 
 onMounted(() => {
     const { importMap, importMapOverrides, moduleLoadTimes } = window.MicroTSM;
-    modules.value = Object.keys(importMap)
-        .reduce(
+    modules.value = Object.values(
+        Object.keys(importMap).reduce(
             (map, name) => {
                 map[name] = {
                     name,
                     originalUrl: importMap[name],
                     overrideUrl: importMapOverrides[name] || '',
+                    temporaryOverrideUrl: importMapOverrides[name] || '',
                     loadTime: isModuleLoaded(name) ? `${moduleLoadTimes[name]}ms` : '-',
                     status: getModuleLoadingsStatus(name),
+                    persisted: true,
                 };
 
                 return map;
             },
             {} as Record<string, Module>,
-        )
-        .valueOf() as Module[];
+        ),
+    );
 });
 
 const searchTerm = ref('');
@@ -59,6 +60,8 @@ const filteredModules = computed(() =>
     ),
 );
 
+const allPersisted = computed(() => modules.value.every((m) => m.persisted));
+
 const isModuleLoaded = (name: string) => {
     return !!document.querySelector(`microtsm-application[name="${name}"]`);
 };
@@ -66,32 +69,74 @@ const isModuleLoaded = (name: string) => {
 const getModuleLoadingsStatus = (name: string) => {
     if (isModuleLoaded(name) && window.MicroTSM.moduleLoadTimes[name] == undefined) return 'Pending';
     else if (window.MicroTSM.errorLoadedModules.includes(name)) return 'Error';
-    return isModuleLoaded(name) ? 'Loaded' : 'Not Loaded';
+    return isModuleLoaded(name) ? 'Loaded' : 'Idle';
 };
 
 const getStatusIcon = (status: string) => {
     switch (status) {
         case 'Loaded':
-            return 'mdi:check-circle-outline';
+            return 'check_circle';
         case 'Pending':
-            return 'mdi:timer-sand';
+            return 'hourglass_empty';
         case 'Error':
-            return 'mdi:alert-circle-outline';
-        case 'Not Loaded':
-            return 'mdi:clock-outline';
+            return 'error';
+        case 'Idle':
+            return 'watch_later';
     }
 };
 
-const saveOverride = (index: number) => {
-    const { overrideUrl, name } = modules.value[index];
-    window.MicroTSM.importMapOverrides = {
-        ...window.MicroTSM.importMapOverrides,
-        [name]: overrideUrl,
-    };
+const onBeforeSaveOverride = (event: MouseEvent, module: Module, index: number) => {
+    const target = event.target as HTMLElement;
+    const dialogId = `saveOverride`;
+
+    eventBus.emit('devtools:confirm-action', {
+        id: dialogId,
+        title: 'Save Override',
+        message: `Save override for <strong>${module.name}</strong> to:
+<code class="text-xs bg-gray-100 p-1 rounded inline-flex w-max my-1">${module.overrideUrl || '(cleared)'}</code>?`,
+        onConfirm: () => {
+            const saveIcon = target.tagName === 'SPAN' ? target : target?.querySelector('span');
+
+            if (saveIcon) {
+                saveIcon.textContent = 'check';
+                saveIcon.classList.add('text-[var(--status-success-text)]');
+                target.classList.remove('text-[var(--brand-primary)]');
+                setTimeout(() => {
+                    saveIcon.textContent = 'save';
+                    saveIcon.classList.remove('text-[var(--status-success-text)]');
+                    target.classList.add('text-[var(--brand-primary)]');
+                }, 1500);
+            }
+
+            saveOverride(index);
+        },
+    });
 };
 
+const saveOverride = (index: number) => {
+    const { temporaryOverrideUrl, name } = modules.value[index];
+    window.MicroTSM.importMapOverrides = {
+        ...window.MicroTSM.importMapOverrides,
+        [name]: temporaryOverrideUrl,
+    };
+
+    modules.value[index].overrideUrl = temporaryOverrideUrl;
+    modules.value[index].persisted = true;
+};
+
+const onBeforeResetOverrides = (_: MouseEvent, module: Module, index: number) => {
+    const dialogId = `resetOverride`;
+    eventBus.emit('devtools:confirm-action', {
+        id: dialogId,
+        title: 'Reset Override',
+        message: `Reset override for <strong>${module.name}</strong>? This will clear any custom URL.`,
+        onConfirm: () => resetOverride(index),
+    });
+};
 const resetOverride = (index: number) => {
     modules.value[index].overrideUrl = '';
+    modules.value[index].temporaryOverrideUrl = '';
+    modules.value[index].persisted = true;
     const { name } = modules.value[index];
     window.MicroTSM.importMapOverrides = {
         ...window.MicroTSM.importMapOverrides,
@@ -99,92 +144,191 @@ const resetOverride = (index: number) => {
     };
 };
 
+const changed = (module: Module) => {
+    return module.overrideUrl !== module.temporaryOverrideUrl;
+};
+
+const overridden = (module: Module) => {
+    return module.overrideUrl !== '';
+};
+
+const onInputOverrides = (module: Module) => {
+    if (changed(module)) module.persisted = false;
+};
+
 defineExpose({ persistedStatus });
 </script>
 
 <template>
-    <div class="relative mb-3">
-        <iconify-icon
-            class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-base"
-            icon="mdi:magnify"
-        ></iconify-icon>
-        <input
-            class="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 outline-none transition-colors text-sm"
-            v-model="searchTerm"
-            placeholder="Search modules by name or domain..."
-            type="text"
-        />
-    </div>
-    <div class="table-container rounded-lg border border-slate-200">
-        <table class="min-w-full divide-y divide-slate-200 text-sm">
-            <thead class="bg-slate-50 sticky top-0 z-10">
-                <tr
-                    v-for="column in ['Module Name', 'Original URL', 'Override URL', 'Load Time', 'Status', 'Actions']"
-                    :key="column"
-                >
-                    <th
-                        class="px-3 py-2.5 text-left text-xs font-medium text-slate-500 uppercase tracking-wider"
-                        scope="col"
-                    >
-                        {{ column }}
-                    </th>
-                </tr>
-            </thead>
+    <section class="tab-pane active" id="tab-content-import-map-overrides">
+        <div class="flex justify-between items-center mb-3">
+            <h2 class="section-title">Import Map Overrides</h2>
+            <span
+                :class="[
+                    'status-badge',
+                    {
+                        'status-badge-green': allPersisted,
+                        'status-badge-yellow': !allPersisted,
+                    },
+                ]"
+                id="persisted-status"
+            >
+                <span class="material-icons-round text-sm">{{ allPersisted ? 'save' : 'warning' }}</span
+                >{{ allPersisted ? 'Overrides Persisted' : 'Changes Not Persisted' }}
+            </span>
+        </div>
 
-            <tbody class="bg-white divide-y divide-slate-200" id="modules-tbody">
-                <tr v-for="(module, index) of filteredModules" :key="module.name">
-                    <td class="table-cell text-slate-700 font-medium">{{ module.name }}</td>
-                    <td class="table-cell text-xs max-w-[100px] truncate" :title="module.originalUrl">
-                        {{ module.originalUrl }}
-                    </td>
-                    <td class="table-cell">
-                        <input
-                            v-model="module.overrideUrl"
-                            class="w-full px-2 py-1.5 border border-slate-300 rounded-md outline-none transition-colors text-xs"
-                        />
-                    </td>
-                    <td class="table-cell text-slate-500">{{ module.loadTime ?? '-' }}</td>
-                    <td class="table-cell">
-                        <span
-                            class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium"
-                            :class="{
-                                'bg-green-100 text-green-700': module.status === 'Loaded',
-                                'bg-yellow-100 text-yellow-700': module.status === 'Pending',
-                                'bg-red-100 text-red-700': module.status === 'Error',
-                                'bg-slate-100 text-slate-700': module.status === 'Not Loaded',
-                            }"
+        <div class="search-input-container mb-3">
+            <span class="material-icons-outlined">search</span>
+            <input
+                class="w-full"
+                id="search-modules-input"
+                v-model="searchTerm"
+                placeholder="Search modules by name or domain..."
+                type="search"
+            />
+        </div>
+        <div class="table-container">
+            <table class="min-w-full">
+                <thead>
+                    <tr>
+                        <th scope="col">Module Name</th>
+                        <th scope="col">Original URL</th>
+                        <th scope="col">Override URL</th>
+                        <th class="w-24" scope="col">Load Time</th>
+                        <th class="w-32" scope="col">Status</th>
+                        <th class="w-28 text-center" scope="col">Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody id="modules-tbody">
+                    <tr v-for="(module, index) of filteredModules" :key="module.name">
+                        <td class="font-medium text-[var(--text-primary)]">{{ module.name }}</td>
+                        <td
+                            class="text-xs max-w-[120px] truncate text-[var(--text-tertiary)]"
+                            :title="module.originalUrl"
                         >
-                            <iconify-icon :icon="getStatusIcon(module.status)" class="text-sm mr-1"></iconify-icon>
-                            {{ module.status }}
-                        </span>
-                    </td>
-                    <td class="table-cell space-x-1.5">
-                        <button @click="saveOverride(index)" class="text-sky-600 hover:text-sky-800">
-                            <iconify-icon
-                                :icon="module.persisted ? persistedIcon : notPersistedIcon"
-                                class="text-lg"
-                            ></iconify-icon>
-                        </button>
-
-                        <button @click="resetOverride(index)" class="text-slate-500 hover:text-slate-700">
-                            <iconify-icon icon="mdi:undo" class="text-lg"></iconify-icon>
-                        </button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+                            {{ module.originalUrl }}
+                        </td>
+                        <td>
+                            <input
+                                class="module-override-url w-full"
+                                placeholder="Enter override URL"
+                                type="text"
+                                v-model="module.temporaryOverrideUrl"
+                                @input="onInputOverrides(module)"
+                            />
+                        </td>
+                        <td class="text-[var(--text-tertiary)] text-xs">{{ module.loadTime ?? '-' }}</td>
+                        <td>
+                            <span
+                                class="status-badge"
+                                :class="{
+                                    'status-badge-green': module.status === 'Loaded',
+                                    'status-badge-yellow': module.status === 'Pending',
+                                    'status-badge-red': module.status === 'Error',
+                                    'status-badge-gray': module.status === 'Not Loaded',
+                                }"
+                            >
+                                <span class="material-icons-round text-sm">{{ getStatusIcon(module.status) }}</span>
+                                {{ module.status }}
+                            </span>
+                        </td>
+                        <td class="text-center space-x-1.5">
+                            <button
+                                :disabled="!changed(module)"
+                                :class="[
+                                    'icon-button text-[var(--brand-primary)]',
+                                    {
+                                        'opacity-60': !changed(module),
+                                    },
+                                ]"
+                                :title="!changed(module) ? 'No Changes to Save' : 'Save Override'"
+                                @click="onBeforeSaveOverride($event, module, index)"
+                            >
+                                <span class="material-icons-outlined text-base">save</span>
+                            </button>
+                            <button
+                                :class="[
+                                    'icon-button',
+                                    {
+                                        'opacity-60': !overridden(module),
+                                    },
+                                ]"
+                                :disabled="!overridden(module)"
+                                title="Reset to Default"
+                                @click="onBeforeResetOverrides($event, module, index)"
+                            >
+                                <span class="material-icons-outlined text-base">undo</span>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
 </template>
 
 <style>
-@reference "tailwindcss";
-
-.table-container {
-    max-height: 300px;
-    overflow-y: auto;
+.search-input-container {
+    position: relative;
 }
 
-.table-cell {
-    @apply px-3 py-2.5 whitespace-nowrap;
+.search-input-container .material-icons-outlined {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-tertiary);
+    font-size: 16px;
+}
+
+.search-input-container input[type='search'] {
+    padding-left: 34px;
+}
+
+table {
+    font-size: 0.875rem;
+    border-collapse: separate;
+    border-spacing: 0;
+    width: 100%;
+}
+
+th {
+    background-color: var(--table-header-bg);
+    color: var(--text-secondary);
+    font-weight: 500;
+    text-transform: none;
+    letter-spacing: normal;
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border-neutral);
+    text-align: left;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+th:first-child {
+    border-top-left-radius: 0;
+}
+
+th:last-child {
+    border-top-right-radius: 0;
+}
+
+td {
+    color: var(--text-primary);
+    padding: 8px 12px;
+    border-bottom: 1px solid #eaeaea;
+    background-color: var(--surface-base);
+    height: auto;
+}
+
+tbody tr:last-child td {
+    border-bottom: none;
+}
+
+tbody tr:hover td {
+    background-color: #f0f6ff;
 }
 </style>

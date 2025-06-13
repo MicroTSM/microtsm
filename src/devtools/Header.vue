@@ -1,37 +1,41 @@
 <script setup lang="ts">
-import { defineEmits, defineProps } from 'vue';
+import { inject, Ref } from 'vue';
 
 defineProps<{ fullscreen: boolean }>();
-const emit = defineEmits(['toggle']);
+const emit = defineEmits(['toggle', 'close']);
 
-const closePanel = () => {
-    document.getElementById('devtools-panel')!.style.display = 'none';
-};
+let pageUrl = window.location.href;
+let pageTitle = document.title;
+
+const fullscreen = inject<Ref<boolean>>('fullscreen');
 </script>
 
 <template>
-    <header class="bg-slate-800 text-white p-3 flex items-center justify-between" fullscreen>
-        <div class="flex items-center gap-2">
-            <iconify-icon icon="ic:outline-build-circle" width="24" height="24"></iconify-icon>
-            <h3 class="text-md font-semibold">MicroTSM Developer Tools</h3>
+    <header class="header relative" fullscreen>
+        <div class="app-bar-left-title-container">
+            <span class="material-icons-outlined text-[var(--brand-primary)] text-2xl">build_circle</span>
+            <h1 class="app-bar-title">DevTools Panel</h1>
         </div>
-        <div class="flex items-center gap-1">
+
+        <div class="app-bar-center-info-container">
+            <div class="app-bar-page-title" title="Current Page Title Displayed Here">{{ pageTitle }}</div>
+            <div class="app-bar-page-url truncate max-w-[250px]" :title="pageUrl">
+                {{ pageUrl }}
+            </div>
+        </div>
+        <div class="flex items-center gap-2">
             <button
-                title="Toggle Fullscreen"
-                class="text-white hover:bg-slate-700 p-1 h-[26px] rounded-full"
+                class="icon-button"
+                id="toggle-fullscreen-btn"
                 @click="emit('toggle')"
+                :title="!fullscreen ? 'Enter Fullscreen' : 'Exit Fullscreen'"
             >
-                <iconify-icon
-                    class="text-lg"
-                    :icon="fullscreen ? 'mdi:fullscreen-exit' : 'mdi:fullscreen'"
-                ></iconify-icon>
+                <span class="material-icons-outlined text-xl" id="fullscreen-icon">
+                    {{ !fullscreen ? 'fullscreen' : 'fullscreen_exit' }}
+                </span>
             </button>
-            <button
-                title="Close Panel"
-                class="text-white hover:bg-slate-700 p-1 h-[26px] rounded-full"
-                @click="closePanel"
-            >
-                <iconify-icon class="text-lg" icon="mdi:close"></iconify-icon>
+            <button class="icon-button" @click="emit('close')" title="Close Panel">
+                <span class="material-icons-outlined text-xl">close</span>
             </button>
         </div>
     </header>

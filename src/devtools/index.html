@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MicroTSM DevTools Development</title>
+    <script type="module" src="http://localhost:4173/module-loader/index.js"></script>
+    <script type="microtsm-importmap">
+        {
+          "imports": {
+            "microtsm": "https://cdn.jsdelivr.net/npm/microtsm@0.0.38/dist/main.min.js",
+            "@microtsm/vue": "https://cdn.jsdelivr.net/npm/@microtsm/vue@0.0.23/dist/microtsm-vue.prod.js",
+            "@microtsm/mfe-navbar": "/modules/navbar/js/app.js",
+            "@microtsm/mfe-sidebar": "/modules/sidebar/js/app.js",
+            "@microtsm/mfe-footer": "/modules/footer/js/app.js"
+          }
+        }
+    </script>
+</head>
+<body>
+<script type="module" src="./index.ts"></script>
+</body>
+</html>
