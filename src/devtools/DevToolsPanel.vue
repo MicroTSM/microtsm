@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { onMounted, provide, ref, useTemplateRef } from 'vue';
+import { nextTick, onMounted, onUnmounted, provide, ref, useTemplateRef } from 'vue';
 import Header from './Header.vue';
 import Sidebar from './Sidebar.vue';
 import MainContent from './MainContent.vue';
 import Footer from './Footer.vue';
 import ConfirmDialog from './ConfirmDialog.vue';
+import tabs from './tabs.ts';
 
 onMounted(() => {
     injectScript('https://cdn.tailwindcss.com?plugins=forms,container-queries');
@@ -16,12 +17,17 @@ onMounted(() => {
     injectLink('https://fonts.googleapis.com/icon?family=Material+Icons+Round', 'stylesheet');
 
     window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keydown', handleKeyPress);
+});
+
+onUnmounted(() => {
+    window.removeEventListener('keydown', handleKeyPress);
 });
 
 const panel = useTemplateRef('panel');
 const panelVisible = ref(false);
 const fullscreen = ref(false);
-const activeTab = ref();
+const activeTab = ref(tabs[0]);
 
 provide('fullscreen', fullscreen);
 
@@ -45,16 +51,31 @@ const injectScript = (src: string) => {
 
 const togglePanel = (open?: boolean) => {
     open ??= !panelVisible.value;
-    panelVisible.value = open;
-
-    setTimeout(() => {
-        open ? panel.value?.focus() : document.body.focus();
-    }, 300);
+    if (open) {
+        panelVisible.value = true;
+    } else {
+        panel.value?.classList.remove('panel-visible');
+        setTimeout(() => {
+            panelVisible.value = false; // To unmount devtools C
+        }, 300);
+    }
 };
 
 const handleKeyDown = (event: KeyboardEvent) => {
     if (event.ctrlKey && event.key === '`') {
         togglePanel();
+    }
+};
+
+const handleKeyPress = (event: KeyboardEvent) => {
+    if (event.ctrlKey && event.key === 'F11') {
+        event.preventDefault();
+        toggleFullscreen();
+    }
+
+    if (event.ctrlKey && (event.key === 'ArrowUp' || event.key === 'ArrowDown')) {
+        event.preventDefault();
+        fullscreen.value = event.key === 'ArrowUp';
     }
 };
 </script>
@@ -72,15 +93,17 @@ const handleKeyDown = (event: KeyboardEvent) => {
         ]"
         id="devtools-panel"
     >
-        <Header :fullscreen="fullscreen" @toggle="toggleFullscreen" @close="togglePanel(false)" />
-        <div class="flex flex-grow overflow-hidden">
-            <Sidebar v-model:activeTab="activeTab" />
-            <MainContent v-if="panelVisible" :activeTab="activeTab" />
-        </div>
-        <Footer />
+        <template v-if="panelVisible">
+            <Header :fullscreen="fullscreen" @toggle="toggleFullscreen" @close="togglePanel(false)" />
+            <div class="flex flex-grow overflow-hidden">
+                <Sidebar v-model:activeTab="activeTab" />
+                <MainContent v-if="panelVisible" :activeTab="activeTab" />
+            </div>
+            <Footer />
+        </template>
     </div>
 
-    <ConfirmDialog />
+    <ConfirmDialog v-if="panelVisible" />
 </template>
 
 <style>

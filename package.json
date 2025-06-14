@@ -37,7 +37,8 @@
         "build": "microtsm build",
         "serve": "microtsm serve",
         "release:patch": "npm version patch && pnpm build && npm publish --access public && git push --follow-tags",
-        "format": "prettier . --write"
+        "format": "prettier . --write",
+        "dev:devtools": "microtsm dev ./src/devtools --config ./microtsm.config.ts"
     },
     "devDependencies": {
         "@tailwindcss/postcss": "^4.1.9",
