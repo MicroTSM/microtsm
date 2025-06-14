@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { nextTick, onMounted, onUnmounted, provide, ref, useTemplateRef } from 'vue';
+import { onMounted, onUnmounted, provide, ref } from 'vue';
 import Header from './Header.vue';
 import Sidebar from './Sidebar.vue';
 import MainContent from './MainContent.vue';
@@ -7,7 +7,25 @@ import Footer from './Footer.vue';
 import ConfirmDialog from './ConfirmDialog.vue';
 import tabs from './tabs.ts';
 
+const panel = ref<HTMLElement | null>(null);
+const panelVisible = ref(false);
+const fullscreen = ref(false);
+const activeTab = ref(tabs[0]);
+// Instead of a boolean, we use a string to mark which edge is being resized.
+const resizeStatus = ref<'top' | 'left' | 'corner' | false>(false);
+
+// Store initial values when dragging starts.
+const initial = {
+    width: 0,
+    height: 0,
+    startX: 0,
+    startY: 0,
+};
+
+provide('fullscreen', fullscreen);
+
 onMounted(() => {
+    // Inject Tailwind and fonts.
     injectScript('https://cdn.tailwindcss.com?plugins=forms,container-queries');
     injectLink('https://fonts.googleapis.com', 'preconnect');
     injectLink('https://fonts.gstatic.com', 'preconnect', '');
@@ -24,15 +42,88 @@ onUnmounted(() => {
     window.removeEventListener('keydown', handleKeyPress);
 });
 
-const panel = useTemplateRef('panel');
-const panelVisible = ref(false);
-const fullscreen = ref(false);
-const activeTab = ref(tabs[0]);
+const getMaxWidth = () => window.innerWidth - 32;
+const getMaxHeight = () => window.innerHeight - 32;
 
-provide('fullscreen', fullscreen);
+const initTopResize = (e: MouseEvent) => {
+    e.preventDefault();
+    if (!panel.value) return;
+    initial.height = panel.value.offsetHeight;
+    initial.startY = e.clientY;
+    resizeStatus.value = 'top';
+    window.addEventListener('mousemove', doTopResize);
+    window.addEventListener('mouseup', stopResize);
+};
 
-const toggleFullscreen = () => {
-    fullscreen.value = !fullscreen.value;
+const doTopResize = (e: MouseEvent) => {
+    if (resizeStatus.value !== 'top' || !panel.value) return;
+    // Calculate how far the mouse has moved.
+    const deltaY = e.clientY - initial.startY;
+    // Since the panel is anchored bottom, subtract delta to increase height when dragging upward.
+    const newHeight = Math.min(Math.max(200, initial.height - deltaY), getMaxHeight());
+    panel.value.style.height = `${newHeight}px`;
+};
+
+const initLeftResize = (e: MouseEvent) => {
+    e.preventDefault();
+    if (!panel.value) return;
+    initial.width = panel.value.offsetWidth;
+    initial.startX = e.clientX;
+    resizeStatus.value = 'left';
+    window.addEventListener('mousemove', doLeftResize);
+    window.addEventListener('mouseup', stopResize);
+};
+
+const doLeftResize = (e: MouseEvent) => {
+    if (resizeStatus.value !== 'left' || !panel.value) return;
+    const deltaX = e.clientX - initial.startX;
+    // Increase width when dragging leftward (deltaX negative) while clamping it.
+    const newWidth = Math.min(Math.max(300, initial.width - deltaX), getMaxWidth());
+    panel.value.style.width = `${newWidth}px`;
+};
+
+const initCornerResize = (e: MouseEvent) => {
+    e.preventDefault();
+    if (!panel.value) return;
+    initial.width = panel.value.offsetWidth;
+    initial.height = panel.value.offsetHeight;
+    initial.startX = e.clientX;
+    initial.startY = e.clientY;
+    resizeStatus.value = 'corner';
+    window.addEventListener('mousemove', doCornerResize);
+    window.addEventListener('mouseup', stopResize);
+};
+
+const doCornerResize = (e: MouseEvent) => {
+    if (resizeStatus.value !== 'corner' || !panel.value) return;
+    const deltaX = e.clientX - initial.startX;
+    const deltaY = e.clientY - initial.startY;
+    const newWidth = Math.min(Math.max(300, initial.width - deltaX), getMaxWidth());
+    const newHeight = Math.min(Math.max(200, initial.height - deltaY), getMaxHeight());
+    panel.value.style.width = `${newWidth}px`;
+    panel.value.style.height = `${newHeight}px`;
+};
+
+const stopResize = () => {
+    resizeStatus.value = false;
+    window.removeEventListener('mousemove', doTopResize);
+    window.removeEventListener('mousemove', doLeftResize);
+    window.removeEventListener('mousemove', doCornerResize);
+    window.removeEventListener('mouseup', stopResize);
+    // Only update cookies when the user stops resizing.
+    if (panel.value) {
+        setCookie('devtoolsWidth', panel.value.style.width);
+        setCookie('devtoolsHeight', panel.value.style.height);
+    }
+};
+
+const setCookie = (name: string, value: string) => {
+    document.cookie = `${name}=${value}; path=/; max-age=31536000`;
+};
+
+const getCookie = (name: string) => {
+    const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+    return match ? match[2] : null;
 };
 
 const injectLink = (href: string, rel: string, crossOrigin?: string) => {
@@ -49,14 +140,32 @@ const injectScript = (src: string) => {
     document.head.appendChild(script);
 };
 
+const toggleFullscreen = (is?: boolean) => {
+    fullscreen.value = is ?? !fullscreen.value;
+
+    if (fullscreen.value) {
+        panel.value?.removeAttribute('style');
+    } else {
+        setTimeout(restorePanelSize, 0);
+    }
+};
+
+const restorePanelSize = () => {
+    const savedWidth = getCookie('devtoolsWidth');
+    const savedHeight = getCookie('devtoolsHeight');
+    if (savedWidth && panel.value) panel.value.style.width = savedWidth;
+    if (savedHeight && panel.value) panel.value.style.height = savedHeight;
+};
+
 const togglePanel = (open?: boolean) => {
     open ??= !panelVisible.value;
     if (open) {
+        restorePanelSize();
         panelVisible.value = true;
     } else {
         panel.value?.classList.remove('panel-visible');
         setTimeout(() => {
-            panelVisible.value = false; // To unmount devtools C
+            panelVisible.value = false;
         }, 300);
     }
 };
@@ -72,10 +181,9 @@ const handleKeyPress = (event: KeyboardEvent) => {
         event.preventDefault();
         toggleFullscreen();
     }
-
     if (event.ctrlKey && (event.key === 'ArrowUp' || event.key === 'ArrowDown')) {
         event.preventDefault();
-        fullscreen.value = event.key === 'ArrowUp';
+        toggleFullscreen(event.key === 'ArrowUp');
     }
 };
 </script>
@@ -89,11 +197,30 @@ const handleKeyPress = (event: KeyboardEvent) => {
                 'devtools-panel-fullscreen': fullscreen,
                 'devtools-panel-compact': !fullscreen,
                 'panel-visible': panelVisible,
+                '!transition-none': resizeStatus,
             },
         ]"
         id="devtools-panel"
     >
         <template v-if="panelVisible">
+            <!-- Top Edge Resizer -->
+            <div
+                ref="resizerTop"
+                @mousedown="initTopResize"
+                class="absolute top-0 left-0 w-full h-1 cursor-ns-resize hover:bg-gray-200/50"
+            ></div>
+            <!-- Left Edge Resizer -->
+            <div
+                ref="resizerLeft"
+                @mousedown="initLeftResize"
+                class="absolute top-0 left-0 h-full w-1 cursor-ew-resize hover:bg-gray-200/50"
+            ></div>
+            <!-- Top-Left Corner Resizer -->
+            <div
+                ref="resizerCorner"
+                @mousedown="initCornerResize"
+                class="absolute top-0 left-0 w-4 h-4 cursor-nw-resize hover:bg-gray-200/50"
+            ></div>
             <Header :fullscreen="fullscreen" @toggle="toggleFullscreen" @close="togglePanel(false)" />
             <div class="flex flex-grow overflow-hidden">
                 <Sidebar v-model:activeTab="activeTab" />
@@ -102,7 +229,6 @@ const handleKeyPress = (event: KeyboardEvent) => {
             <Footer />
         </template>
     </div>
-
     <ConfirmDialog v-if="panelVisible" />
 </template>
 
@@ -149,6 +275,8 @@ const handleKeyPress = (event: KeyboardEvent) => {
     color: var(--text-primary);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    /* Enable smoother resizing by hinting to the browser which properties change */
+    will-change: width, height;
 }
 
 .table-container {

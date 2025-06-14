@@ -11,7 +11,7 @@ const fullscreen = inject<Ref<boolean>>('fullscreen');
 </script>
 
 <template>
-    <header class="header relative" fullscreen>
+    <header class="header" fullscreen>
         <div class="app-bar-left-title-container">
             <span class="material-icons-outlined text-[var(--brand-primary)] text-2xl">build_circle</span>
             <h1 class="app-bar-title">DevTools Panel</h1>
@@ -23,7 +23,7 @@ const fullscreen = inject<Ref<boolean>>('fullscreen');
                 {{ pageUrl }}
             </div>
         </div>
-        <div class="flex items-center gap-2">
+        <div class="flex items-center justify-end gap-2">
             <button
                 class="icon-button"
                 id="toggle-fullscreen-btn"
