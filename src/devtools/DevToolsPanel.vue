@@ -42,9 +42,6 @@ onUnmounted(() => {
     window.removeEventListener('keydown', handleKeyPress);
 });
 
-const getMaxWidth = () => window.innerWidth - 32;
-const getMaxHeight = () => window.innerHeight - 32;
-
 const initTopResize = (e: MouseEvent) => {
     e.preventDefault();
     if (!panel.value) return;
@@ -60,7 +57,7 @@ const doTopResize = (e: MouseEvent) => {
     // Calculate how far the mouse has moved.
     const deltaY = e.clientY - initial.startY;
     // Since the panel is anchored bottom, subtract delta to increase height when dragging upward.
-    const newHeight = Math.min(Math.max(200, initial.height - deltaY), getMaxHeight());
+    const newHeight = Math.max(200, initial.height - deltaY);
     panel.value.style.height = `${newHeight}px`;
 };
 
@@ -78,7 +75,7 @@ const doLeftResize = (e: MouseEvent) => {
     if (resizeStatus.value !== 'left' || !panel.value) return;
     const deltaX = e.clientX - initial.startX;
     // Increase width when dragging leftward (deltaX negative) while clamping it.
-    const newWidth = Math.min(Math.max(300, initial.width - deltaX), getMaxWidth());
+    const newWidth = Math.max(300, initial.width - deltaX);
     panel.value.style.width = `${newWidth}px`;
 };
 
@@ -98,8 +95,8 @@ const doCornerResize = (e: MouseEvent) => {
     if (resizeStatus.value !== 'corner' || !panel.value) return;
     const deltaX = e.clientX - initial.startX;
     const deltaY = e.clientY - initial.startY;
-    const newWidth = Math.min(Math.max(300, initial.width - deltaX), getMaxWidth());
-    const newHeight = Math.min(Math.max(200, initial.height - deltaY), getMaxHeight());
+    const newWidth = Math.max(300, initial.width - deltaX);
+    const newHeight = Math.max(200, initial.height - deltaY);
     panel.value.style.width = `${newWidth}px`;
     panel.value.style.height = `${newHeight}px`;
 };
@@ -151,10 +148,12 @@ const toggleFullscreen = (is?: boolean) => {
 };
 
 const restorePanelSize = () => {
-    const savedWidth = getCookie('devtoolsWidth');
+    if (fullscreen.value) return;
+
+    const savedWidth = getCookie('devtoolsWidth') ?? '800px';
     const savedHeight = getCookie('devtoolsHeight');
-    if (savedWidth && panel.value) panel.value.style.width = savedWidth;
-    if (savedHeight && panel.value) panel.value.style.height = savedHeight;
+    if (savedWidth && panel.value) panel.value.style.width = parseInt(savedWidth) + 'px';
+    if (savedHeight && panel.value) panel.value.style.height = parseInt(savedHeight) + 'px';
 };
 
 const togglePanel = (open?: boolean) => {
@@ -162,11 +161,13 @@ const togglePanel = (open?: boolean) => {
     if (open) {
         restorePanelSize();
         panelVisible.value = true;
+        window.addEventListener('resize', restorePanelSize);
     } else {
         panel.value?.classList.remove('panel-visible');
         setTimeout(() => {
             panelVisible.value = false;
         }, 300);
+        window.removeEventListener('resize', restorePanelSize);
     }
 };
 
@@ -552,7 +553,7 @@ input[type='checkbox']:focus {
 }
 
 .devtools-panel-compact {
-    @apply fixed bottom-4 right-4 w-[800px] max-h-[calc(100vh-32px)];
+    @apply fixed bottom-4 right-4 w-[800px] h-[78vh] max-h-[calc(100vh-32px)] max-w-[calc(100vw-32px)];
     background-color: var(--surface-elevated);
     border-radius: 10px;
     box-shadow: var(--shadow-lg);
