@@ -79,7 +79,9 @@ class MicroTSMModuleLoader {
         return MicroTSMModuleLoader._moduleLoadTimes;
     }
 
-    private static _importMapOverrides: ImportMap['imports'] = {};
+    private static _importMapOverrides: ImportMap['imports'] = JSON.parse(
+        localStorage.getItem('importMapOverrides') || '{}',
+    );
 
     get importMapOverrides(): ImportMap['imports'] {
         return MicroTSMModuleLoader._importMapOverrides;
@@ -92,6 +94,7 @@ class MicroTSMModuleLoader {
         }
 
         MicroTSMModuleLoader._importMapOverrides = value;
+        localStorage.setItem('importMapOverrides', JSON.stringify(value));
     }
 
     private static _importMap: ImportMap['imports'] = {};
