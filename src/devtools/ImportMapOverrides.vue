@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue';
-import eventBus from '../event-bus';
+import { computed, onMounted, onUnmounted, ref } from 'vue';
+import eventBus, { MicroTSMEventMap } from '../event-bus';
 
 interface Module {
     name: string;
@@ -32,6 +32,16 @@ onMounted(() => {
             {} as Record<string, Module>,
         ),
     );
+
+    eventBus.on('module-loader:load-error', loadErrorHandler);
+    eventBus.on('module-loader:load-requested', loadRequestedHandler);
+    eventBus.on('module-loader:module-loaded', moduleLoadedHandler);
+});
+
+onUnmounted(() => {
+    eventBus.off('module-loader:load-error', loadErrorHandler);
+    eventBus.off('module-loader:load-requested', loadRequestedHandler);
+    eventBus.off('module-loader:module-loaded', moduleLoadedHandler);
 });
 
 const searchTerm = ref('');
@@ -144,6 +154,28 @@ const overridden = (module: Module) => {
 
 const onInputOverrides = (module: Module) => {
     module.persisted = !changed(module);
+};
+
+const loadErrorHandler = ({ module }: MicroTSMEventMap['module-loader:load-error']) => {
+    const matchedModule = modules.value.find((m) => m.name === module);
+    if (matchedModule) {
+        matchedModule.status = 'Error';
+    }
+};
+
+const loadRequestedHandler = ({ module }: MicroTSMEventMap['module-loader:load-requested']) => {
+    const matchedModule = modules.value.find((m) => m.name === module);
+    if (matchedModule) {
+        matchedModule.status = 'Pending';
+    }
+};
+
+const moduleLoadedHandler = ({ module, loadTime }: MicroTSMEventMap['module-loader:module-loaded']) => {
+    const matchedModule = modules.value.find((m) => m.name === module);
+    if (matchedModule) {
+        matchedModule.status = 'Loaded';
+        matchedModule.loadTime = `${loadTime}ms`;
+    }
 };
 
 defineExpose({ persistedStatus });
