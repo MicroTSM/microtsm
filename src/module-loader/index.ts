@@ -1,10 +1,24 @@
+import eventBus from '../event-bus';
+
 interface ImportMap {
     imports: Record<string, string>;
 }
 
+export interface LoaderLog {
+    type: 'info' | 'warn' | 'load' | 'error';
+    message: string;
+    data?: {
+        moduleOverrideUrl?: string;
+    };
+    trace?: string;
+}
+
 const EMPTY_IMPORTMAP = Object.freeze({ imports: {} });
 
+// TODO: add enableDevtools method
 class MicroTSMModuleLoader {
+    static _loadingModules = new Map<string, boolean>();
+
     constructor() {
         if (window.MicroTSM) {
             return window.MicroTSM;
@@ -25,6 +39,12 @@ class MicroTSMModuleLoader {
         MicroTSMModuleLoader._importMap = importMapData.imports;
 
         window.MicroTSM = this;
+    }
+
+    private static _logs: LoaderLog[] = [{ type: 'info', message: 'MicroTSM DevTools activated.' }];
+
+    get logs(): LoaderLog[] {
+        return MicroTSMModuleLoader._logs;
     }
 
     static _errorLoadedModules: string[] = [];
@@ -64,6 +84,20 @@ class MicroTSMModuleLoader {
         return MicroTSMModuleLoader._importMap;
     }
 
+    pushLogs(value: LoaderLog) {
+        MicroTSMModuleLoader._logs.push(value);
+        eventBus.emit('module-loader:new-log', value);
+    }
+
+    getModuleStatus(module: string): 'Idle' | 'Loading' | 'Loaded' | 'Error' {
+        if (MicroTSMModuleLoader._loadingModules.has(module)) return 'Loading';
+        return MicroTSMModuleLoader._moduleLoadTimes[module] !== undefined
+            ? 'Loaded'
+            : MicroTSMModuleLoader._errorLoadedModules.includes(module)
+              ? 'Error'
+              : 'Idle';
+    }
+
     /**
      * Dynamically imports a module using the stored import map.
      * @param {string} specifier - The bare module specifier.
@@ -73,25 +107,47 @@ class MicroTSMModuleLoader {
      */
     async load(specifier: string, baseUrl = import.meta.url): Promise<any> {
         const startTime = performance.now();
-        specifier =
-            MicroTSMModuleLoader._importMapOverrides[specifier] ||
-            MicroTSMModuleLoader._importMap[specifier] ||
-            specifier;
-
         const moduleUrl =
-            specifier.startsWith('.') || specifier.startsWith('/') ? new URL(specifier, baseUrl).href : specifier;
+            specifier.startsWith('.') || specifier.startsWith('/') // Relative URL
+                ? new URL(specifier, baseUrl).href
+                : MicroTSMModuleLoader._importMapOverrides[specifier] ||
+                  MicroTSMModuleLoader._importMap[specifier] ||
+                  specifier;
 
         if (!moduleUrl) {
-            throw new Error(`Module '${specifier}' not found in MicroTSM import map.`);
+            const message = `Module ${specifier} not found in MicroTSM import map.`;
+            this.pushLogs({ type: 'error', message });
+            throw new Error(message);
         }
 
-        const result = await import(moduleUrl);
+        eventBus.emit('module-loader:load-requested', { module: specifier, url: moduleUrl });
+        this.pushLogs({ type: 'load', message: `Module ${specifier} requested from ${moduleUrl}` });
+        MicroTSMModuleLoader._loadingModules.set(specifier, true);
 
-        if (specifier in MicroTSMModuleLoader._importMap) {
-            MicroTSMModuleLoader._moduleLoadTimes[specifier] = performance.now() - startTime;
+        try {
+            const result = await import(moduleUrl);
+            const loadTime = Number((performance.now() - startTime).toFixed(2));
+
+            if (specifier in MicroTSMModuleLoader._importMap) {
+                MicroTSMModuleLoader._moduleLoadTimes[specifier] = loadTime;
+            }
+
+            eventBus.emit('module-loader:module-loaded', { module: specifier, loadTime });
+            this.pushLogs({ type: 'load', message: `Module ${specifier} loaded in ${loadTime}ms` });
+
+            return result;
+        } catch (error: any) {
+            MicroTSMModuleLoader._errorLoadedModules.push(specifier);
+            this.pushLogs({
+                type: 'error',
+                message: `Failed to load module ${specifier}: ${error}`,
+                trace: error.stack,
+            });
+            eventBus.emit('module-loader:load-error', { module: specifier, error });
+            throw error;
+        } finally {
+            MicroTSMModuleLoader._loadingModules.delete(specifier);
         }
-
-        return result;
     }
 
     unload(specifier: string) {

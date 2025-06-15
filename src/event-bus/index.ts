@@ -1,3 +1,5 @@
+import {LoaderLog} from "../module-loader";
+
 export type EventType = string | symbol;
 export type Handler<T = unknown> = (event: T) => void;
 export type WildcardHandler<T = Record<string, unknown>> = (type: keyof T, event: T[keyof T]) => void;
@@ -80,6 +82,13 @@ export type MicroTSMEventMap = {
         icon?: string;
         showCheckbox?: boolean;
     };
+    'module-loader:load-requested': {
+        module: string;
+        url: string;
+    };
+    'module-loader:module-loaded': { module: string; loadTime: number };
+    'module-loader:load-error': { module: string; error: unknown };
+    'module-loader:new-log': LoaderLog;
 };
 
 /** Ensure global availability */

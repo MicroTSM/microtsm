@@ -535,6 +535,7 @@ input[type='checkbox']:focus {
     border-bottom: 1px solid var(--border-neutral);
     padding: 0 12px;
     height: 44px;
+    flex-shrink: 0;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -619,51 +620,6 @@ input[type='checkbox']:focus {
     font-weight: 600;
     color: var(--text-primary);
     line-height: 1.4;
-}
-
-.log-container {
-    background-color: #ffffff;
-    color: #1e1e1e;
-    padding: 12px;
-    border-radius: 6px;
-    font-family: 'SF Mono', 'Menlo', 'Courier New', monospace;
-    font-size: 0.8125rem;
-    max-height: 300px;
-    overflow-y: auto;
-    line-height: 1.6;
-    border: 1px solid var(--border-neutral);
-}
-
-.log-container p .text-sky-300 {
-    color: #50e3c2;
-}
-
-.log-container p .text-cyan-300 {
-    color: #4a90e2;
-}
-
-.log-container p .text-yellow-300 {
-    color: #f5a623;
-}
-
-.log-container p .text-purple-300 {
-    color: #bd10e0;
-}
-
-.log-container p .text-yellow-200 {
-    color: #f8e71c;
-}
-
-.log-container p .text-red-300 {
-    color: #d0021b;
-}
-
-.log-container p a {
-    color: var(--brand-primary);
-}
-
-.log-container p a:hover {
-    text-decoration: underline;
 }
 
 .info-card {

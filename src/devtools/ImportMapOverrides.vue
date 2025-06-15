@@ -22,8 +22,8 @@ onMounted(() => {
                     originalUrl: importMap[name],
                     overrideUrl: importMapOverrides[name] || '',
                     temporaryOverrideUrl: importMapOverrides[name] || '',
-                    loadTime: isModuleLoaded(name) ? `${moduleLoadTimes[name]}ms` : '-',
-                    status: getModuleLoadingsStatus(name),
+                    loadTime: moduleLoadTimes[name] != null ? `${moduleLoadTimes[name]}ms` : '-',
+                    status: window.MicroTSM.getModuleStatus(name),
                     persisted: true,
                 };
 
@@ -61,16 +61,6 @@ const filteredModules = computed(() =>
 );
 
 const allPersisted = computed(() => modules.value.every((m) => m.persisted));
-
-const isModuleLoaded = (name: string) => {
-    return !!document.querySelector(`microtsm-application[name="${name}"]`);
-};
-
-const getModuleLoadingsStatus = (name: string) => {
-    if (isModuleLoaded(name) && window.MicroTSM.moduleLoadTimes[name] == undefined) return 'Pending';
-    else if (window.MicroTSM.errorLoadedModules.includes(name)) return 'Error';
-    return isModuleLoaded(name) ? 'Loaded' : 'Idle';
-};
 
 const getStatusIcon = (status: string) => {
     switch (status) {
