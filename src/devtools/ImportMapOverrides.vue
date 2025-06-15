@@ -93,7 +93,7 @@ const onBeforeSaveOverride = (event: MouseEvent, module: Module, index: number) 
         id: dialogId,
         title: 'Save Override',
         message: `Save override for <strong>${module.name}</strong> to:
-<code class="text-xs bg-gray-100 p-1 rounded inline-flex w-max my-1">${module.overrideUrl || '(cleared)'}</code>?`,
+<code class="text-xs bg-gray-100 p-1 rounded inline-flex w-max my-1">${module.temporaryOverrideUrl || '(cleared)'}</code>?`,
         onConfirm: () => {
             const saveIcon = target.tagName === 'SPAN' ? target : target?.querySelector('span');
 
@@ -236,7 +236,7 @@ defineExpose({ persistedStatus });
                             <input
                                 class="module-override-url w-full"
                                 placeholder="Enter override URL"
-                                type="text"
+                                type="url"
                                 v-model="module.temporaryOverrideUrl"
                                 @input="onInputOverrides(module)"
                             />
@@ -367,5 +367,87 @@ tbody tr:last-child td {
 
 tbody tr:hover td {
     background-color: #f0f6ff;
+}
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    border: 1px solid transparent;
+}
+
+.status-badge-green {
+    background-color: var(--status-success-bg);
+    color: var(--status-success-text);
+}
+
+.status-badge-yellow {
+    background-color: var(--status-warning-bg);
+    color: var(--status-warning-text);
+}
+
+.status-badge-red {
+    background-color: var(--status-error-bg);
+    color: var(--status-error-text);
+}
+
+.status-badge-gray {
+    background-color: #e5e5ea;
+    color: #3c3c43;
+}
+
+.status-badge .material-icons-outlined,
+.status-badge .material-icons-round {
+    font-size: 14px;
+    margin-right: 5px;
+}
+
+input[type='text'],
+input[type='url'],
+input[type='search'] {
+    background-color: var(--surface-base);
+    border: 1px solid #c6c6c6;
+    border-radius: 6px;
+    padding: 7px 10px;
+    font-size: 0.875rem;
+    color: var(--text-primary);
+    transition:
+        border-color 0.15s ease-in-out,
+        box-shadow 0.15s ease-in-out;
+    appearance: none;
+    height: 32px;
+}
+
+input[type='text']::placeholder,
+input[type='url']::placeholder,
+input[type='search']::placeholder {
+    color: var(--text-placeholder);
+}
+
+input[type='text']:focus,
+input[type='url']:focus,
+input[type='search']:focus {
+    border-color: var(--border-focused);
+    box-shadow: 0 0 0 3px rgba(10, 132, 255, 0.25);
+    outline: none;
+}
+
+.module-override-url {
+    font-size: 0.8125rem;
+    background-color: transparent;
+    border: none;
+    padding: 3px;
+    color: var(--text-primary);
+    width: 100%;
+    border-radius: 4px;
+}
+
+.module-override-url:focus {
+    outline: none;
+    background-color: var(--status-info-bg);
+    box-shadow: 0 0 0 2px var(--brand-primary);
 }
 </style>

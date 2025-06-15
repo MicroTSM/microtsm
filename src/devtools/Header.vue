@@ -40,3 +40,43 @@ const fullscreen = inject<Ref<boolean>>('fullscreen');
         </div>
     </header>
 </template>
+
+<style>
+.header {
+    background-color: var(--surface-elevated);
+    color: var(--text-primary);
+    border-bottom: 1px solid var(--border-neutral);
+    padding: 0 12px;
+    height: 44px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: border-radius 0.3s ease-in-out;
+}
+
+.icon-button {
+    color: var(--text-secondary);
+    background-color: transparent;
+    height: 30px;
+    width: 30px;
+    padding: 5px;
+    border-radius: 5px;
+    transition:
+        background-color 0.1s ease-in-out,
+        color 0.1s ease-in-out;
+}
+
+.icon-button:not(:disabled):hover {
+    background-color: rgba(0, 0, 0, 0.07);
+    color: var(--text-primary);
+}
+
+.icon-button:not(:disabled):active {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.icon-button span {
+    line-height: 1;
+}
+</style>

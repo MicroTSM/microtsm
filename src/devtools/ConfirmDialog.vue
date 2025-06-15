@@ -73,3 +73,142 @@ eventBus.on('devtools:confirm-action', (e) => {
         </div>
     </div>
 </template>
+
+<style>
+.dialog-overlay {
+    background-color: var(--surface-overlay);
+}
+
+.dialog-content {
+    background-color: #fdfdfd;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    padding: 24px;
+    border: none;
+    min-width: 200px;
+    max-width: 360px;
+}
+
+.dialog-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: 1.3;
+    text-align: center;
+}
+
+.dialog-message {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin-top: 12px;
+    line-height: 1.5;
+    text-align: center;
+}
+
+.dialog-icon-area {
+    margin-bottom: 16px;
+    display: flex;
+    justify-content: center;
+}
+
+.dialog-icon-area .material-icons-outlined {
+    font-size: 28px;
+    color: var(--brand-primary);
+}
+
+.dialog-checkbox-label {
+    font-size: 0.875rem;
+    color: var(--text-primary);
+}
+
+input[type='checkbox'] {
+    border-radius: 4px;
+    border: 1px solid #bdbdbd;
+    color: var(--brand-primary);
+    background-color: #ffffff;
+    width: 18px;
+    height: 18px;
+    appearance: none;
+    position: relative;
+    cursor: pointer;
+    vertical-align: middle;
+    margin-top: -2px;
+}
+
+input[type='checkbox']:checked {
+    background-color: var(--brand-primary);
+    border-color: var(--brand-primary);
+}
+
+input[type='checkbox']:checked::before {
+    content: 'check';
+    font-family: 'Material Icons Round', sans-serif;
+    font-size: 14px;
+    color: var(--text-on-brand);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-weight: bold;
+}
+
+input[type='checkbox']:focus {
+    outline: none;
+    border-color: var(--brand-primary);
+    box-shadow: 0 0 0 3px rgba(10, 132, 255, 0.25);
+}
+
+.button-primary {
+    background-color: var(--brand-primary);
+    color: var(--text-on-brand);
+    font-weight: 500;
+    font-size: 0.875rem;
+    padding: 6px 16px;
+    border-radius: 6px;
+    transition: background-color 0.1s ease-in-out;
+    height: 32px;
+    text-transform: none;
+    letter-spacing: normal;
+    border: none;
+}
+
+.button-primary:hover {
+    background-color: #0070dd;
+}
+
+.button-primary:active {
+    background-color: #005cbf;
+}
+
+.button-secondary {
+    background-color: #e9e9eb;
+    color: var(--text-primary);
+    font-weight: 500;
+    font-size: 0.875rem;
+    padding: 6px 16px;
+    border-radius: 6px;
+    border: 1px solid #d1d1d6;
+    transition:
+        background-color 0.1s ease-in-out,
+        border-color 0.1s ease;
+    height: 32px;
+    text-transform: none;
+    letter-spacing: normal;
+}
+
+.button-secondary:hover {
+    background-color: #dddee0;
+    border-color: #c6c6c9;
+}
+
+.button-secondary:focus {
+    border-color: var(--brand-primary);
+    box-shadow: 0 0 0 3px rgba(10, 132, 255, 0.25);
+    outline: none;
+}
+
+.button-secondary:active {
+    background-color: #d2d3d5;
+    border-color: #b8b8bb;
+}
+</style>
