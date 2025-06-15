@@ -13,20 +13,24 @@ const averageLoadTime = computed(() =>
 </script>
 
 <template>
-    <section class="bg-white p-3 rounded-lg shadow">
-        <h2 class="text-lg font-semibold text-slate-700 mb-3">Performance Metrics</h2>
-        <div class="bg-slate-50 p-3 rounded-lg space-y-2 text-sm">
-            <div class="flex justify-between">
-                <span class="text-slate-600">Total Modules Loaded:</span>
-                <span class="font-medium text-slate-800">{{ totalModulesLoaded }} / {{ totalModules }}</span>
+    <section class="tab-pane active" id="tab-content-performance-metrics">
+        <h2 class="section-title mb-3">Performance Metrics</h2>
+        <div class="info-card space-y-3">
+            <div class="flex justify-between items-center">
+                <span class="text-[var(--text-secondary)] text-sm">Total Modules Loaded:</span>
+                <span class="font-medium text-[var(--text-primary)] text-sm"
+                    >{{ totalModulesLoaded }} / {{ totalModules }}</span
+                >
             </div>
-            <div class="flex justify-between">
-                <span class="text-slate-600">Overall Load Time:</span>
-                <span class="font-medium text-slate-800">{{ overallLoadTime }}ms</span>
+            <hr class="border-[var(--border-neutral)]" />
+            <div class="flex justify-between items-center">
+                <span class="text-[var(--text-secondary)] text-sm">Overall Load Time:</span>
+                <span class="font-medium text-[var(--text-primary)] text-sm">{{ overallLoadTime }}ms</span>
             </div>
-            <div class="flex justify-between">
-                <span class="text-slate-600">Average Load Time:</span>
-                <span class="font-medium text-slate-800">{{ averageLoadTime }}ms</span>
+            <hr class="border-[var(--border-neutral)]" />
+            <div class="flex justify-between items-center">
+                <span class="text-[var(--text-secondary)] text-sm">Average Load Time:</span>
+                <span class="font-medium text-[var(--text-primary)] text-sm">{{ averageLoadTime }}ms</span>
             </div>
         </div>
     </section>

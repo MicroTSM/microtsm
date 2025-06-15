@@ -18,6 +18,7 @@ const EMPTY_IMPORTMAP = Object.freeze({ imports: {} });
 // TODO: add enableDevtools method
 class MicroTSMModuleLoader {
     static _loadingModules = new Map<string, boolean>();
+    version = __VERSION__;
 
     constructor() {
         if (window.MicroTSM) {
@@ -165,3 +166,5 @@ declare global {
         MicroTSM: MicroTSMModuleLoader;
     }
 }
+
+declare const __VERSION__: string;
