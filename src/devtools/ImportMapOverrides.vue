@@ -174,7 +174,7 @@ defineExpose({ persistedStatus });
                 class="w-full"
                 id="search-modules-input"
                 v-model="searchTerm"
-                placeholder="Search modules by name or domain..."
+                placeholder="Search modules by name or url..."
                 type="search"
             />
         </div>

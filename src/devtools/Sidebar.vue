@@ -51,7 +51,7 @@ onMounted(() => {
           @click="activeTab = tab"
       >
         <span class="material-icons-outlined text-lg">{{ tab.icon }}</span>
-        <span class="tab-label">{{ fullScreen ? tab.name : tab.label }}</span>
+        <span class="tab-label">{{ fullScreen ? tab.shortName : tab.label }}</span>
       </button>
     </nav>
   </aside>
