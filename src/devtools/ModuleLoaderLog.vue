@@ -93,7 +93,7 @@ const showTrace = (e: MouseEvent, log: LoaderLog) => {
     border: 1px solid var(--border-neutral);
     overflow-y: auto;
     max-height: max-content;
-  scroll-behavior: smooth;
+    scroll-behavior: smooth;
 }
 
 .log-wrapper {

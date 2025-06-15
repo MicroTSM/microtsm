@@ -280,14 +280,6 @@ const handleKeyPress = (event: KeyboardEvent) => {
     will-change: width, height;
 }
 
-.table-container {
-    max-height: 300px;
-    overflow-y: auto;
-    border: 1px solid var(--border-neutral);
-    border-radius: 6px;
-    background-color: var(--surface-base);
-}
-
 .icon-button {
     color: var(--text-secondary);
     background-color: transparent;

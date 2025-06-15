@@ -260,6 +260,12 @@ defineExpose({ persistedStatus });
 </template>
 
 <style>
+#tab-content-import-map-overrides {
+    display: grid;
+    grid-template-rows: max-content max-content 1fr;
+    height: 100%;
+}
+
 .search-input-container {
     position: relative;
 }
@@ -275,6 +281,15 @@ defineExpose({ persistedStatus });
 
 .search-input-container input[type='search'] {
     padding-left: 34px;
+}
+
+.table-container {
+    max-height: max-content;
+    overflow-y: auto;
+    border: 1px solid var(--border-neutral);
+    border-radius: 6px;
+    background-color: var(--surface-base);
+    scroll-behavior: smooth;
 }
 
 table {
