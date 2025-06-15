@@ -61,6 +61,7 @@ const persistedStatus = computed(() => {
 });
 
 const modules = ref<Module[]>([]);
+const changesNeedRelaunch = ref<boolean>(false);
 
 const filteredModules = computed(() =>
     modules.value.filter(
@@ -123,6 +124,7 @@ const saveOverride = (index: number) => {
 
     modules.value[index].overrideUrl = temporaryOverrideUrl;
     modules.value[index].persisted = true;
+    changesNeedRelaunch.value = true;
 };
 
 const onBeforeResetOverrides = (_: MouseEvent, module: Module, index: number) => {
@@ -143,6 +145,16 @@ const resetOverride = (index: number) => {
         ...window.MicroTSM.importMapOverrides,
         [name]: '',
     };
+};
+
+const relaunchApp = () => {
+    if (window.MicroTSM && window.MicroTSM.rootApp && typeof window.MicroTSM.rootApp.relaunch === 'function') {
+        window.MicroTSM.rootApp.relaunch();
+        changesNeedRelaunch.value = false;
+    } else {
+        console.warn('Relaunch function not available.');
+        alert('Relaunch function (window.MicroTSM.rootApp.relaunch) is not available.');
+    }
 };
 
 const changed = (module: Module) => {
@@ -186,19 +198,27 @@ defineExpose({ persistedStatus });
     <section class="tab-pane active" id="tab-content-import-map-overrides">
         <div class="flex justify-between items-center mb-3">
             <h2 class="section-title">Import Map Overrides</h2>
-            <span
-                :class="[
-                    'status-badge',
-                    {
-                        'status-badge-green': allPersisted,
-                        'status-badge-yellow': !allPersisted,
-                    },
-                ]"
-                id="persisted-status"
-            >
-                <span class="material-icons-round text-sm">{{ allPersisted ? 'save' : 'warning' }}</span
-                >{{ allPersisted ? 'Overrides Persisted' : 'Changes Not Persisted' }}
-            </span>
+            <div class="flex items-center gap-1.5">
+                <span
+                    :class="[
+                        'status-badge',
+                        {
+                            'status-badge-green': allPersisted,
+                            'status-badge-yellow': !allPersisted,
+                        },
+                    ]"
+                    id="persisted-status"
+                >
+                    <span class="material-icons-round text-sm">
+                        {{ allPersisted ? 'save' : 'warning' }}
+                    </span>
+                    {{ allPersisted ? 'Overrides Persisted' : 'Changes Not Persisted' }}
+                </span>
+                <button class="icon-button relative" id="relaunch-app-btn" title="Relaunch App" @click="relaunchApp">
+                    <span class="material-icons-outlined text-base">refresh</span>
+                    <span class="relaunch-btn-indicator" v-show="changesNeedRelaunch" id="relaunch-button-indicator" />
+                </button>
+            </div>
         </div>
 
         <div class="search-input-container mb-3">
@@ -459,5 +479,22 @@ input[type='search']:focus {
     outline: none;
     background-color: var(--status-info-bg);
     box-shadow: 0 0 0 2px var(--brand-primary);
+}
+
+.relaunch-indicator .material-icons-outlined {
+    font-size: 16px;
+    margin-right: 6px;
+    vertical-align: text-bottom;
+}
+
+.relaunch-btn-indicator {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    width: 10px;
+    height: 10px;
+    background-color: var(--status-warning-text);
+    border-radius: 50%;
+    border: 2px solid var(--surface-elevated);
 }
 </style>

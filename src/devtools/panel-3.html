@@ -600,6 +600,39 @@
         .devtools-panel-fullscreen {
             border-radius: 0 !important;
         }
+
+        .relaunch-indicator {
+            display: none;
+            background-color: var(--status-warning-bg);
+            color: var(--status-warning-text);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.8125rem;
+            margin-top: 8px;
+            border: 1px solid var(--status-warning-text);
+            text-align: center;
+        }
+
+        .relaunch-indicator.visible {
+            display: block;
+        }
+
+        .relaunch-indicator .material-icons-outlined {
+            font-size: 16px;
+            margin-right: 6px;
+            vertical-align: text-bottom;
+        }
+
+        .relaunch-btn-indicator {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            width: 10px;
+            height: 10px;
+            background-color: var(--status-warning-text);
+            border-radius: 50%;
+            border: 2px solid var(--surface-elevated);
+        }
     </style>
 </head>
 <body class="min-h-screen flex items-center justify-center p-4">
@@ -656,16 +689,26 @@
                     <div class="bg-transparent p-0">
                         <div class="flex justify-between items-center mb-3">
                             <h2 class="section-title">Import Map Overrides</h2>
-                            <span class="status-badge status-badge-green" id="persisted-status">
+                            <div class="flex items-center space-x-2">
+<span class="status-badge status-badge-green" id="persisted-status">
 <span class="material-icons-round text-sm">save</span>Overrides Persisted
                 </span>
+                                <button class="icon-button relative" id="relaunch-app-btn" title="Relaunch App">
+                                    <span class="material-icons-outlined text-base">refresh</span>
+                                    <span class="relaunch-btn-indicator hidden" id="relaunch-button-indicator"></span>
+                                </button>
+                            </div>
                         </div>
                         <div class="search-input-container mb-3">
                             <span class="material-icons-outlined">search</span>
                             <input class="w-full" id="search-modules-input" placeholder="Search modules..."
                                    type="search"/>
                         </div>
-                        <div class="table-container">
+                        <div class="relaunch-indicator" id="relaunch-needed-indicator">
+                            <span class="material-icons-outlined">warning_amber</span>
+                            Relaunch required for changes to take effect.
+                        </div>
+                        <div class="table-container mt-3">
                             <table class="min-w-full">
                                 <thead>
                                 <tr>
@@ -909,21 +952,35 @@
     const modulesTbody = document.getElementById('modules-tbody');
     const persistedStatus = document.getElementById('persisted-status');
     const persistedStatusIcon = persistedStatus.querySelector('span');
+    const relaunchAppBtn = document.getElementById('relaunch-app-btn');
+    const relaunchButtonIndicator = document.getElementById('relaunch-button-indicator');
     const confirmDialog = document.getElementById('confirm-dialog');
     const confirmDialogTitle = document.getElementById('confirm-dialog-title');
     const confirmDialogMessage = document.getElementById('confirm-dialog-message');
     const confirmDialogCancelBtn = document.getElementById('confirm-dialog-cancel');
     const confirmDialogConfirmBtn = document.getElementById('confirm-dialog-confirm');
     const dontShowAgainCheckbox = document.getElementById('dont-show-again');
+    const relaunchNeededIndicator = document.getElementById('relaunch-needed-indicator');
     let confirmCallback = null;
     let cancelCallback = null;
     let dialogIdentifier = '';
+    let changesNeedRelaunch = false;
     // Show panel with transition
     window.addEventListener('load', () => {
         setTimeout(() => { // Timeout to ensure CSS transitions are applied
             panel.classList.add('panel-visible');
         }, 50);
     });
+
+    function updateRelaunchIndicator() {
+        if (changesNeedRelaunch) {
+            relaunchNeededIndicator.classList.add('visible');
+            relaunchButtonIndicator.classList.remove('hidden');
+        } else {
+            relaunchNeededIndicator.classList.remove('visible');
+            relaunchButtonIndicator.classList.add('hidden');
+        }
+    }
 
     function showConfirmDialog(title, message, onConfirm, onCancel, id) {
         dialogIdentifier = id;
@@ -1031,7 +1088,7 @@
             const dialogId = `saveOverride_${moduleName.replace(/[^a-zA-Z0-9]/g, '_')}`;
             showConfirmDialog(
                 'Save Override',
-                `Save override for <strong>${moduleName}</strong> to: <br><code class="text-xs bg-gray-100 p-1 rounded block my-1">${overrideUrl || '(cleared)'}</code>?`,
+                `Save override for <strong>${moduleName}</strong> to: <br><code class="text-xs bg-gray-100 p-1 rounded block my-1">${overrideUrl || '(cleared)'}</code>? <br><br>This will relaunch the application.`,
                 () => {
                     console.log(`Saving override for ${moduleName}: ${overrideUrl}`);
                     persistedStatus.className = 'status-badge status-badge-green';
@@ -1044,11 +1101,20 @@
                     saveIcon.textContent = 'check';
                     saveIcon.classList.add('text-[var(--status-success-text)]');
                     target.classList.remove('text-[var(--brand-primary)]');
+                    changesNeedRelaunch = false;
+                    updateRelaunchIndicator();
                     setTimeout(() => {
                         saveIcon.textContent = 'save';
                         saveIcon.classList.remove('text-[var(--status-success-text)]');
                         target.classList.add('text-[var(--brand-primary)]');
                     }, 1500);
+                    // Relaunch app
+                    if (window.MicroTSM && window.MicroTSM.rootApp && typeof window.MicroTSM.rootApp.relaunch === 'function') {
+                        console.log('Relaunching application...');
+                        window.MicroTSM.rootApp.relaunch();
+                    } else {
+                        console.warn('Relaunch function not available.');
+                    }
                 },
                 () => {
                     console.log(`Save operation for ${moduleName} cancelled.`);
@@ -1059,7 +1125,7 @@
             const dialogId = `resetOverride_${moduleName.replace(/[^a-zA-Z0-9]/g, '_')}`;
             showConfirmDialog(
                 'Reset Override',
-                `Reset override for <strong>${moduleName}</strong>? This will clear any custom URL.`,
+                `Reset override for <strong>${moduleName}</strong>? This will clear any custom URL and relaunch the application.`,
                 () => {
                     console.log(`Resetting override for ${moduleName}`);
                     overrideInput.value = '';
@@ -1069,6 +1135,15 @@
                         persistedStatus.removeChild(persistedStatus.lastChild);
                     }
                     persistedStatus.appendChild(document.createTextNode(' Changes Not Persisted'));
+                    changesNeedRelaunch = false;
+                    updateRelaunchIndicator();
+                    // Relaunch app
+                    if (window.MicroTSM && window.MicroTSM.rootApp && typeof window.MicroTSM.rootApp.relaunch === 'function') {
+                        console.log('Relaunching application after reset...');
+                        window.MicroTSM.rootApp.relaunch();
+                    } else {
+                        console.warn('Relaunch function not available.');
+                    }
                 },
                 () => {
                     console.log(`Reset operation for ${moduleName} cancelled.`);
@@ -1085,10 +1160,34 @@
                 persistedStatus.removeChild(persistedStatus.lastChild);
             }
             persistedStatus.appendChild(document.createTextNode(' Changes Not Persisted'));
+            changesNeedRelaunch = true;
+            updateRelaunchIndicator();
         }
+    });
+    relaunchAppBtn.addEventListener('click', () => {
+        showConfirmDialog(
+            'Relaunch Application',
+            'Are you sure you want to relaunch the application with the current override settings?',
+            () => {
+                if (window.MicroTSM && window.MicroTSM.rootApp && typeof window.MicroTSM.rootApp.relaunch === 'function') {
+                    console.log('Relaunching application manually...');
+                    window.MicroTSM.rootApp.relaunch();
+                    changesNeedRelaunch = false;
+                    updateRelaunchIndicator();
+                } else {
+                    console.warn('Relaunch function not available.');
+                    alert('Relaunch function (window.MicroTSM.rootApp.relaunch) is not available.');
+                }
+            },
+            () => {
+                console.log('Manual relaunch cancelled.');
+            },
+            'manualRelaunch'
+        );
     });
     // Initial tab setup
     document.querySelector('aside nav button[data-tab="import-map-overrides"]').click();
+    updateRelaunchIndicator(); // Initial check
     console.log("DevTools Panel Initialized - Standard Style");
 </script>
 </body>

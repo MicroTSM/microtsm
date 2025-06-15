@@ -141,6 +141,7 @@ export default class MicroTSMRootApp {
         this.engineStarted = Promise.all([gearUp(), kickstartEngine()]);
         this.engineStarted.then(() => console.log('✅ Engine started!'));
 
+        window.MicroTSM.rootApp = this;
         return this; // Allow chaining
     }
 
@@ -168,6 +169,12 @@ export default class MicroTSMRootApp {
         this.launched = true;
         await this.trigger('onLaunch');
         console.log('✅ App is live!');
+    }
+
+    async relaunch() {
+        document.querySelector('microtsm-layout')?.remove();
+        this.launched = false;
+        await this.launch();
     }
 
     /**
