@@ -153,7 +153,7 @@ const overridden = (module: Module) => {
 };
 
 const onInputOverrides = (module: Module) => {
-    if (changed(module)) module.persisted = false;
+    module.persisted = !changed(module);
 };
 
 defineExpose({ persistedStatus });
