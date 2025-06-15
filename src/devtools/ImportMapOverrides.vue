@@ -85,7 +85,8 @@ const getStatusIcon = (status: string) => {
     }
 };
 
-const onBeforeSaveOverride = (event: MouseEvent, module: Module, index: number) => {
+const onBeforeSaveOverride = (event: Event, module: Module, index: number) => {
+    event.preventDefault();
     const target = event.target as HTMLElement;
     const dialogId = `saveOverride`;
 
@@ -95,7 +96,7 @@ const onBeforeSaveOverride = (event: MouseEvent, module: Module, index: number) 
         message: `Save override for <strong>${module.name}</strong> to:
 <code class="text-xs bg-gray-100 p-1 rounded inline-flex w-max my-1">${module.temporaryOverrideUrl || '(cleared)'}</code>?`,
         onConfirm: () => {
-            const saveIcon = target.tagName === 'SPAN' ? target : target?.querySelector('span');
+            const saveIcon = target.closest('tr')?.querySelector('.save-override .material-icons-outlined');
 
             if (saveIcon) {
                 saveIcon.textContent = 'check';
@@ -233,13 +234,20 @@ defineExpose({ persistedStatus });
                             {{ module.originalUrl }}
                         </td>
                         <td>
-                            <input
-                                class="module-override-url w-full"
-                                placeholder="Enter override URL"
-                                type="url"
-                                v-model="module.temporaryOverrideUrl"
-                                @input="onInputOverrides(module)"
-                            />
+                            <form
+                                :id="`override-url-form-${module.name}`"
+                                @submit="onBeforeSaveOverride($event, module, index)"
+                            >
+                                <input
+                                    name="override-url"
+                                    class="module-override-url w-full"
+                                    placeholder="Enter override URL"
+                                    type="url"
+                                    pattern="https?://.+"
+                                    v-model="module.temporaryOverrideUrl"
+                                    @input="onInputOverrides(module)"
+                                />
+                            </form>
                         </td>
                         <td class="text-[var(--text-tertiary)] text-xs">{{ module.loadTime ?? '-' }}</td>
                         <td>
@@ -260,13 +268,15 @@ defineExpose({ persistedStatus });
                             <button
                                 :disabled="!changed(module)"
                                 :class="[
+                                    'save-override',
                                     'icon-button text-[var(--brand-primary)]',
                                     {
                                         'opacity-60': !changed(module),
                                     },
                                 ]"
                                 :title="!changed(module) ? 'No Changes to Save' : 'Save Override'"
-                                @click="onBeforeSaveOverride($event, module, index)"
+                                type="submit"
+                                :form="`override-url-form-${module.name}`"
                             >
                                 <span class="material-icons-outlined text-base">save</span>
                             </button>
