@@ -46,6 +46,7 @@ class MicroTSMModuleLoader {
         }
 
         window.MicroTSM = this;
+        this.bindDevToolsShortcut();
     }
 
     static _rootApp: MicroTSMRootApp;
@@ -209,6 +210,19 @@ class MicroTSMModuleLoader {
 
     private uninstallDevTools() {
         MicroTSMModuleLoader._devtoolsInstance?.unmount();
+    }
+
+    private bindDevToolsShortcut() {
+        // Listen for keydown events globally
+        document.addEventListener('keydown', (event) => {
+            // Check for the first part of the shortcut: Ctrl + `
+            // Note: event.key should equal "`" for the backtick key.
+            if (event.altKey && event.key.toLowerCase() === 'd') {
+                event.preventDefault(); // Prevent default behavior (if any)
+                if (localStorage.devtoolsEnabled) this.disableDevTools();
+                else this.enableDevTools();
+            }
+        });
     }
 }
 

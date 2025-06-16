@@ -7,32 +7,34 @@ const fullScreen = inject<Ref<boolean>>('fullscreen');
 
 onMounted(() => {
     if (!activeTab.value) activeTab.value = tabs[0];
-
-    const handleKeyDown = (event: KeyboardEvent) => {
-        const key = parseInt(event.key);
-        if (key >= 1 && key <= tabs.length) {
-            activeTab.value = tabs[key - 1];
-        }
-
-        if ((event.altKey && event.key === 'ArrowDown') || event.key === 'ArrowRight') {
-            const currentIndex = tabs.findIndex((tab) => tab.id === activeTab.value?.id);
-            const nextIndex = (currentIndex + 1) % tabs.length;
-            activeTab.value = tabs[nextIndex];
-        }
-
-        if ((event.altKey && event.key === 'ArrowUp') || event.key === 'ArrowLeft') {
-            const currentIndex = tabs.findIndex((tab) => tab.id === activeTab.value?.id);
-            const prevIndex = currentIndex - 1 < 0 ? tabs.length - 1 : currentIndex - 1;
-            activeTab.value = tabs[prevIndex];
-        }
-    };
-
     window.addEventListener('keydown', handleKeyDown);
-
-    onUnmounted(() => {
-        window.removeEventListener('keydown', handleKeyDown);
-    });
 });
+
+onUnmounted(() => {
+    window.removeEventListener('keydown', handleKeyDown);
+});
+
+const handleKeyDown = (event: KeyboardEvent) => {
+    const key = parseInt(event.key);
+    if (key >= 1 && key <= tabs.length) {
+        activeTab.value = tabs[key - 1];
+    }
+
+    if (event.altKey && (event.key === 'ArrowDown' || event.key === 'ArrowRight')) {
+        event.preventDefault();
+        const currentIndex = tabs.findIndex((tab) => tab.id === activeTab.value?.id);
+        const nextIndex = (currentIndex + 1) % tabs.length;
+        activeTab.value = tabs[nextIndex];
+    }
+
+    if (event.altKey && (event.key === 'ArrowUp' || event.key === 'ArrowLeft')) {
+        debugger;
+        event.preventDefault();
+        const currentIndex = tabs.findIndex((tab) => tab.id === activeTab.value?.id);
+        const prevIndex = currentIndex - 1 < 0 ? tabs.length - 1 : currentIndex - 1;
+        activeTab.value = tabs[prevIndex];
+    }
+};
 </script>
 
 <template>

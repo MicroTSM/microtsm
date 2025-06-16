@@ -1,4 +1,4 @@
-import { createApp } from 'vue';
+import { App, createApp } from 'vue';
 import DevToolsPanel from './DevToolsPanel.vue';
 import './style.css';
 
@@ -18,22 +18,25 @@ injectLink('https://fonts.gstatic.com', 'preconnect', '');
 injectLink('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap', 'stylesheet');
 injectLink('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500&display=swap', 'stylesheet');
 
-const { mount: vueMount, unmount, onUnmount } = createApp(DevToolsPanel);
-
-onUnmount(() => {
+let unmount: App['unmount'];
+const onUnmount = () => {
     linkEls.forEach((link) => {
         link.remove();
     });
 
     document.getElementById('microtsm-devtools')?.remove();
-});
+};
 
 function mount() {
+    const app = createApp(DevToolsPanel);
+
     const devtools = document.createElement('div');
     devtools.id = 'microtsm-devtools';
     document.body.appendChild(devtools);
 
-    vueMount(devtools);
+    app.onUnmount(onUnmount);
+    unmount = app.unmount;
+    app.mount(devtools);
 }
 
 export { mount, unmount };
