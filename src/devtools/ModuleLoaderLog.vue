@@ -96,7 +96,7 @@ microtsm-devtools .log-container {
     scroll-behavior: smooth !important;
 }
 
-microtsm-devtools .log-wrapper {
+microtsm-devtools .log-wrapper p {
     color: #1e1e1e !important;
     font-family: 'SF Mono', 'Menlo', 'Courier New', monospace !important;
     font-size: 0.8125rem !important;
