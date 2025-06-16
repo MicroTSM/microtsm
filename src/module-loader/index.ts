@@ -16,7 +16,6 @@ export interface LoaderLog {
 
 const EMPTY_IMPORTMAP = Object.freeze({ imports: {} });
 
-// TODO: add enableDevtools method
 class MicroTSMModuleLoader {
     static _loadingModules = new Map<string, boolean>();
     version = __VERSION__;
@@ -40,6 +39,10 @@ class MicroTSMModuleLoader {
         const importMapData: ImportMap = importMap ? JSON.parse(importMap) : EMPTY_IMPORTMAP;
         MicroTSMModuleLoader._importMap = importMapData.imports;
 
+        if (localStorage.getItem('devtoolsEnabled') === 'true') {
+            this.installDevtools();
+        }
+
         window.MicroTSM = this;
     }
 
@@ -57,7 +60,7 @@ class MicroTSMModuleLoader {
         MicroTSMModuleLoader._rootApp = value;
     }
 
-    private static _logs: LoaderLog[] = [{ type: 'info', message: 'MicroTSM DevTools activated.' }];
+    private static _logs: LoaderLog[] = [];
 
     get logs(): LoaderLog[] {
         return MicroTSMModuleLoader._logs;
@@ -101,6 +104,11 @@ class MicroTSMModuleLoader {
 
     get importMap(): ImportMap['imports'] {
         return MicroTSMModuleLoader._importMap;
+    }
+
+    enableDevtools() {
+        localStorage.devtoolsEnabled = true;
+        this.installDevtools();
     }
 
     pushLogs(value: LoaderLog) {
@@ -174,6 +182,12 @@ class MicroTSMModuleLoader {
         MicroTSMModuleLoader._errorLoadedModules = MicroTSMModuleLoader._errorLoadedModules.filter(
             (m) => m !== specifier,
         );
+    }
+
+    private installDevtools() {
+        import('../devtools/index.js').then(() => {
+            this.pushLogs({ type: 'info', message: 'MicroTSM DevTools activated.' });
+        });
     }
 }
 
