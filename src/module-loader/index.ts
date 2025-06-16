@@ -112,7 +112,7 @@ class MicroTSMModuleLoader {
     enableDevTools() {
         if (!localStorage.devtoolsEnabled) {
             localStorage.devtoolsEnabled = true;
-            this.installDevTools();
+            this.installDevTools().then();
         } else {
             console.warn('DevTools already enabled');
         }
@@ -200,7 +200,10 @@ class MicroTSMModuleLoader {
         );
     }
 
-    private installDevTools() {
+    private async installDevTools() {
+        const { showIndicator } = await import('../devtools/devtoolsCustomElement.js');
+        showIndicator();
+
         import('../devtools/index.js').then((module) => {
             MicroTSMModuleLoader._devtoolsInstance = module;
             module.mount();
@@ -215,12 +218,13 @@ class MicroTSMModuleLoader {
     private bindDevToolsShortcut() {
         // Listen for keydown events globally
         document.addEventListener('keydown', (event) => {
-            // Check for the first part of the shortcut: Ctrl + `
-            // Note: event.key should equal "`" for the backtick key.
-            if (event.altKey && event.key.toLowerCase() === 'd') {
-                event.preventDefault(); // Prevent default behavior (if any)
-                if (localStorage.devtoolsEnabled) this.disableDevTools();
-                else this.enableDevTools();
+            switch (true) {
+                case event.ctrlKey && event.key === 'F12':
+                case event.altKey && event.key.toLowerCase() === 'd':
+                    event.preventDefault();
+                    if (localStorage.devtoolsEnabled) this.disableDevTools();
+                    else this.enableDevTools();
+                    break;
             }
         });
     }

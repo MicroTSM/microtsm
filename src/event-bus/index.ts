@@ -89,6 +89,8 @@ export type MicroTSMEventMap = {
     'module-loader:module-loaded': { module: string; loadTime: number };
     'module-loader:load-error': { module: string; error: unknown };
     'module-loader:new-log': LoaderLog;
+    'devtools:activated': void;
+    'devtools:deactivated': void;
 };
 
 /** Ensure global availability */

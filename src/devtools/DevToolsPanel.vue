@@ -6,6 +6,7 @@ import MainContent from './MainContent.vue';
 import Footer from './Footer.vue';
 import ConfirmDialog from './ConfirmDialog.vue';
 import tabs from './tabs.ts';
+import WelcomeDialog from './WelcomeDialog.vue';
 
 const panel = ref<HTMLElement | null>(null);
 const panelVisible = ref(false);
@@ -13,6 +14,7 @@ const fullscreen = ref(false);
 const activeTab = ref(tabs[0]);
 // Instead of a boolean, we use a string to mark which edge is being resized.
 const resizeStatus = ref<'top' | 'left' | 'corner' | false>(false);
+const seenWelcomeDialog = ref(getCookie('seenWelcomeDialog') === 'true');
 
 // Store initial values when dragging starts.
 const initial = {
@@ -105,14 +107,14 @@ const stopResize = () => {
     }
 };
 
-const setCookie = (name: string, value: string) => {
+function setCookie(name: string, value: string) {
     document.cookie = `${name}=${value}; path=/; max-age=31536000`;
-};
+}
 
-const getCookie = (name: string) => {
+function getCookie(name: string) {
     const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
     return match ? match[2] : null;
-};
+}
 
 const toggleFullscreen = (is?: boolean) => {
     fullscreen.value = is ?? !fullscreen.value;
@@ -164,6 +166,16 @@ const handleKeyPress = (event: KeyboardEvent) => {
         toggleFullscreen(event.key === 'ArrowUp');
     }
 };
+
+const onUserPressGotItButton = () => {
+    setCookie('seenWelcomeDialog', 'true');
+    const welcome = document.body.querySelector('#devtools-guide-dialog');
+    welcome?.classList.add('hidden');
+    setTimeout(() => {
+        welcome?.remove();
+    }, 300);
+    panelVisible.value = true;
+};
 </script>
 
 <template>
@@ -208,6 +220,8 @@ const handleKeyPress = (event: KeyboardEvent) => {
         </template>
     </div>
     <ConfirmDialog v-if="panelVisible" />
+
+    <WelcomeDialog v-if="!seenWelcomeDialog" @got-it="onUserPressGotItButton" />
 </template>
 
 <style>

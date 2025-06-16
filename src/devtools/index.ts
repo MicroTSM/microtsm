@@ -18,36 +18,23 @@ injectLink('https://fonts.gstatic.com', 'preconnect', '');
 injectLink('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap', 'stylesheet');
 injectLink('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500&display=swap', 'stylesheet');
 
+const devtools = document.createElement('microtsm-devtools');
 let unmount: App['unmount'];
+
 const onUnmount = () => {
     linkEls.forEach((link) => {
         link.remove();
     });
 
-    document.getElementById('microtsm-devtools')?.remove();
+    document.body.removeChild(devtools);
 };
 
 function mount() {
     const app = createApp(DevToolsPanel);
-
-    class MicrotsmDevtools extends HTMLElement {
-        constructor() {
-            super();
-        }
-
-        connectedCallback() {
-            app.onUnmount(onUnmount);
-            unmount = app.unmount;
-            app.mount(this);
-        }
-    }
-
-    if (!customElements.get('microtsm-devtools')) {
-        customElements.define('microtsm-devtools', MicrotsmDevtools);
-    }
-
-    const devtools = document.createElement('microtsm-devtools');
     document.body.appendChild(devtools);
+    app.onUnmount(onUnmount);
+    unmount = app.unmount;
+    app.mount(devtools);
 }
 
 export { mount, unmount };

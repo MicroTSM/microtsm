@@ -14,8 +14,7 @@
             href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500&amp;display=swap"
             rel="stylesheet"
         />
-        <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet" />
-        <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
         <style type="text/tailwindcss">
             :root {
                 --brand-primary: #0a84ff;
@@ -78,8 +77,7 @@
                 border-radius: 5px;
                 box-shadow: none;
             }
-            .tab-active .material-icons-outlined,
-            .tab-active .material-icons-round {
+            .tab-active .material-icons {
                 color: var(--brand-primary) !important;
             }
             .devtools-panel-compact aside {
@@ -105,8 +103,7 @@
                 opacity: 1;
                 transition: opacity 0.3s ease-in-out;
             }
-            .devtools-panel-compact aside nav button .material-icons-outlined,
-            .devtools-panel-compact aside nav button .material-icons-round {
+            .devtools-panel-compact aside nav button .material-icons {
                 font-size: 18px;
             }
             .devtools-panel-fullscreen aside {
@@ -136,8 +133,7 @@
                 opacity: 1;
                 transition: opacity 0.3s ease-in-out;
             }
-            .devtools-panel-fullscreen aside nav button .material-icons-outlined,
-            .devtools-panel-fullscreen aside nav button .material-icons-round {
+            .devtools-panel-fullscreen aside nav button .material-icons {
                 font-size: 18px;
                 flex-shrink: 0;
             }
@@ -182,8 +178,7 @@
                 background-color: #e5e5ea;
                 color: #3c3c43;
             }
-            .status-badge .material-icons-outlined,
-            .status-badge .material-icons-round {
+            .status-badge .material-icons {
                 font-size: 14px;
                 margin-right: 5px;
             }
@@ -214,7 +209,7 @@
             .search-input-container {
                 position: relative;
             }
-            .search-input-container .material-icons-outlined {
+            .search-input-container .material-icons {
                 position: absolute;
                 left: 10px;
                 top: 50%;
@@ -308,7 +303,7 @@
                 display: flex;
                 justify-content: center;
             }
-            .dialog-icon-area .material-icons-outlined {
+            .dialog-icon-area .material-icons {
                 font-size: 28px;
                 color: var(--brand-primary);
             }
@@ -335,7 +330,7 @@
             }
             input[type='checkbox']:checked::before {
                 content: 'check';
-                font-family: 'Material Icons Round';
+                font-family: 'Material Icons';
                 font-size: 14px;
                 color: var(--text-on-brand);
                 position: absolute;
@@ -601,24 +596,100 @@
             .panel-overlay.visible {
                 opacity: 1;
             }
+            .activation-indicator {
+                position: fixed;
+                top: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                background-color: rgba(0, 0, 0, 0.8);
+                color: white;
+                padding: 10px 20px;
+                border-radius: 8px;
+                font-size: 0.875rem;
+                z-index: 100;
+                opacity: 0;
+                transition:
+                    opacity 0.3s ease-in-out,
+                    transform 0.3s ease-in-out;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            }
+            .activation-indicator.visible {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+            .keyboard-shortcut {
+                background-color: var(--surface-elevated);
+                border: 1px solid var(--border-neutral);
+                border-radius: 4px;
+                padding: 2px 6px;
+                font-family: 'Roboto Mono', monospace;
+                font-size: 0.8em;
+                color: var(--text-primary);
+                box-shadow: var(--shadow-sm);
+            }
+            .material-icons {
+                font-variation-settings:
+                    'FILL' 0,
+                    'wght' 400,
+                    'GRAD' 0,
+                    'opsz' 24;
+            }
         </style>
     </head>
     <body class="min-h-screen flex items-center justify-center p-4 bg-gray-100">
-        <div class="panel-overlay hidden" id="panel-overlay"></div>
-        <button
-            class="fixed bottom-4 right-4 z-50 flex items-center px-4 py-2 bg-[var(--brand-primary)] text-[var(--text-on-brand)] rounded-lg shadow-lg hover:bg-[#0070DD] transition-colors duration-150"
-            id="open-devtools-btn"
+        <div class="activation-indicator" id="activation-indicator">
+            <span class="material-icons mr-2 align-middle">keyboard_command_key</span> DevTools Activating...
+        </div>
+        <div
+            class="fixed inset-0 dialog-overlay flex items-center justify-center p-4 z-[70] hidden"
+            id="devtools-guide-dialog"
         >
-            <span class="material-icons-outlined mr-2">build_circle</span>
-            Open DevTools
-        </button>
+            <div class="dialog-content w-full max-w-lg">
+                <div class="dialog-icon-area">
+                    <span class="material-icons">help_outline</span>
+                </div>
+                <div>
+                    <h3 class="dialog-title">Welcome to DevTools!</h3>
+                    <p class="dialog-message mt-3 text-left">Here are some helpful shortcuts to get you started:</p>
+                    <ul class="mt-4 space-y-2 text-sm text-left text-[var(--text-secondary)]">
+                        <li>
+                            <span class="font-medium text-[var(--text-primary)]">Show/Hide Panel:</span>
+                            <span class="keyboard-shortcut">Ctrl</span> + <span class="keyboard-shortcut">`</span> or
+                            <span class="keyboard-shortcut">Ctrl</span> + <span class="keyboard-shortcut">F12</span>
+                        </li>
+                        <li>
+                            <span class="font-medium text-[var(--text-primary)]">Toggle Fullscreen:</span>
+                            <span class="keyboard-shortcut">Ctrl</span> + <span class="keyboard-shortcut">F11</span> or
+                            <span class="keyboard-shortcut">Ctrl</span> + <span class="keyboard-shortcut">↑</span> /
+                            <span class="keyboard-shortcut">↓</span>
+                        </li>
+                        <li>
+                            <span class="font-medium text-[var(--text-primary)]">Navigate Tabs:</span>
+                            <span class="keyboard-shortcut">1</span>, <span class="keyboard-shortcut">2</span>,
+                            <span class="keyboard-shortcut">3</span>, <span class="keyboard-shortcut">4</span> or
+                            <span class="keyboard-shortcut">Alt</span> + <span class="keyboard-shortcut">↑</span> /
+                            <span class="keyboard-shortcut">↓</span> / <span class="keyboard-shortcut">←</span> /
+                            <span class="keyboard-shortcut">→</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="mt-6 flex items-center">
+                    <input class="mr-2" id="hide-devtools-guide" name="hide-devtools-guide" type="checkbox" />
+                    <label class="dialog-checkbox-label" for="hide-devtools-guide">Don't show this again</label>
+                </div>
+                <div class="mt-6 flex justify-end">
+                    <button class="button-primary" id="close-devtools-guide-btn" type="button">Got it!</button>
+                </div>
+            </div>
+        </div>
+        <div class="panel-overlay hidden" id="panel-overlay"></div>
         <div
             class="fixed bottom-4 left-1/2 -translate-x-1/2 w-[800px] max-h-[calc(100vh-32px)] flex-col overflow-hidden devtools-panel-compact modern-panel hidden z-50"
             id="devtools-panel"
         >
             <header class="header relative">
                 <div class="app-bar-left-title-container">
-                    <span class="material-icons-outlined text-[var(--brand-primary)] text-2xl">build_circle</span>
+                    <span class="material-icons text-[var(--brand-primary)] text-2xl">build_circle</span>
                     <h1 class="app-bar-title">DevTools Panel</h1>
                 </div>
                 <div class="app-bar-center-info-container">
@@ -629,12 +700,19 @@
                         https://www.example.com/very/long/path/...
                     </div>
                 </div>
-                <div class="flex items-center gap-2">
-                    <button class="icon-button" id="toggle-fullscreen-btn" title="Enter Fullscreen">
-                        <span class="material-icons-outlined text-xl" id="fullscreen-icon">fullscreen</span>
+                <div class="flex items-center gap-1">
+                    <button class="icon-button" id="help-btn" title="Help (F1)">
+                        <span class="material-icons text-xl">help_outline</span>
                     </button>
-                    <button class="icon-button" id="panel-close-btn" title="Close Panel">
-                        <span class="material-icons-outlined text-xl">close</span>
+                    <button
+                        class="icon-button"
+                        id="toggle-fullscreen-btn"
+                        title="Enter Fullscreen (Ctrl+F11 or Ctrl+Up/Down)"
+                    >
+                        <span class="material-icons text-xl" id="fullscreen-icon">fullscreen</span>
+                    </button>
+                    <button class="icon-button" id="panel-close-btn" title="Close Panel (Ctrl+`)">
+                        <span class="material-icons text-xl">close</span>
                     </button>
                 </div>
             </header>
@@ -644,29 +722,33 @@
                         <button
                             class="w-full flex items-center px-2.5 py-2.5 text-left text-sm font-medium text-[var(--text-secondary)] hover:bg-[rgba(0,0,0,0.03)] rounded-[5px] transition-colors duration-150 tab-active"
                             data-tab="import-map-overrides"
+                            title="Overrides (1 or Alt+Left/Right)"
                         >
-                            <span class="material-icons-outlined text-lg">tune</span>
+                            <span class="material-icons text-lg">tune</span>
                             <span class="tab-label">Overrides</span>
                         </button>
                         <button
                             class="w-full flex items-center px-2.5 py-2.5 text-left text-sm font-medium text-[var(--text-secondary)] hover:bg-[rgba(0,0,0,0.03)] rounded-[5px] transition-colors duration-150"
                             data-tab="module-loader-log"
+                            title="Log (2 or Alt+Left/Right)"
                         >
-                            <span class="material-icons-outlined text-lg">description</span>
+                            <span class="material-icons text-lg">description</span>
                             <span class="tab-label">Log</span>
                         </button>
                         <button
                             class="w-full flex items-center px-2.5 py-2.5 text-left text-sm font-medium text-[var(--text-secondary)] hover:bg-[rgba(0,0,0,0.03)] rounded-[5px] transition-colors duration-150"
                             data-tab="performance-metrics"
+                            title="Perf (3 or Alt+Left/Right)"
                         >
-                            <span class="material-icons-outlined text-lg">speed</span>
+                            <span class="material-icons text-lg">speed</span>
                             <span class="tab-label">Perf</span>
                         </button>
                         <button
                             class="w-full flex items-center px-2.5 py-2.5 text-left text-sm font-medium text-[var(--text-secondary)] hover:bg-[rgba(0,0,0,0.03)] rounded-[5px] transition-colors duration-150"
                             data-tab="contextual-information"
+                            title="Context (4 or Alt+Left/Right)"
                         >
-                            <span class="material-icons-outlined text-lg">info</span>
+                            <span class="material-icons text-lg">info</span>
                             <span class="tab-label">Context</span>
                         </button>
                     </nav>
@@ -679,18 +761,20 @@
                                     <h2 class="section-title">Import Map Overrides</h2>
                                     <div class="flex items-center space-x-2">
                                         <span class="status-badge status-badge-green" id="persisted-status">
-                                            <span class="material-icons-round text-sm">save</span>Overrides Persisted
+                                            <span class="material-icons text-sm">save</span>Overrides Persisted
                                         </span>
                                         <div class="relative">
                                             <button class="icon-button" id="relaunch-app-btn" title="Relaunch App">
-                                                <span class="material-icons-outlined text-base">refresh</span>
+                                                <span class="material-icons text-base">refresh</span>
                                                 <span
                                                     class="relaunch-btn-indicator hidden"
                                                     id="relaunch-button-indicator"
                                                 ></span>
                                                 <div class="relaunch-message-tooltip" id="relaunch-needed-tooltip">
-                                                    <span class="material-icons-outlined text-sm mr-1 align-bottom"
-                                                        >warning_amber</span
+                                                    <span
+                                                        class="material-icons text-sm mr-1 align-bottom !text-yellow-500"
+                                                        style="font-variation-settings: 'FILL' 1"
+                                                        >warning</span
                                                     >
                                                     Relaunch required
                                                 </div>
@@ -699,7 +783,7 @@
                                     </div>
                                 </div>
                                 <div class="search-input-container mb-3">
-                                    <span class="material-icons-outlined">search</span>
+                                    <span class="material-icons">search</span>
                                     <input
                                         class="w-full"
                                         id="search-modules-input"
@@ -739,8 +823,7 @@
                                                 <td class="text-[var(--text-tertiary)] text-xs">120ms</td>
                                                 <td>
                                                     <span class="status-badge status-badge-green">
-                                                        <span class="material-icons-round text-sm">check_circle</span>
-                                                        Loaded
+                                                        <span class="material-icons text-sm">check_circle</span> Loaded
                                                     </span>
                                                 </td>
                                                 <td class="text-center space-x-1">
@@ -748,10 +831,10 @@
                                                         class="icon-button text-[var(--brand-primary)]"
                                                         title="Save Override"
                                                     >
-                                                        <span class="material-icons-outlined text-base">save</span>
+                                                        <span class="material-icons text-base">save</span>
                                                     </button>
                                                     <button class="icon-button" title="Reset to Default">
-                                                        <span class="material-icons-outlined text-base">undo</span>
+                                                        <span class="material-icons text-base">undo</span>
                                                     </button>
                                                 </td>
                                             </tr>
@@ -773,9 +856,7 @@
                                                 <td class="text-[var(--text-tertiary)] text-xs">-</td>
                                                 <td>
                                                     <span class="status-badge status-badge-yellow">
-                                                        <span class="material-icons-round text-sm"
-                                                            >hourglass_empty</span
-                                                        >
+                                                        <span class="material-icons text-sm">hourglass_empty</span>
                                                         Pending
                                                     </span>
                                                 </td>
@@ -784,10 +865,10 @@
                                                         class="icon-button text-[var(--brand-primary)]"
                                                         title="Save Override"
                                                     >
-                                                        <span class="material-icons-outlined text-base">save</span>
+                                                        <span class="material-icons text-base">save</span>
                                                     </button>
                                                     <button class="icon-button" title="Reset to Default">
-                                                        <span class="material-icons-outlined text-base">undo</span>
+                                                        <span class="material-icons text-base">undo</span>
                                                     </button>
                                                 </td>
                                             </tr>
@@ -812,7 +893,7 @@
                                                 <td class="text-[var(--text-tertiary)] text-xs">-</td>
                                                 <td>
                                                     <span class="status-badge status-badge-red">
-                                                        <span class="material-icons-round text-sm">error</span> Error
+                                                        <span class="material-icons text-sm">error</span> Error
                                                     </span>
                                                 </td>
                                                 <td class="text-center space-x-1">
@@ -820,10 +901,10 @@
                                                         class="icon-button text-[var(--brand-primary)]"
                                                         title="Save Override"
                                                     >
-                                                        <span class="material-icons-outlined text-base">save</span>
+                                                        <span class="material-icons text-base">save</span>
                                                     </button>
                                                     <button class="icon-button" title="Reset to Default">
-                                                        <span class="material-icons-outlined text-base">undo</span>
+                                                        <span class="material-icons text-base">undo</span>
                                                     </button>
                                                 </td>
                                             </tr>
@@ -845,8 +926,7 @@
                                                 <td class="text-[var(--text-tertiary)] text-xs">80ms</td>
                                                 <td>
                                                     <span class="status-badge status-badge-green">
-                                                        <span class="material-icons-round text-sm">check_circle</span>
-                                                        Loaded
+                                                        <span class="material-icons text-sm">check_circle</span> Loaded
                                                     </span>
                                                 </td>
                                                 <td class="text-center space-x-1">
@@ -854,10 +934,10 @@
                                                         class="icon-button text-[var(--brand-primary)]"
                                                         title="Save Override"
                                                     >
-                                                        <span class="material-icons-outlined text-base">save</span>
+                                                        <span class="material-icons text-base">save</span>
                                                     </button>
                                                     <button class="icon-button" title="Reset to Default">
-                                                        <span class="material-icons-outlined text-base">undo</span>
+                                                        <span class="material-icons text-base">undo</span>
                                                     </button>
                                                 </td>
                                             </tr>
@@ -879,8 +959,7 @@
                                                 <td class="text-[var(--text-tertiary)] text-xs">-</td>
                                                 <td>
                                                     <span class="status-badge status-badge-gray">
-                                                        <span class="material-icons-round text-sm">watch_later</span>
-                                                        Idle
+                                                        <span class="material-icons text-sm">watch_later</span> Idle
                                                     </span>
                                                 </td>
                                                 <td class="text-center space-x-1">
@@ -888,10 +967,10 @@
                                                         class="icon-button text-[var(--brand-primary)]"
                                                         title="Save Override"
                                                     >
-                                                        <span class="material-icons-outlined text-base">save</span>
+                                                        <span class="material-icons text-base">save</span>
                                                     </button>
                                                     <button class="icon-button" title="Reset to Default">
-                                                        <span class="material-icons-outlined text-base">undo</span>
+                                                        <span class="material-icons text-base">undo</span>
                                                     </button>
                                                 </td>
                                             </tr>
@@ -979,7 +1058,7 @@
                     </div>
                 </main>
             </div>
-            <footer class="footer">DevTools Panel v0.1.0 © 2024. For development use only.</footer>
+            <footer class="footer">DevTools Panel v0.1.0 © 2024. Press Ctrl+F12 to toggle.</footer>
         </div>
         <div
             class="fixed inset-0 dialog-overlay flex items-center justify-center p-4 z-[60] hidden"
@@ -987,7 +1066,7 @@
         >
             <div class="dialog-content w-full">
                 <div class="dialog-icon-area">
-                    <span class="material-icons-outlined">help_outline</span>
+                    <span class="material-icons">help_outline</span>
                 </div>
                 <div>
                     <h3 class="dialog-title" id="confirm-dialog-title">Confirm Action</h3>
@@ -1009,6 +1088,7 @@
             const panelOverlay = document.getElementById('panel-overlay');
             const fullscreenIconElement = document.getElementById('fullscreen-icon');
             const panelCloseBtn = document.getElementById('panel-close-btn');
+            const helpBtn = document.getElementById('help-btn');
             const searchInput = document.getElementById('search-modules-input');
             const modulesTbody = document.getElementById('modules-tbody');
             const persistedStatus = document.getElementById('persisted-status');
@@ -1022,26 +1102,87 @@
             const confirmDialogConfirmBtn = document.getElementById('confirm-dialog-confirm');
             const dontShowAgainCheckbox = document.getElementById('dont-show-again');
             const relaunchNeededTooltip = document.getElementById('relaunch-needed-tooltip');
-            const openDevToolsBtn = document.getElementById('open-devtools-btn');
+            const activationIndicator = document.getElementById('activation-indicator');
+            const devtoolsGuideDialog = document.getElementById('devtools-guide-dialog');
+            const closeDevtoolsGuideBtn = document.getElementById('close-devtools-guide-btn');
+            const hideDevtoolsGuideCheckbox = document.getElementById('hide-devtools-guide');
             let confirmCallback = null;
             let cancelCallback = null;
             let dialogIdentifier = '';
             let changesNeedRelaunch = false;
+            let isPanelVisible = false;
+            function showActivationIndicator() {
+                activationIndicator.classList.add('visible');
+                setTimeout(() => {
+                    activationIndicator.classList.remove('visible');
+                }, 1500);
+            }
+            function showDevToolsGuide() {
+                // Always show the guide if the help button is clicked
+                // or if it's the first time and not disabled.
+                if (
+                    devtoolsGuideDialog.classList.contains('hidden') ||
+                    localStorage.getItem('hideDevtoolsGuide') !== 'true'
+                ) {
+                    devtoolsGuideDialog.classList.remove('hidden');
+                }
+            }
+            helpBtn.addEventListener('click', () => {
+                // Reset "Don't show this again" for this specific help request if needed,
+                // or simply always show. For now, just always show.
+                hideDevtoolsGuideCheckbox.checked = localStorage.getItem('hideDevtoolsGuide') === 'true';
+                showDevToolsGuide();
+            });
+            closeDevtoolsGuideBtn.addEventListener('click', () => {
+                if (hideDevtoolsGuideCheckbox.checked) {
+                    localStorage.setItem('hideDevtoolsGuide', 'true');
+                } else {
+                    // If unchecked, ensure it's not set to true for future automated showings.
+                    // However, the help button itself will always show it.
+                    // localStorage.removeItem('hideDevtoolsGuide'); // Optional: if you want to reset the "don't show again" on manual close
+                }
+                devtoolsGuideDialog.classList.add('hidden');
+            });
             // Show panel with transition
             function showDevToolsPanel() {
+                if (isPanelVisible) return;
+                showActivationIndicator();
                 panel.classList.remove('hidden');
                 panelOverlay.classList.remove('hidden');
+                // Remove initial hidden state classes and apply visible classes
                 panel.classList.remove('opacity-0', 'scale-95', 'translate-y-2.5');
                 setTimeout(() => {
+                    // Allow DOM to update before transition
                     panel.classList.add('panel-visible');
-                    panel.classList.add('flex');
+                    panel.classList.add('flex'); // Ensure flex is applied for layout
                     panelOverlay.classList.add('visible');
-                }, 50);
+                    isPanelVisible = true;
+                    if (localStorage.getItem('hideDevtoolsGuide') !== 'true') {
+                        showDevToolsGuide(); // Show guide on first panel open if not disabled
+                    }
+                }, 50); // Small delay for transition initiation
             }
-            openDevToolsBtn.addEventListener('click', () => {
-                showDevToolsPanel();
-                openDevToolsBtn.classList.add('hidden');
-            });
+            // Hide panel with transition
+            function hideDevToolsPanel() {
+                if (!isPanelVisible) return;
+                panel.classList.remove('panel-visible');
+                panelOverlay.classList.remove('visible');
+                // Re-apply hidden state classes for transition out
+                panel.classList.add('opacity-0', 'scale-95', 'translate-y-2.5');
+                setTimeout(() => {
+                    panel.classList.add('hidden');
+                    panel.classList.remove('flex'); // Remove flex when hidden
+                    panelOverlay.classList.add('hidden');
+                    isPanelVisible = false;
+                }, 300); // Match transition duration
+            }
+            function toggleDevToolsPanel() {
+                if (isPanelVisible) {
+                    hideDevToolsPanel();
+                } else {
+                    showDevToolsPanel();
+                }
+            }
             function updateRelaunchIndicator() {
                 if (changesNeedRelaunch) {
                     relaunchButtonIndicator.classList.remove('hidden');
@@ -1054,14 +1195,14 @@
             function showConfirmDialog(title, message, onConfirm, onCancel, id) {
                 dialogIdentifier = id;
                 if (localStorage.getItem(`dontShow_${dialogIdentifier}`) === 'true') {
-                    onConfirm();
+                    onConfirm(); // Automatically confirm if "don't show again" is set
                     return;
                 }
                 confirmDialogTitle.textContent = title;
-                confirmDialogMessage.innerHTML = message;
+                confirmDialogMessage.innerHTML = message; // Use innerHTML to support bold tags etc.
                 confirmCallback = onConfirm;
                 cancelCallback = onCancel;
-                dontShowAgainCheckbox.checked = false;
+                dontShowAgainCheckbox.checked = false; // Reset checkbox
                 confirmDialog.classList.remove('hidden');
             }
             confirmDialogConfirmBtn.addEventListener('click', () => {
@@ -1075,7 +1216,7 @@
                 confirmDialog.classList.add('hidden');
                 if (cancelCallback) cancelCallback();
             });
-            toggleButton.addEventListener('click', () => {
+            function toggleFullscreen() {
                 const isCompact = panel.classList.contains('devtools-panel-compact');
                 panel.classList.toggle('devtools-panel-compact', !isCompact);
                 panel.classList.toggle('devtools-panel-fullscreen', isCompact);
@@ -1094,8 +1235,9 @@
                     );
                     panel.classList.add('w-screen', 'h-screen', 'fixed', 'top-0', 'left-0');
                     fullscreenIconElement.textContent = 'fullscreen_exit';
-                    toggleButton.title = 'Exit Fullscreen';
-                    panelOverlay.classList.add('devtools-panel-fullscreen'); // Apply fullscreen styles to overlay
+                    toggleButton.title = 'Exit Fullscreen (Ctrl+F11 or Ctrl+Up/Down)';
+                    panelOverlay.classList.add('devtools-panel-fullscreen'); // Add overlay class for fullscreen
+                    // Ensure tab labels are visible in fullscreen
                     tabLabels.forEach((label) => (label.style.opacity = '1'));
                 } else {
                     // Going to compact
@@ -1110,51 +1252,53 @@
                         'modern-panel',
                     );
                     fullscreenIconElement.textContent = 'fullscreen';
-                    toggleButton.title = 'Enter Fullscreen';
-                    panelOverlay.classList.remove('devtools-panel-fullscreen'); // Remove fullscreen styles from overlay
+                    toggleButton.title = 'Enter Fullscreen (Ctrl+F11 or Ctrl+Up/Down)';
+                    panelOverlay.classList.remove('devtools-panel-fullscreen'); // Remove overlay class for compact
+                    // Restore compact tab label visibility logic (if it was different, otherwise this is redundant)
                     tabLabels.forEach((label) => {
                         if (panel.classList.contains('devtools-panel-compact')) {
-                            label.style.opacity = '1';
+                            // For compact view, the label is already visible by default from CSS
+                            label.style.opacity = '1'; // Or manage via CSS classes if preferred
                         }
                     });
                 }
-            });
-            panelCloseBtn.addEventListener('click', () => {
-                panel.classList.remove('panel-visible');
-                panelOverlay.classList.remove('visible');
-                panel.classList.add('opacity-0', 'scale-95', 'translate-y-2.5');
-                setTimeout(() => {
-                    panel.classList.add('hidden');
-                    panel.classList.remove('flex');
-                    panelOverlay.classList.add('hidden');
-                    openDevToolsBtn.classList.remove('hidden');
-                }, 300);
-            });
+            }
+            toggleButton.addEventListener('click', toggleFullscreen);
+            panelCloseBtn.addEventListener('click', hideDevToolsPanel);
             const tabButtons = document.querySelectorAll('aside nav button');
             const tabPanes = document.querySelectorAll('main .tab-pane');
-            tabButtons.forEach((button) => {
-                button.addEventListener('click', () => {
-                    tabButtons.forEach((btn) => {
-                        btn.classList.remove('tab-active');
-                        btn.classList.add('text-[var(--text-secondary)]', 'hover:bg-[rgba(0,0,0,0.03)]');
-                        btn.querySelector('.material-icons-outlined').classList.remove('text-[var(--brand-primary)]');
-                        btn.querySelector('.material-icons-outlined').classList.add('text-[var(--text-secondary)]');
-                    });
-                    tabPanes.forEach((pane) => {
-                        pane.classList.add('hidden');
-                        pane.classList.remove('active');
-                    });
-                    button.classList.add('tab-active');
-                    button.classList.remove('text-[var(--text-secondary)]', 'hover:bg-[rgba(0,0,0,0.03)]');
-                    button.querySelector('.material-icons-outlined').classList.add('text-[var(--brand-primary)]');
-                    button.querySelector('.material-icons-outlined').classList.remove('text-[var(--text-secondary)]');
-                    const tabId = button.dataset.tab;
-                    const activePane = document.getElementById(`tab-content-${tabId}`);
-                    if (activePane) {
-                        activePane.classList.remove('hidden');
-                        activePane.classList.add('active');
-                    }
+            let currentTabIndex = 0;
+            function setActiveTab(index) {
+                if (index < 0 || index >= tabButtons.length) return;
+                // Reset all tabs
+                tabButtons.forEach((btn) => {
+                    btn.classList.remove('tab-active');
+                    // Restore default text color for non-active tabs
+                    btn.classList.add('text-[var(--text-secondary)]', 'hover:bg-[rgba(0,0,0,0.03)]');
+                    // Restore default icon color for non-active tabs
+                    btn.querySelector('.material-icons').classList.remove('text-[var(--brand-primary)]');
+                    btn.querySelector('.material-icons').classList.add('text-[var(--text-secondary)]');
                 });
+                tabPanes.forEach((pane) => {
+                    pane.classList.add('hidden');
+                    pane.classList.remove('active');
+                });
+                // Activate the selected tab
+                const button = tabButtons[index];
+                button.classList.add('tab-active');
+                button.classList.remove('text-[var(--text-secondary)]', 'hover:bg-[rgba(0,0,0,0.03)]'); // Remove default text color
+                button.querySelector('.material-icons').classList.add('text-[var(--brand-primary)]');
+                button.querySelector('.material-icons').classList.remove('text-[var(--text-secondary)]'); // Remove default icon color, apply active
+                const tabId = button.dataset.tab;
+                const activePane = document.getElementById(`tab-content-${tabId}`);
+                if (activePane) {
+                    activePane.classList.remove('hidden');
+                    activePane.classList.add('active');
+                }
+                currentTabIndex = index;
+            }
+            tabButtons.forEach((button, index) => {
+                button.addEventListener('click', () => setActiveTab(index));
             });
             searchInput.addEventListener('input', (event) => {
                 const searchTerm = event.target.value.toLowerCase();
@@ -1163,28 +1307,31 @@
                     const moduleName = row.querySelector('td:first-child').textContent.toLowerCase();
                     const originalUrl = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
                     if (moduleName.includes(searchTerm) || originalUrl.includes(searchTerm)) {
-                        row.style.display = '';
+                        row.style.display = ''; // Show row if matches
                     } else {
-                        row.style.display = 'none';
+                        row.style.display = 'none'; // Hide row if no match
                     }
                 });
             });
             modulesTbody.addEventListener('click', (event) => {
                 const target = event.target.closest('button.icon-button');
-                if (!target) return;
+                if (!target) return; // Clicked outside an icon button
                 const row = target.closest('tr');
                 const moduleName = row.querySelector('td:first-child').textContent;
                 const overrideInput = row.querySelector('.module-override-url');
                 if (target.querySelector('span').textContent === 'save') {
                     const overrideUrl = overrideInput.value;
-                    const dialogId = `saveOverride_${moduleName.replace(/[^a-zA-Z0-9]/g, '_')}`;
+                    const dialogId = `saveOverride_${moduleName.replace(/[^a-zA-Z0-9]/g, '_')}`; // Unique ID for "don't show again"
                     showConfirmDialog(
                         'Save Override',
                         `Save override for <strong>${moduleName}</strong> to: <br><code class="text-xs bg-gray-100 p-1 rounded block my-1">${overrideUrl || '(cleared)'}</code>? <br><br>This will relaunch the application.`,
                         () => {
+                            // onConfirm
                             console.log(`Saving override for ${moduleName}: ${overrideUrl}`);
+                            // Update persisted status badge
                             persistedStatus.className = 'status-badge status-badge-green';
                             persistedStatusIcon.textContent = 'save';
+                            // Clear existing text node before adding new one
                             while (
                                 persistedStatus.childNodes.length > 1 &&
                                 persistedStatus.lastChild.nodeType === Node.TEXT_NODE
@@ -1192,17 +1339,19 @@
                                 persistedStatus.removeChild(persistedStatus.lastChild);
                             }
                             persistedStatus.appendChild(document.createTextNode(' Overrides Persisted'));
+                            // Show save success animation
                             const saveIcon = target.querySelector('span');
                             saveIcon.textContent = 'check';
                             saveIcon.classList.add('text-[var(--status-success-text)]');
                             target.classList.remove('text-[var(--brand-primary)]');
-                            changesNeedRelaunch = false;
+                            changesNeedRelaunch = false; // Assume relaunch handles this
                             updateRelaunchIndicator();
                             setTimeout(() => {
                                 saveIcon.textContent = 'save';
                                 saveIcon.classList.remove('text-[var(--status-success-text)]');
                                 target.classList.add('text-[var(--brand-primary)]');
                             }, 1500);
+                            // Attempt to relaunch the app
                             if (
                                 window.MicroTSM &&
                                 window.MicroTSM.rootApp &&
@@ -1212,9 +1361,11 @@
                                 window.MicroTSM.rootApp.relaunch();
                             } else {
                                 console.warn('Relaunch function not available.');
+                                // Optionally, inform the user that relaunch is not possible if needed.
                             }
                         },
                         () => {
+                            // onCancel
                             console.log(`Save operation for ${moduleName} cancelled.`);
                         },
                         dialogId,
@@ -1225,8 +1376,9 @@
                         'Reset Override',
                         `Reset override for <strong>${moduleName}</strong>? This will clear any custom URL and relaunch the application.`,
                         () => {
+                            // onConfirm
                             console.log(`Resetting override for ${moduleName}`);
-                            overrideInput.value = '';
+                            overrideInput.value = ''; // Clear the input field
                             persistedStatus.className = 'status-badge status-badge-yellow';
                             persistedStatusIcon.textContent = 'warning';
                             while (
@@ -1236,8 +1388,9 @@
                                 persistedStatus.removeChild(persistedStatus.lastChild);
                             }
                             persistedStatus.appendChild(document.createTextNode(' Changes Not Persisted'));
-                            changesNeedRelaunch = false;
+                            changesNeedRelaunch = false; // Reset should persist immediately or on relaunch
                             updateRelaunchIndicator();
+                            // Attempt to relaunch the app after reset
                             if (
                                 window.MicroTSM &&
                                 window.MicroTSM.rootApp &&
@@ -1250,16 +1403,19 @@
                             }
                         },
                         () => {
+                            // onCancel
                             console.log(`Reset operation for ${moduleName} cancelled.`);
                         },
                         dialogId,
                     );
                 }
             });
+            // Listen for input changes on override URLs
             modulesTbody.addEventListener('input', (event) => {
                 if (event.target.classList.contains('module-override-url')) {
                     persistedStatus.className = 'status-badge status-badge-yellow';
                     persistedStatusIcon.textContent = 'warning';
+                    // Clear existing text node before adding new one
                     while (
                         persistedStatus.childNodes.length > 1 &&
                         persistedStatus.lastChild.nodeType === Node.TEXT_NODE
@@ -1271,11 +1427,13 @@
                     updateRelaunchIndicator();
                 }
             });
+            // Relaunch button handler
             relaunchAppBtn.addEventListener('click', () => {
                 showConfirmDialog(
                     'Relaunch Application',
                     'Are you sure you want to relaunch the application with the current override settings?',
                     () => {
+                        // onConfirm
                         if (
                             window.MicroTSM &&
                             window.MicroTSM.rootApp &&
@@ -1283,7 +1441,7 @@
                         ) {
                             console.log('Relaunching application manually...');
                             window.MicroTSM.rootApp.relaunch();
-                            changesNeedRelaunch = false;
+                            changesNeedRelaunch = false; // Relaunch applies changes
                             updateRelaunchIndicator();
                         } else {
                             console.warn('Relaunch function not available.');
@@ -1291,15 +1449,68 @@
                         }
                     },
                     () => {
+                        // onCancel
                         console.log('Manual relaunch cancelled.');
                     },
-                    'manualRelaunch',
+                    'manualRelaunch', // Dialog identifier
                 );
             });
+            // Keyboard shortcuts
+            document.addEventListener('keydown', (event) => {
+                // Ctrl+F12 to toggle panel (global)
+                if (event.ctrlKey && event.key === 'F12') {
+                    event.preventDefault();
+                    toggleDevToolsPanel();
+                }
+                // F1 to show help dialog when panel is visible
+                if (isPanelVisible && event.key === 'F1') {
+                    event.preventDefault();
+                    showDevToolsGuide();
+                }
+                if (!isPanelVisible) return; // Only process other shortcuts if panel is visible
+                // Ctrl+` (Backtick) to toggle panel when visible
+                if (event.ctrlKey && event.key === '`') {
+                    event.preventDefault();
+                    toggleDevToolsPanel();
+                }
+                // Ctrl+F11 or Ctrl+Up/Down to toggle fullscreen
+                if (event.ctrlKey && (event.key === 'F11' || event.key === 'ArrowUp' || event.key === 'ArrowDown')) {
+                    event.preventDefault();
+                    toggleFullscreen();
+                }
+                // Alt+Arrows to navigate tabs
+                if (
+                    event.altKey &&
+                    (event.key === 'ArrowUp' ||
+                        event.key === 'ArrowDown' ||
+                        event.key === 'ArrowLeft' ||
+                        event.key === 'ArrowRight')
+                ) {
+                    event.preventDefault();
+                    let nextTabIndex = currentTabIndex;
+                    if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
+                        nextTabIndex = (currentTabIndex + 1) % tabButtons.length;
+                    } else if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
+                        nextTabIndex = (currentTabIndex - 1 + tabButtons.length) % tabButtons.length;
+                    }
+                    setActiveTab(nextTabIndex);
+                }
+                // Number keys (1-4) to switch tabs
+                if (!event.altKey && !event.ctrlKey && !event.metaKey) {
+                    // Ensure no modifiers are pressed
+                    const tabNumber = parseInt(event.key);
+                    if (tabNumber >= 1 && tabNumber <= tabButtons.length) {
+                        event.preventDefault();
+                        setActiveTab(tabNumber - 1); // 0-indexed
+                    }
+                }
+            });
             // Initial tab setup
-            document.querySelector('aside nav button[data-tab="import-map-overrides"]').click();
-            updateRelaunchIndicator();
-            console.log('DevTools Panel Initialized - Standard Style');
+            setActiveTab(0);
+            updateRelaunchIndicator(); // Initial check for relaunch state
+            // Example: Trigger panel on load if needed for testing/dev
+            // showDevToolsPanel();
+            console.log('DevTools Panel Initialized. Press Ctrl+F12 to toggle.');
         </script>
     </body>
 </html>
