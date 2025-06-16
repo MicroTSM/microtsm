@@ -9,14 +9,14 @@ const version = window.MicroTSM.version;
 </template>
 
 <style>
-.footer {
-    background-color: var(--surface-elevated);
-    color: var(--text-tertiary);
-    border-top: 1px solid var(--border-neutral);
-    padding: 6px 14px;
-    height: 30px;
-    font-size: 0.75rem;
-    text-align: center;
-    transition: border-radius 0.3s ease-in-out;
+microtsm-devtools .footer {
+    background-color: var(--surface-elevated) !important;
+    color: var(--text-tertiary) !important;
+    border-top: 1px solid var(--border-neutral) !important;
+    padding: 6px 14px !important;
+    height: 30px !important;
+    font-size: 0.75rem !important;
+    text-align: center !important;
+    transition: border-radius 0.3s ease-in-out !important;
 }
 </style>

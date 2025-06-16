@@ -323,179 +323,181 @@ defineExpose({ persistedStatus });
 </template>
 
 <style>
-#tab-content-import-map-overrides {
-    display: grid;
-    grid-template-rows: max-content max-content 1fr;
-    height: 100%;
+microtsm-devtools #tab-content-import-map-overrides {
+    display: grid !important;
+    grid-template-rows:
+        max-content
+        max-content 1fr !important;
+    height: 100% !important;
 }
 
-.search-input-container {
-    position: relative;
+microtsm-devtools .search-input-container {
+    position: relative !important;
 }
 
-.search-input-container .material-icons-outlined {
-    position: absolute;
-    left: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: var(--text-tertiary);
-    font-size: 16px;
+microtsm-devtools .search-input-container .material-icons-outlined {
+    position: absolute !important;
+    left: 10px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    color: var(--text-tertiary) !important;
+    font-size: 16px !important;
 }
 
-.search-input-container input[type='search'] {
-    padding-left: 34px;
+microtsm-devtools .search-input-container input[type='search'] {
+    padding-left: 34px !important;
 }
 
-.table-container {
-    max-height: max-content;
-    overflow-y: auto;
-    border: 1px solid var(--border-neutral);
-    border-radius: 6px;
-    background-color: var(--surface-base);
-    scroll-behavior: smooth;
+microtsm-devtools .table-container {
+    max-height: max-content !important;
+    overflow-y: auto !important;
+    border: 1px solid var(--border-neutral) !important;
+    border-radius: 6px !important;
+    background-color: var(--surface-base) !important;
+    scroll-behavior: smooth !important;
 }
 
-table {
-    font-size: 0.875rem;
-    border-collapse: separate;
-    border-spacing: 0;
-    width: 100%;
+microtsm-devtools table {
+    font-size: 0.875rem !important;
+    border-collapse: separate !important;
+    border-spacing: 0 !important;
+    width: 100% !important;
 }
 
-th {
-    background-color: var(--table-header-bg);
-    color: var(--text-secondary);
-    font-weight: 500;
-    text-transform: none;
-    letter-spacing: normal;
-    padding: 10px 12px;
-    border-bottom: 1px solid var(--border-neutral);
-    text-align: left;
-    position: sticky;
-    top: 0;
-    z-index: 1;
+microtsm-devtools th {
+    background-color: var(--table-header-bg) !important;
+    color: var(--text-secondary) !important;
+    font-weight: 500 !important;
+    text-transform: none !important;
+    letter-spacing: normal !important;
+    padding: 10px 12px !important;
+    border-bottom: 1px solid var(--border-neutral) !important;
+    text-align: left !important;
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 1 !important;
 }
 
-th:first-child {
-    border-top-left-radius: 0;
+microtsm-devtools th:first-child {
+    border-top-left-radius: 0 !important;
 }
 
-th:last-child {
-    border-top-right-radius: 0;
+microtsm-devtools th:last-child {
+    border-top-right-radius: 0 !important;
 }
 
-td {
-    color: var(--text-primary);
-    padding: 8px 12px;
-    border-bottom: 1px solid #eaeaea;
-    background-color: var(--surface-base);
-    height: auto;
+microtsm-devtools td {
+    color: var(--text-primary) !important;
+    padding: 8px 12px !important;
+    border-bottom: 1px solid #eaeaea !important;
+    background-color: var(--surface-base) !important;
+    height: auto !important;
 }
 
-tbody tr:last-child td {
-    border-bottom: none;
+microtsm-devtools tbody tr:last-child td {
+    border-bottom: none !important;
 }
 
-tbody tr:hover td {
-    background-color: #f0f6ff;
+microtsm-devtools tbody tr:hover td {
+    background-color: #f0f6ff !important;
 }
 
-.status-badge {
-    display: inline-flex;
-    align-items: center;
-    padding: 3px 8px;
-    border-radius: 12px;
-    font-size: 0.75rem;
-    font-weight: 500;
-    border: 1px solid transparent;
+microtsm-devtools .status-badge {
+    display: inline-flex !important;
+    align-items: center !important;
+    padding: 3px 8px !important;
+    border-radius: 12px !important;
+    font-size: 0.75rem !important;
+    font-weight: 500 !important;
+    border: 1px solid transparent !important;
 }
 
-.status-badge-green {
-    background-color: var(--status-success-bg);
-    color: var(--status-success-text);
+microtsm-devtools .status-badge-green {
+    background-color: var(--status-success-bg) !important;
+    color: var(--status-success-text) !important;
 }
 
-.status-badge-yellow {
-    background-color: var(--status-warning-bg);
-    color: var(--status-warning-text);
+microtsm-devtools .status-badge-yellow {
+    background-color: var(--status-warning-bg) !important;
+    color: var(--status-warning-text) !important;
 }
 
-.status-badge-red {
-    background-color: var(--status-error-bg);
-    color: var(--status-error-text);
+microtsm-devtools .status-badge-red {
+    background-color: var(--status-error-bg) !important;
+    color: var(--status-error-text) !important;
 }
 
-.status-badge-gray {
-    background-color: #e5e5ea;
-    color: #3c3c43;
+microtsm-devtools .status-badge-gray {
+    background-color: #e5e5ea !important;
+    color: #3c3c43 !important;
 }
 
-.status-badge .material-icons-outlined,
-.status-badge .material-icons-round {
-    font-size: 14px;
-    margin-right: 5px;
+microtsm-devtools .status-badge .material-icons-outlined,
+microtsm-devtools .status-badge .material-icons-round {
+    font-size: 14px !important;
+    margin-right: 5px !important;
 }
 
-input[type='text'],
-input[type='url'],
-input[type='search'] {
-    background-color: var(--surface-base);
-    border: 1px solid #c6c6c6;
-    border-radius: 6px;
-    padding: 7px 10px;
-    font-size: 0.875rem;
-    color: var(--text-primary);
+microtsm-devtools input[type='text'],
+microtsm-devtools input[type='url'],
+microtsm-devtools input[type='search'] {
+    background-color: var(--surface-base) !important;
+    border: 1px solid #c6c6c6 !important;
+    border-radius: 6px !important;
+    padding: 7px 10px !important;
+    font-size: 0.875rem !important;
+    color: var(--text-primary) !important;
     transition:
         border-color 0.15s ease-in-out,
-        box-shadow 0.15s ease-in-out;
-    appearance: none;
-    height: 32px;
+        box-shadow 0.15s ease-in-out !important;
+    appearance: none !important;
+    height: 32px !important;
 }
 
-input[type='text']::placeholder,
-input[type='url']::placeholder,
-input[type='search']::placeholder {
-    color: var(--text-placeholder);
+microtsm-devtools input[type='text']::placeholder,
+microtsm-devtools input[type='url']::placeholder,
+microtsm-devtools input[type='search']::placeholder {
+    color: var(--text-placeholder) !important;
 }
 
-input[type='text']:focus,
-input[type='url']:focus,
-input[type='search']:focus {
-    border-color: var(--border-focused);
-    box-shadow: 0 0 0 3px rgba(10, 132, 255, 0.25);
-    outline: none;
+microtsm-devtools input[type='text']:focus,
+microtsm-devtools input[type='url']:focus,
+microtsm-devtools input[type='search']:focus {
+    border-color: var(--border-focused) !important;
+    box-shadow: 0 0 0 3px rgba(10, 132, 255, 0.25) !important;
+    outline: none !important;
 }
 
-.module-override-url {
-    font-size: 0.8125rem;
-    background-color: transparent;
-    border: none;
-    padding: 3px;
-    color: var(--text-primary);
-    width: 100%;
-    border-radius: 4px;
+microtsm-devtools .module-override-url {
+    font-size: 0.8125rem !important;
+    background-color: transparent !important;
+    border: none !important;
+    padding: 3px !important;
+    color: var(--text-primary) !important;
+    width: 100% !important;
+    border-radius: 4px !important;
 }
 
-.module-override-url:focus {
-    outline: none;
-    background-color: var(--status-info-bg);
-    box-shadow: 0 0 0 2px var(--brand-primary);
+microtsm-devtools .module-override-url:focus {
+    outline: none !important;
+    background-color: var(--status-info-bg) !important;
+    box-shadow: 0 0 0 2px var(--brand-primary) !important;
 }
 
-.relaunch-indicator .material-icons-outlined {
-    font-size: 16px;
-    margin-right: 6px;
-    vertical-align: text-bottom;
+microtsm-devtools .relaunch-indicator .material-icons-outlined {
+    font-size: 16px !important;
+    margin-right: 6px !important;
+    vertical-align: text-bottom !important;
 }
 
-.relaunch-btn-indicator {
-    position: absolute;
-    top: -4px;
-    right: -4px;
-    width: 10px;
-    height: 10px;
-    background-color: var(--status-warning-text);
-    border-radius: 50%;
-    border: 2px solid var(--surface-elevated);
+microtsm-devtools .relaunch-btn-indicator {
+    position: absolute !important;
+    top: -4px !important;
+    right: -4px !important;
+    width: 10px !important;
+    height: 10px !important;
+    background-color: var(--status-warning-text) !important;
+    border-radius: 50% !important;
+    border: 2px solid var(--surface-elevated) !important;
 }
 </style>

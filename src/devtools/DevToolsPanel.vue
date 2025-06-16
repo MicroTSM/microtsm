@@ -213,7 +213,7 @@ const handleKeyPress = (event: KeyboardEvent) => {
 <style>
 @reference "tailwindcss";
 
-:root {
+microtsm-devtools {
     --brand-primary: #0a84ff;
     --brand-secondary: #ff9f0a;
     --surface-base: #ffffff;
@@ -240,7 +240,7 @@ const handleKeyPress = (event: KeyboardEvent) => {
     --table-header-bg: #f0f2f5;
 }
 
-#devtools-panel {
+microtsm-devtools #devtools-panel {
     font-family:
         'Inter',
         -apple-system,
@@ -248,135 +248,134 @@ const handleKeyPress = (event: KeyboardEvent) => {
         'San Francisco',
         'Helvetica Neue',
         'Arial',
-        sans-serif;
-    background-color: var(--surface-base);
-    color: var(--text-primary);
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    /* Enable smoother resizing by hinting to the browser which properties change */
-    will-change: width, height;
-    z-index: 2147483647;
+        sans-serif !important;
+    background-color: var(--surface-base) !important;
+    color: var(--text-primary) !important;
+    -webkit-font-smoothing: antialiased !important;
+    -moz-osx-font-smoothing: grayscale !important;
+    will-change: width, height !important;
 }
 
-.devtools-panel-compact {
-    @apply fixed bottom-4 right-4 w-[800px] h-[78vh] max-h-[calc(100vh-32px)] max-w-[calc(100vw-32px)];
-    background-color: var(--surface-elevated);
-    border-radius: 10px;
-    box-shadow: var(--shadow-lg);
-    border: 1px solid #c6c6c6;
-    overflow: hidden;
-}
-
-.devtools-panel-fullscreen {
-    @apply w-screen h-screen fixed top-0 left-0;
-}
-
-.devtools-panel-fullscreen .header,
-.devtools-panel-fullscreen .footer {
-    border-radius: 0;
-}
-
-.app-bar-left-title-container {
-    display: flex;
-    align-items: center;
-}
-
-.app-bar-title {
-    font-size: 0.9375rem;
-    font-weight: 600;
-    line-height: 1;
-    color: var(--text-primary);
-    margin-left: 8px;
-}
-
-.app-bar-center-info-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-}
-
-.app-bar-page-title {
-    font-size: 0.8125rem;
-    font-weight: 500;
-    color: var(--text-primary);
-    line-height: 1.2;
-    max-width: 300px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-.app-bar-page-url {
-    font-size: 0.6875rem;
-    color: var(--text-tertiary);
-    line-height: 1.2;
-    max-width: 300px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-.section-title {
-    font-size: 1rem;
-    font-weight: 600;
-    color: var(--text-primary);
-    line-height: 1.4;
-}
-
-.info-card {
-    background-color: #fdfdfd;
-    padding: 12px;
-    border-radius: 6px;
-    box-shadow: none;
-    border: 1px solid var(--border-neutral);
-}
-
-.info-card-label {
-    color: var(--text-secondary);
-    font-size: 0.8125rem;
-    margin-bottom: 3px;
-}
-
-.info-card-value {
-    color: var(--text-primary);
-    font-size: 0.875rem;
-    font-weight: 400;
-    background-color: var(--surface-base);
-    padding: 5px 8px;
-    border-radius: 4px;
-    border: 1px solid #d6d6d6;
-    word-break: break-all;
-    font-family: 'SF Mono', 'Menlo', monospace;
-}
-
-#devtools-panel {
-    transform-origin: bottom right;
+microtsm-devtools #devtools-panel {
+    transform-origin: bottom right !important;
     transition:
         width 0.3s ease-in-out,
         height 0.3s ease-in-out,
         max-height 0.3s ease-in-out,
         border-radius 0.3s ease-in-out,
         opacity 0.3s ease-in-out,
-        transform 0.3s ease-in-out;
-    opacity: 0;
-    transform: scale(0.95) translate(10px, 10px);
+        transform 0.3s ease-in-out !important;
+    opacity: 0 !important;
+    transform: scale(0.95) translate(10px, 10px) !important;
 }
 
-#devtools-panel.panel-visible {
-    opacity: 1;
-    transform: scale(1) translate(0, 0);
+microtsm-devtools .devtools-panel-compact {
+    @apply fixed bottom-4 right-4 w-[800px] h-[78vh] max-h-[calc(100vh-32px)] max-w-[calc(100vw-32px)];
+    background-color: var(--surface-elevated) !important;
+    border-radius: 10px !important;
+    box-shadow: var(--shadow-lg) !important;
+    border: 1px solid #c6c6c6 !important;
+    overflow: hidden !important;
 }
 
-.devtools-panel-fullscreen {
+microtsm-devtools .devtools-panel-fullscreen {
+    @apply w-screen h-screen fixed top-0 left-0;
+}
+
+microtsm-devtools .devtools-panel-fullscreen .header,
+microtsm-devtools .devtools-panel-fullscreen .footer {
     border-radius: 0 !important;
 }
 
-#devtools-panel button,
-#confirm-dialog button {
-    cursor: pointer;
+microtsm-devtools #devtools-panel.panel-visible {
+    opacity: 1 !important;
+    transform: scale(1) translate(0, 0) !important;
+    z-index: 2147483647 !important;
+}
+
+microtsm-devtools .devtools-panel-fullscreen {
+    border-radius: 0 !important;
+}
+
+microtsm-devtools #devtools-panel button,
+microtsm-devtools #confirm-dialog button {
+    cursor: pointer !important;
+}
+
+microtsm-devtools .app-bar-left-title-container {
+    display: flex !important;
+    align-items: center !important;
+}
+
+microtsm-devtools .app-bar-title {
+    font-size: 0.9375rem !important;
+    font-weight: 600 !important;
+    line-height: 1 !important;
+    color: var(--text-primary) !important;
+    margin-left: 8px !important;
+}
+
+microtsm-devtools .app-bar-center-info-container {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    position: absolute !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+}
+
+microtsm-devtools .app-bar-page-title {
+    font-size: 0.8125rem !important;
+    font-weight: 500 !important;
+    color: var(--text-primary) !important;
+    line-height: 1.2 !important;
+    max-width: 300px !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+}
+
+microtsm-devtools .app-bar-page-url {
+    font-size: 0.6875rem !important;
+    color: var(--text-tertiary) !important;
+    line-height: 1.2 !important;
+    max-width: 300px !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+}
+
+microtsm-devtools .section-title {
+    font-size: 1rem !important;
+    font-weight: 600 !important;
+    color: var(--text-primary) !important;
+    line-height: 1.4 !important;
+}
+
+microtsm-devtools .info-card {
+    background-color: #fdfdfd !important;
+    padding: 12px !important;
+    border-radius: 6px !important;
+    box-shadow: none !important;
+    border: 1px solid var(--border-neutral) !important;
+}
+
+microtsm-devtools .info-card-label {
+    color: var(--text-secondary) !important;
+    font-size: 0.8125rem !important;
+    margin-bottom: 3px !important;
+}
+
+microtsm-devtools .info-card-value {
+    color: var(--text-primary) !important;
+    font-size: 0.875rem !important;
+    font-weight: 400 !important;
+    background-color: var(--surface-base) !important;
+    padding: 5px 8px !important;
+    border-radius: 4px !important;
+    border: 1px solid #d6d6d6 !important;
+    word-break: break-all !important;
+    font-family: 'SF Mono', 'Menlo', monospace !important;
 }
 </style>

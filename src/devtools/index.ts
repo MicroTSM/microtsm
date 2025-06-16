@@ -30,13 +30,24 @@ const onUnmount = () => {
 function mount() {
     const app = createApp(DevToolsPanel);
 
-    const devtools = document.createElement('div');
-    devtools.id = 'microtsm-devtools';
-    document.body.appendChild(devtools);
+    class MicrotsmDevtools extends HTMLElement {
+        constructor() {
+            super();
+        }
 
-    app.onUnmount(onUnmount);
-    unmount = app.unmount;
-    app.mount(devtools);
+        connectedCallback() {
+            app.onUnmount(onUnmount);
+            unmount = app.unmount;
+            app.mount(this);
+        }
+    }
+
+    if (!customElements.get('microtsm-devtools')) {
+        customElements.define('microtsm-devtools', MicrotsmDevtools);
+    }
+
+    const devtools = document.createElement('microtsm-devtools');
+    document.body.appendChild(devtools);
 }
 
 export { mount, unmount };

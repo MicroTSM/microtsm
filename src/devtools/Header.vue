@@ -42,41 +42,41 @@ const fullscreen = inject<Ref<boolean>>('fullscreen');
 </template>
 
 <style>
-.header {
-    background-color: var(--surface-elevated);
-    color: var(--text-primary);
-    border-bottom: 1px solid var(--border-neutral);
-    padding: 0 12px;
-    height: 44px;
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    transition: border-radius 0.3s ease-in-out;
+microtsm-devtools .header {
+    background-color: var(--surface-elevated) !important;
+    color: var(--text-primary) !important;
+    border-bottom: 1px solid var(--border-neutral) !important;
+    padding: 0 12px !important;
+    height: 44px !important;
+    flex-shrink: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    transition: border-radius 0.3s ease-in-out !important;
 }
 
-.icon-button {
-    color: var(--text-secondary);
-    background-color: transparent;
-    height: 30px;
-    width: 30px;
-    padding: 5px;
-    border-radius: 5px;
+microtsm-devtools .icon-button {
+    color: var(--text-secondary) !important;
+    background-color: transparent !important;
+    height: 30px !important;
+    width: 30px !important;
+    padding: 5px !important;
+    border-radius: 5px !important;
     transition:
-        background-color 0.1s ease-in-out,
-        color 0.1s ease-in-out;
+        background-color 0.1s ease-in-out !important,
+        color 0.1 s ease-in-out !important;
 }
 
-.icon-button:not(:disabled):hover {
-    background-color: rgba(0, 0, 0, 0.07);
-    color: var(--text-primary);
+microtsm-devtools .icon-button:not(:disabled):hover {
+    background-color: rgba(0, 0, 0, 0.07) !important;
+    color: var(--text-primary) !important;
 }
 
-.icon-button:not(:disabled):active {
-    background-color: rgba(0, 0, 0, 0.1);
+microtsm-devtools .icon-button:not(:disabled):active {
+    background-color: rgba(0, 0, 0, 0.1) !important;
 }
 
-.icon-button span {
-    line-height: 1;
+microtsm-devtools .icon-button span {
+    line-height: 1 !important;
 }
 </style>

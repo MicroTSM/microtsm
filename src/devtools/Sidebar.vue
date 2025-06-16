@@ -60,88 +60,88 @@ const handleKeyDown = (event: KeyboardEvent) => {
 </template>
 
 <style>
-.tab-active {
+microtsm-devtools .tab-active {
     background-color: rgba(0, 0, 0, 0.05) !important;
     color: var(--brand-primary) !important;
-    font-weight: 600;
-    border-radius: 5px;
-    box-shadow: none;
+    font-weight: 600 !important;
+    border-radius: 5px !important;
+    box-shadow: none !important;
 }
 
-.tab-active .material-icons-outlined,
-.tab-active .material-icons-round {
+microtsm-devtools .tab-active .material-icons-outlined,
+microtsm-devtools .tab-active .material-icons-round {
     color: var(--brand-primary) !important;
 }
 
-.devtools-panel-compact aside {
-    width: max-content;
-    background-color: var(--surface-elevated);
-    border-right: 1px solid var(--border-neutral);
-    transition: width 0.3s ease-in-out;
+microtsm-devtools .devtools-panel-compact aside {
+    width: max-content !important;
+    background-color: var(--surface-elevated) !important;
+    border-right: 1px solid var(--border-neutral) !important;
+    transition: width 0.3s ease-in-out !important;
 }
 
-.devtools-panel-compact aside nav button {
-    justify-content: center;
-    padding-left: 6px;
-    padding-right: 6px;
-    width: 46px;
-    height: max-content;
-    border-radius: 6px;
-    flex-direction: column;
-    align-items: center;
+microtsm-devtools .devtools-panel-compact aside nav button {
+    justify-content: center !important;
+    padding-left: 6px !important;
+    padding-right: 6px !important;
+    width: 46px !important;
+    height: max-content !important;
+    border-radius: 6px !important;
+    flex-direction: column !important;
+    align-items: center !important;
 }
 
-.devtools-panel-compact aside nav button .tab-label {
-    display: block;
-    font-size: 0.6rem;
-    margin-left: 0;
-    margin-top: 2px;
-    opacity: 1;
-    transition: opacity 0.3s ease-in-out;
-    line-height: 1;
+microtsm-devtools .devtools-panel-compact aside nav button .tab-label {
+    display: block !important;
+    font-size: 0.6rem !important;
+    margin-left: 0 !important;
+    margin-top: 2px !important;
+    opacity: 1 !important;
+    transition: opacity 0.3s ease-in-out !important;
+    line-height: 1 !important;
 }
 
-.devtools-panel-compact aside nav button .material-icons-outlined,
-.devtools-panel-compact aside nav button .material-icons-round {
-    font-size: 18px;
-    line-height: 1.1;
+microtsm-devtools .devtools-panel-compact aside nav button .material-icons-outlined,
+microtsm-devtools .devtools-panel-compact aside nav button .material-icons-round {
+    font-size: 18px !important;
+    line-height: 1.1 !important;
 }
 
-.devtools-panel-fullscreen aside {
-    width: 180px;
-    flex-shrink: 0;
-    padding: 8px;
-    background-color: var(--surface-elevated);
-    border-right: 1px solid var(--border-neutral);
-    transition: width 0.3s ease-in-out;
+microtsm-devtools .devtools-panel-fullscreen aside {
+    width: 180px !important;
+    flex-shrink: 0 !important;
+    padding: 8px !important;
+    background-color: var(--surface-elevated) !important;
+    border-right: 1px solid var(--border-neutral) !important;
+    transition: width 0.3s ease-in-out !important;
 }
 
-.devtools-panel-fullscreen aside nav button {
-    justify-content: flex-start;
-    height: 36px;
-    padding: 0 10px;
-    border-radius: 5px;
+microtsm-devtools .devtools-panel-fullscreen aside nav button {
+    justify-content: flex-start !important;
+    height: 36px !important;
+    padding: 0 10px !important;
+    border-radius: 5px !important;
 }
 
-.devtools-panel-fullscreen aside nav button:hover {
-    background-color: rgba(0, 0, 0, 0.03);
+microtsm-devtools .devtools-panel-fullscreen aside nav button:hover {
+    background-color: rgba(0, 0, 0, 0.03) !important;
 }
 
-.devtools-panel-fullscreen aside nav button .tab-label {
-    display: inline-block;
-    margin-left: 12px;
-    font-size: 0.875rem;
-    flex-grow: 1;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    opacity: 1;
-    transition: opacity 0.3s ease-in-out;
+microtsm-devtools .devtools-panel-fullscreen aside nav button .tab-label {
+    display: inline-block !important;
+    margin-left: 12px !important;
+    font-size: 0.875rem !important;
+    flex-grow: 1 !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+    opacity: 1 !important;
+    transition: opacity 0.3s ease-in-out !important;
 }
 
-.devtools-panel-fullscreen aside nav button .material-icons-outlined,
-.devtools-panel-fullscreen aside nav button .material-icons-round {
-    font-size: 18px;
-    flex-shrink: 0;
+microtsm-devtools .devtools-panel-fullscreen aside nav button .material-icons-outlined,
+microtsm-devtools .devtools-panel-fullscreen aside nav button .material-icons-round {
+    font-size: 18px !important;
+    flex-shrink: 0 !important;
 }
 </style>

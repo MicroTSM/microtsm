@@ -86,53 +86,53 @@ const showTrace = (e: MouseEvent, log: LoaderLog) => {
 </template>
 
 <style>
-.log-container {
-    background-color: #ffffff;
-    padding: 12px;
-    border-radius: 6px;
-    border: 1px solid var(--border-neutral);
-    overflow-y: auto;
-    max-height: max-content;
-    scroll-behavior: smooth;
+microtsm-devtools .log-container {
+    background-color: #ffffff !important;
+    padding: 12px !important;
+    border-radius: 6px !important;
+    border: 1px solid var(--border-neutral) !important;
+    overflow-y: auto !important;
+    max-height: max-content !important;
+    scroll-behavior: smooth !important;
 }
 
-.log-wrapper {
-    color: #1e1e1e;
-    font-family: 'SF Mono', 'Menlo', 'Courier New', monospace;
-    font-size: 0.8125rem;
-    height: max-content;
-    line-height: 1.6;
+microtsm-devtools .log-wrapper {
+    color: #1e1e1e !important;
+    font-family: 'SF Mono', 'Menlo', 'Courier New', monospace !important;
+    font-size: 0.8125rem !important;
+    height: max-content !important;
+    line-height: 1.6 !important;
 }
 
-.log-container p .text-sky-300 {
-    color: #50e3c2;
+microtsm-devtools .log-container p .text-sky-300 {
+    color: #50e3c2 !important;
 }
 
-.log-container p .text-cyan-300 {
-    color: #4a90e2;
+microtsm-devtools .log-container p .text-cyan-300 {
+    color: #4a90e2 !important;
 }
 
-.log-container p .text-yellow-300 {
-    color: #f5a623;
+microtsm-devtools .log-container p .text-yellow-300 {
+    color: #f5a623 !important;
 }
 
-.log-container p .text-purple-300 {
-    color: #bd10e0;
+microtsm-devtools .log-container p .text-purple-300 {
+    color: #bd10e0 !important;
 }
 
-.log-container p .text-yellow-200 {
-    color: #f8e71c;
+microtsm-devtools .log-container p .text-yellow-200 {
+    color: #f8e71c !important;
 }
 
-.log-container p .text-red-300 {
-    color: #d0021b;
+microtsm-devtools .log-container p .text-red-300 {
+    color: #d0021b !important;
 }
 
-.log-container p a {
-    color: var(--brand-primary);
+microtsm-devtools .log-container p a {
+    color: var(--brand-primary) !important;
 }
 
-.log-container p a:hover {
-    text-decoration: underline;
+microtsm-devtools .log-container p a:hover {
+    text-decoration: underline !important;
 }
 </style>

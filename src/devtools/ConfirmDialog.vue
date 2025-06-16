@@ -75,141 +75,141 @@ eventBus.on('devtools:confirm-action', (e) => {
 </template>
 
 <style>
-.dialog-overlay {
-    background-color: var(--surface-overlay);
-    z-index: 2147483648;
+microtsm-devtools .dialog-overlay {
+    background-color: var(--surface-overlay) !important;
+    z-index: 2147483648 !important;
 }
 
-.dialog-content {
-    background-color: #fdfdfd;
-    border-radius: 12px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-    padding: 24px;
-    border: none;
-    min-width: 200px;
-    max-width: 360px;
+microtsm-devtools .dialog-content {
+    background-color: #fdfdfd !important;
+    border-radius: 12px !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15) !important;
+    padding: 24px !important;
+    border: none !important;
+    min-width: 200px !important;
+    max-width: 360px !important;
 }
 
-.dialog-title {
-    font-size: 1.125rem;
-    font-weight: 600;
-    color: var(--text-primary);
-    line-height: 1.3;
-    text-align: center;
+microtsm-devtools .dialog-title {
+    font-size: 1.125rem !important;
+    font-weight: 600 !important;
+    color: var(--text-primary) !important;
+    line-height: 1.3 !important;
+    text-align: center !important;
 }
 
-.dialog-message {
-    font-size: 0.875rem;
-    color: var(--text-secondary);
-    margin-top: 12px;
-    line-height: 1.5;
-    text-align: center;
+microtsm-devtools .dialog-message {
+    font-size: 0.875rem !important;
+    color: var(--text-secondary) !important;
+    margin-top: 12px !important;
+    line-height: 1.5 !important;
+    text-align: center !important;
 }
 
-.dialog-icon-area {
-    margin-bottom: 16px;
-    display: flex;
-    justify-content: center;
+microtsm-devtools .dialog-icon-area {
+    margin-bottom: 16px !important;
+    display: flex !important;
+    justify-content: center !important;
 }
 
-.dialog-icon-area .material-icons-outlined {
-    font-size: 28px;
-    color: var(--brand-primary);
+microtsm-devtools .dialog-icon-area .material-icons-outlined {
+    font-size: 28px !important;
+    color: var(--brand-primary) !important;
 }
 
-.dialog-checkbox-label {
-    font-size: 0.875rem;
-    color: var(--text-primary);
+microtsm-devtools .dialog-checkbox-label {
+    font-size: 0.875rem !important;
+    color: var(--text-primary) !important;
 }
 
-input[type='checkbox'] {
-    border-radius: 4px;
-    border: 1px solid #bdbdbd;
-    color: var(--brand-primary);
-    background-color: #ffffff;
-    width: 18px;
-    height: 18px;
-    appearance: none;
-    position: relative;
-    cursor: pointer;
-    vertical-align: middle;
-    margin-top: -2px;
+microtsm-devtools input[type='checkbox'] {
+    border-radius: 4px !important;
+    border: 1px solid #bdbdbd !important;
+    color: var(--brand-primary) !important;
+    background-color: #ffffff !important;
+    width: 18px !important;
+    height: 18px !important;
+    appearance: none !important;
+    position: relative !important;
+    cursor: pointer !important;
+    vertical-align: middle !important;
+    margin-top: -2px !important;
 }
 
-input[type='checkbox']:checked {
-    background-color: var(--brand-primary);
-    border-color: var(--brand-primary);
+microtsm-devtools input[type='checkbox']:checked {
+    background-color: var(--brand-primary) !important;
+    border-color: var(--brand-primary) !important;
 }
 
-input[type='checkbox']:checked::before {
-    content: 'check';
-    font-family: 'Material Icons Round', sans-serif;
-    font-size: 14px;
-    color: var(--text-on-brand);
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-weight: bold;
+microtsm-devtools input[type='checkbox']:checked::before {
+    content: 'check' !important;
+    font-family: 'Material Icons Round', sans-serif !important;
+    font-size: 14px !important;
+    color: var(--text-on-brand) !important;
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    font-weight: bold !important;
 }
 
-input[type='checkbox']:focus {
-    outline: none;
-    border-color: var(--brand-primary);
-    box-shadow: 0 0 0 3px rgba(10, 132, 255, 0.25);
+microtsm-devtools input[type='checkbox']:focus {
+    outline: none !important;
+    border-color: var(--brand-primary) !important;
+    box-shadow: 0 0 0 3px rgba(10, 132, 255, 0.25) !important;
 }
 
-.button-primary {
-    background-color: var(--brand-primary);
-    color: var(--text-on-brand);
-    font-weight: 500;
-    font-size: 0.875rem;
-    padding: 6px 16px;
-    border-radius: 6px;
-    transition: background-color 0.1s ease-in-out;
-    height: 32px;
-    text-transform: none;
-    letter-spacing: normal;
-    border: none;
+microtsm-devtools .button-primary {
+    background-color: var(--brand-primary) !important;
+    color: var(--text-on-brand) !important;
+    font-weight: 500 !important;
+    font-size: 0.875rem !important;
+    padding: 6px 16px !important;
+    border-radius: 6px !important;
+    transition: background-color 0.1s ease-in-out !important;
+    height: 32px !important;
+    text-transform: none !important;
+    letter-spacing: normal !important;
+    border: none !important;
 }
 
-.button-primary:hover {
-    background-color: #0070dd;
+microtsm-devtools .button-primary:hover {
+    background-color: #0070dd !important;
 }
 
-.button-primary:active {
-    background-color: #005cbf;
+microtsm-devtools .button-primary:active {
+    background-color: #005cbf !important;
 }
 
-.button-secondary {
-    background-color: #e9e9eb;
-    color: var(--text-primary);
-    font-weight: 500;
-    font-size: 0.875rem;
-    padding: 6px 16px;
-    border-radius: 6px;
-    border: 1px solid #d1d1d6;
+microtsm-devtools .button-secondary {
+    background-color: #e9e9eb !important;
+    color: var(--text-primary) !important;
+    font-weight: 500 !important;
+    font-size: 0.875rem !important;
+    padding: 6px 16px !important;
+    border-radius: 6px !important;
+    border: 1px solid #d1d1d6 !important;
     transition:
         background-color 0.1s ease-in-out,
-        border-color 0.1s ease;
-    height: 32px;
-    text-transform: none;
-    letter-spacing: normal;
+        border-color 0.1s ease !important;
+    height: 32px !important;
+    text-transform: none !important;
+    letter-spacing: normal !important;
 }
 
-.button-secondary:hover {
-    background-color: #dddee0;
-    border-color: #c6c6c9;
+microtsm-devtools .button-secondary:hover {
+    background-color: #dddee0 !important;
+    border-color: #c6c6c9 !important;
 }
 
-.button-secondary:focus {
-    border-color: var(--brand-primary);
-    box-shadow: 0 0 0 3px rgba(10, 132, 255, 0.25);
-    outline: none;
+microtsm-devtools .button-secondary:focus {
+    border-color: var(--brand-primary) !important;
+    box-shadow: 0 0 0 3px rgba(10, 132, 255, 0.25) !important;
+    outline: none !important;
 }
 
-.button-secondary:active {
-    background-color: #d2d3d5;
-    border-color: #b8b8bb;
+microtsm-devtools .button-secondary:active {
+    background-color: #d2d3d5 !important;
+    border-color: #b8b8bb !important;
 }
 </style>

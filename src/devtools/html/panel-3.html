@@ -43,7 +43,6 @@
                 --shadow-lg: 0px 6px 12px rgba(0, 0, 0, 0.1), 0px 3px 6px rgba(0, 0, 0, 0.08);
                 --table-header-bg: #f0f2f5;
             }
-
             body {
                 font-family:
                     'Inter',
@@ -58,7 +57,6 @@
                 -webkit-font-smoothing: antialiased;
                 -moz-osx-font-smoothing: grayscale;
             }
-
             .modern-panel {
                 background-color: var(--surface-elevated);
                 border-radius: 10px;
@@ -66,7 +64,6 @@
                 border: 1px solid #c6c6c6;
                 overflow: hidden;
             }
-
             .table-container {
                 max-height: 300px;
                 overflow-y: auto;
@@ -74,7 +71,6 @@
                 border-radius: 6px;
                 background-color: var(--surface-base);
             }
-
             .tab-active {
                 background-color: rgba(0, 0, 0, 0.05) !important;
                 color: var(--brand-primary) !important;
@@ -82,19 +78,16 @@
                 border-radius: 5px;
                 box-shadow: none;
             }
-
             .tab-active .material-icons-outlined,
             .tab-active .material-icons-round {
                 color: var(--brand-primary) !important;
             }
-
             .devtools-panel-compact aside {
                 width: 56px;
                 background-color: var(--surface-elevated);
                 border-right: 1px solid var(--border-neutral);
                 transition: width 0.3s ease-in-out;
             }
-
             .devtools-panel-compact aside nav button {
                 justify-content: center;
                 padding-left: 0;
@@ -104,7 +97,6 @@
                 flex-direction: column;
                 align-items: center;
             }
-
             .devtools-panel-compact aside nav button .tab-label {
                 display: block;
                 font-size: 0.6rem;
@@ -113,12 +105,10 @@
                 opacity: 1;
                 transition: opacity 0.3s ease-in-out;
             }
-
             .devtools-panel-compact aside nav button .material-icons-outlined,
             .devtools-panel-compact aside nav button .material-icons-round {
                 font-size: 18px;
             }
-
             .devtools-panel-fullscreen aside {
                 width: 220px;
                 padding: 8px;
@@ -126,18 +116,15 @@
                 border-right: 1px solid var(--border-neutral);
                 transition: width 0.3s ease-in-out;
             }
-
             .devtools-panel-fullscreen aside nav button {
                 justify-content: flex-start;
                 height: 36px;
                 padding: 0 10px;
                 border-radius: 5px;
             }
-
             .devtools-panel-fullscreen aside nav button:hover {
                 background-color: rgba(0, 0, 0, 0.03);
             }
-
             .devtools-panel-fullscreen aside nav button .tab-label {
                 display: inline-block;
                 margin-left: 12px;
@@ -149,13 +136,11 @@
                 opacity: 1;
                 transition: opacity 0.3s ease-in-out;
             }
-
             .devtools-panel-fullscreen aside nav button .material-icons-outlined,
             .devtools-panel-fullscreen aside nav button .material-icons-round {
                 font-size: 18px;
                 flex-shrink: 0;
             }
-
             .icon-button {
                 color: var(--text-secondary);
                 background-color: transparent;
@@ -165,16 +150,13 @@
                     background-color 0.1s ease-in-out,
                     color 0.1s ease-in-out;
             }
-
             .icon-button:hover {
                 background-color: rgba(0, 0, 0, 0.07);
                 color: var(--text-primary);
             }
-
             .icon-button:active {
                 background-color: rgba(0, 0, 0, 0.1);
             }
-
             .status-badge {
                 display: inline-flex;
                 align-items: center;
@@ -184,33 +166,27 @@
                 font-weight: 500;
                 border: 1px solid transparent;
             }
-
             .status-badge-green {
                 background-color: var(--status-success-bg);
                 color: var(--status-success-text);
             }
-
             .status-badge-yellow {
                 background-color: var(--status-warning-bg);
                 color: var(--status-warning-text);
             }
-
             .status-badge-red {
                 background-color: var(--status-error-bg);
                 color: var(--status-error-text);
             }
-
             .status-badge-gray {
                 background-color: #e5e5ea;
                 color: #3c3c43;
             }
-
             .status-badge .material-icons-outlined,
             .status-badge .material-icons-round {
                 font-size: 14px;
                 margin-right: 5px;
             }
-
             input[type='text'],
             input[type='search'] {
                 background-color: var(--surface-base);
@@ -225,23 +201,19 @@
                 appearance: none;
                 height: 32px;
             }
-
             input[type='text']::placeholder,
             input[type='search']::placeholder {
                 color: var(--text-placeholder);
             }
-
             input[type='text']:focus,
             input[type='search']:focus {
                 border-color: var(--border-focused);
                 box-shadow: 0 0 0 3px rgba(10, 132, 255, 0.25);
                 outline: none;
             }
-
             .search-input-container {
                 position: relative;
             }
-
             .search-input-container .material-icons-outlined {
                 position: absolute;
                 left: 10px;
@@ -250,18 +222,15 @@
                 color: var(--text-tertiary);
                 font-size: 16px;
             }
-
             .search-input-container input[type='search'] {
                 padding-left: 34px;
             }
-
             table {
                 font-size: 0.875rem;
                 border-collapse: separate;
                 border-spacing: 0;
                 width: 100%;
             }
-
             th {
                 background-color: var(--table-header-bg);
                 color: var(--text-secondary);
@@ -275,15 +244,12 @@
                 top: 0;
                 z-index: 1;
             }
-
             th:first-child {
                 border-top-left-radius: 0;
             }
-
             th:last-child {
                 border-top-right-radius: 0;
             }
-
             td {
                 color: var(--text-primary);
                 padding: 8px 12px;
@@ -291,15 +257,12 @@
                 background-color: var(--surface-base);
                 height: auto;
             }
-
             tbody tr:last-child td {
                 border-bottom: none;
             }
-
             tbody tr:hover td {
                 background-color: #f0f6ff;
             }
-
             .module-override-url {
                 font-size: 0.8125rem;
                 background-color: transparent;
@@ -309,17 +272,14 @@
                 width: 100%;
                 border-radius: 4px;
             }
-
             .module-override-url:focus {
                 outline: none;
                 background-color: var(--status-info-bg);
                 box-shadow: 0 0 0 1.5px var(--brand-primary);
             }
-
             .dialog-overlay {
                 background-color: var(--surface-overlay);
             }
-
             .dialog-content {
                 background-color: #fdfdfd;
                 border-radius: 12px;
@@ -329,7 +289,6 @@
                 min-width: 360px;
                 max-width: 520px;
             }
-
             .dialog-title {
                 font-size: 1.125rem;
                 font-weight: 600;
@@ -337,7 +296,6 @@
                 line-height: 1.3;
                 text-align: center;
             }
-
             .dialog-message {
                 font-size: 0.875rem;
                 color: var(--text-secondary);
@@ -345,23 +303,19 @@
                 line-height: 1.5;
                 text-align: center;
             }
-
             .dialog-icon-area {
                 margin-bottom: 16px;
                 display: flex;
                 justify-content: center;
             }
-
             .dialog-icon-area .material-icons-outlined {
                 font-size: 28px;
                 color: var(--brand-primary);
             }
-
             .dialog-checkbox-label {
                 font-size: 0.875rem;
                 color: var(--text-primary);
             }
-
             input[type='checkbox'] {
                 border-radius: 4px;
                 border: 1px solid #bdbdbd;
@@ -375,12 +329,10 @@
                 vertical-align: middle;
                 margin-top: -2px;
             }
-
             input[type='checkbox']:checked {
                 background-color: var(--brand-primary);
                 border-color: var(--brand-primary);
             }
-
             input[type='checkbox']:checked::before {
                 content: 'check';
                 font-family: 'Material Icons Round';
@@ -392,13 +344,11 @@
                 transform: translate(-50%, -50%);
                 font-weight: bold;
             }
-
             input[type='checkbox']:focus {
                 outline: none;
                 border-color: var(--brand-primary);
                 box-shadow: 0 0 0 3px rgba(10, 132, 255, 0.25);
             }
-
             .button-primary {
                 background-color: var(--brand-primary);
                 color: var(--text-on-brand);
@@ -412,15 +362,12 @@
                 letter-spacing: normal;
                 border: none;
             }
-
             .button-primary:hover {
                 background-color: #0070dd;
             }
-
             .button-primary:active {
                 background-color: #005cbf;
             }
-
             .button-secondary {
                 background-color: #e9e9eb;
                 color: var(--text-primary);
@@ -436,23 +383,19 @@
                 text-transform: none;
                 letter-spacing: normal;
             }
-
             .button-secondary:hover {
                 background-color: #dddee0;
                 border-color: #c6c6c9;
             }
-
             .button-secondary:focus {
                 border-color: var(--brand-primary);
                 box-shadow: 0 0 0 3px rgba(10, 132, 255, 0.25);
                 outline: none;
             }
-
             .button-secondary:active {
                 background-color: #d2d3d5;
                 border-color: #b8b8bb;
             }
-
             .header {
                 background-color: var(--surface-elevated);
                 color: var(--text-primary);
@@ -464,7 +407,6 @@
                 justify-content: space-between;
                 transition: border-radius 0.3s ease-in-out;
             }
-
             .footer {
                 background-color: var(--surface-elevated);
                 color: var(--text-tertiary);
@@ -475,17 +417,14 @@
                 text-align: center;
                 transition: border-radius 0.3s ease-in-out;
             }
-
             .devtools-panel-fullscreen .header,
             .devtools-panel-fullscreen .footer {
                 border-radius: 0;
             }
-
             .app-bar-left-title-container {
                 display: flex;
                 align-items: center;
             }
-
             .app-bar-title {
                 font-size: 0.9375rem;
                 font-weight: 600;
@@ -493,7 +432,6 @@
                 color: var(--text-primary);
                 margin-left: 8px;
             }
-
             .app-bar-center-info-container {
                 display: flex;
                 flex-direction: column;
@@ -503,7 +441,6 @@
                 left: 50%;
                 transform: translateX(-50%);
             }
-
             .app-bar-page-title {
                 font-size: 0.8125rem;
                 font-weight: 500;
@@ -514,7 +451,6 @@
                 text-overflow: ellipsis;
                 white-space: nowrap;
             }
-
             .app-bar-page-url {
                 font-size: 0.6875rem;
                 color: var(--text-tertiary);
@@ -524,14 +460,12 @@
                 text-overflow: ellipsis;
                 white-space: nowrap;
             }
-
             .section-title {
                 font-size: 1rem;
                 font-weight: 600;
                 color: var(--text-primary);
                 line-height: 1.4;
             }
-
             .log-container {
                 background-color: #ffffff;
                 color: #1e1e1e;
@@ -544,39 +478,30 @@
                 line-height: 1.6;
                 border: 1px solid var(--border-neutral);
             }
-
             .log-container p .text-sky-300 {
                 color: #50e3c2;
             }
-
             .log-container p .text-cyan-300 {
                 color: #4a90e2;
             }
-
             .log-container p .text-yellow-300 {
                 color: #f5a623;
             }
-
             .log-container p .text-purple-300 {
                 color: #bd10e0;
             }
-
             .log-container p .text-yellow-200 {
                 color: #f8e71c;
             }
-
             .log-container p .text-red-300 {
                 color: #d0021b;
             }
-
             .log-container p a {
                 color: var(--brand-primary);
             }
-
             .log-container p a:hover {
                 text-decoration: underline;
             }
-
             .info-card {
                 background-color: #fdfdfd;
                 padding: 12px;
@@ -584,13 +509,11 @@
                 box-shadow: none;
                 border: 1px solid var(--border-neutral);
             }
-
             .info-card-label {
                 color: var(--text-secondary);
                 font-size: 0.8125rem;
                 margin-bottom: 3px;
             }
-
             .info-card-value {
                 color: var(--text-primary);
                 font-size: 0.875rem;
@@ -602,9 +525,8 @@
                 word-break: break-all;
                 font-family: 'SF Mono', 'Menlo', monospace;
             }
-
             #devtools-panel {
-                transform-origin: bottom right;
+                transform-origin: bottom center;
                 transition:
                     width 0.3s ease-in-out,
                     height 0.3s ease-in-out,
@@ -613,40 +535,15 @@
                     opacity 0.3s ease-in-out,
                     transform 0.3s ease-in-out;
                 opacity: 0;
-                transform: scale(0.95) translate(10px, 10px);
+                transform: scale(0.95) translateY(10px);
             }
-
             #devtools-panel.panel-visible {
                 opacity: 1;
                 transform: scale(1) translate(0, 0);
             }
-
             .devtools-panel-fullscreen {
                 border-radius: 0 !important;
             }
-
-            .relaunch-indicator {
-                display: none;
-                background-color: var(--status-warning-bg);
-                color: var(--status-warning-text);
-                padding: 6px 12px;
-                border-radius: 6px;
-                font-size: 0.8125rem;
-                margin-top: 8px;
-                border: 1px solid var(--status-warning-text);
-                text-align: center;
-            }
-
-            .relaunch-indicator.visible {
-                display: block;
-            }
-
-            .relaunch-indicator .material-icons-outlined {
-                font-size: 16px;
-                margin-right: 6px;
-                vertical-align: text-bottom;
-            }
-
             .relaunch-btn-indicator {
                 position: absolute;
                 top: -4px;
@@ -657,11 +554,66 @@
                 border-radius: 50%;
                 border: 2px solid var(--surface-elevated);
             }
+            .relaunch-message-tooltip {
+                position: absolute;
+                bottom: calc(100% + 8px);
+                left: 50%;
+                transform: translateX(-50%);
+                background-color: var(--status-warning-bg);
+                color: var(--status-warning-text);
+                padding: 6px 10px;
+                border-radius: 5px;
+                font-size: 0.75rem;
+                white-space: nowrap;
+                box-shadow: var(--shadow-md);
+                border: 1px solid var(--status-warning-text);
+                z-index: 10;
+                opacity: 0;
+                visibility: hidden;
+                transition:
+                    opacity 0.2s ease-in-out,
+                    visibility 0.2s ease-in-out;
+            }
+            .relaunch-message-tooltip::after {
+                content: '';
+                position: absolute;
+                top: 100%;
+                left: 50%;
+                margin-left: -5px;
+                border-width: 5px;
+                border-style: solid;
+                border-color: var(--status-warning-text) transparent transparent transparent;
+            }
+            #relaunch-app-btn:hover .relaunch-message-tooltip.visible,
+            #relaunch-app-btn:focus .relaunch-message-tooltip.visible {
+                opacity: 1;
+                visibility: visible;
+            }
+            .panel-overlay {
+                position: fixed;
+                inset: 0;
+                background-color: rgba(0, 0, 0, 0.1);
+                backdrop-filter: blur(2px);
+                z-index: 40;
+                opacity: 0;
+                transition: opacity 0.3s ease-in-out;
+            }
+            .panel-overlay.visible {
+                opacity: 1;
+            }
         </style>
     </head>
-    <body class="min-h-screen flex items-center justify-center p-4">
+    <body class="min-h-screen flex items-center justify-center p-4 bg-gray-100">
+        <div class="panel-overlay hidden" id="panel-overlay"></div>
+        <button
+            class="fixed bottom-4 right-4 z-50 flex items-center px-4 py-2 bg-[var(--brand-primary)] text-[var(--text-on-brand)] rounded-lg shadow-lg hover:bg-[#0070DD] transition-colors duration-150"
+            id="open-devtools-btn"
+        >
+            <span class="material-icons-outlined mr-2">build_circle</span>
+            Open DevTools
+        </button>
         <div
-            class="fixed bottom-4 right-4 w-[800px] max-h-[calc(100vh-32px)] flex flex-col overflow-hidden devtools-panel-compact modern-panel"
+            class="fixed bottom-4 left-1/2 -translate-x-1/2 w-[800px] max-h-[calc(100vh-32px)] flex-col overflow-hidden devtools-panel-compact modern-panel hidden z-50"
             id="devtools-panel"
         >
             <header class="header relative">
@@ -729,13 +681,21 @@
                                         <span class="status-badge status-badge-green" id="persisted-status">
                                             <span class="material-icons-round text-sm">save</span>Overrides Persisted
                                         </span>
-                                        <button class="icon-button relative" id="relaunch-app-btn" title="Relaunch App">
-                                            <span class="material-icons-outlined text-base">refresh</span>
-                                            <span
-                                                class="relaunch-btn-indicator hidden"
-                                                id="relaunch-button-indicator"
-                                            ></span>
-                                        </button>
+                                        <div class="relative">
+                                            <button class="icon-button" id="relaunch-app-btn" title="Relaunch App">
+                                                <span class="material-icons-outlined text-base">refresh</span>
+                                                <span
+                                                    class="relaunch-btn-indicator hidden"
+                                                    id="relaunch-button-indicator"
+                                                ></span>
+                                                <div class="relaunch-message-tooltip" id="relaunch-needed-tooltip">
+                                                    <span class="material-icons-outlined text-sm mr-1 align-bottom"
+                                                        >warning_amber</span
+                                                    >
+                                                    Relaunch required
+                                                </div>
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="search-input-container mb-3">
@@ -746,10 +706,6 @@
                                         placeholder="Search modules..."
                                         type="search"
                                     />
-                                </div>
-                                <div class="relaunch-indicator" id="relaunch-needed-indicator">
-                                    <span class="material-icons-outlined">warning_amber</span>
-                                    Relaunch required for changes to take effect.
                                 </div>
                                 <div class="table-container mt-3">
                                     <table class="min-w-full">
@@ -1025,7 +981,10 @@
             </div>
             <footer class="footer">DevTools Panel v0.1.0 © 2024. For development use only.</footer>
         </div>
-        <div class="fixed inset-0 dialog-overlay flex items-center justify-center p-4 z-50 hidden" id="confirm-dialog">
+        <div
+            class="fixed inset-0 dialog-overlay flex items-center justify-center p-4 z-[60] hidden"
+            id="confirm-dialog"
+        >
             <div class="dialog-content w-full">
                 <div class="dialog-icon-area">
                     <span class="material-icons-outlined">help_outline</span>
@@ -1047,6 +1006,7 @@
         <script>
             const toggleButton = document.getElementById('toggle-fullscreen-btn');
             const panel = document.getElementById('devtools-panel');
+            const panelOverlay = document.getElementById('panel-overlay');
             const fullscreenIconElement = document.getElementById('fullscreen-icon');
             const panelCloseBtn = document.getElementById('panel-close-btn');
             const searchInput = document.getElementById('search-modules-input');
@@ -1061,29 +1021,36 @@
             const confirmDialogCancelBtn = document.getElementById('confirm-dialog-cancel');
             const confirmDialogConfirmBtn = document.getElementById('confirm-dialog-confirm');
             const dontShowAgainCheckbox = document.getElementById('dont-show-again');
-            const relaunchNeededIndicator = document.getElementById('relaunch-needed-indicator');
+            const relaunchNeededTooltip = document.getElementById('relaunch-needed-tooltip');
+            const openDevToolsBtn = document.getElementById('open-devtools-btn');
             let confirmCallback = null;
             let cancelCallback = null;
             let dialogIdentifier = '';
             let changesNeedRelaunch = false;
             // Show panel with transition
-            window.addEventListener('load', () => {
+            function showDevToolsPanel() {
+                panel.classList.remove('hidden');
+                panelOverlay.classList.remove('hidden');
+                panel.classList.remove('opacity-0', 'scale-95', 'translate-y-2.5');
                 setTimeout(() => {
-                    // Timeout to ensure CSS transitions are applied
                     panel.classList.add('panel-visible');
+                    panel.classList.add('flex');
+                    panelOverlay.classList.add('visible');
                 }, 50);
+            }
+            openDevToolsBtn.addEventListener('click', () => {
+                showDevToolsPanel();
+                openDevToolsBtn.classList.add('hidden');
             });
-
             function updateRelaunchIndicator() {
                 if (changesNeedRelaunch) {
-                    relaunchNeededIndicator.classList.add('visible');
                     relaunchButtonIndicator.classList.remove('hidden');
+                    relaunchNeededTooltip.classList.add('visible');
                 } else {
-                    relaunchNeededIndicator.classList.remove('visible');
                     relaunchButtonIndicator.classList.add('hidden');
+                    relaunchNeededTooltip.classList.remove('visible');
                 }
             }
-
             function showConfirmDialog(title, message, onConfirm, onCancel, id) {
                 dialogIdentifier = id;
                 if (localStorage.getItem(`dontShow_${dialogIdentifier}`) === 'true') {
@@ -1097,7 +1064,6 @@
                 dontShowAgainCheckbox.checked = false;
                 confirmDialog.classList.remove('hidden');
             }
-
             confirmDialogConfirmBtn.addEventListener('click', () => {
                 if (dontShowAgainCheckbox.checked && dialogIdentifier) {
                     localStorage.setItem(`dontShow_${dialogIdentifier}`, 'true');
@@ -1122,12 +1088,14 @@
                         'max-h-[calc(100vh-32px)]',
                         'fixed',
                         'bottom-4',
-                        'right-4',
+                        'left-1/2',
+                        '-translate-x-1/2',
                         'modern-panel',
                     );
                     panel.classList.add('w-screen', 'h-screen', 'fixed', 'top-0', 'left-0');
                     fullscreenIconElement.textContent = 'fullscreen_exit';
                     toggleButton.title = 'Exit Fullscreen';
+                    panelOverlay.classList.add('devtools-panel-fullscreen'); // Apply fullscreen styles to overlay
                     tabLabels.forEach((label) => (label.style.opacity = '1'));
                 } else {
                     // Going to compact
@@ -1137,13 +1105,14 @@
                         'max-h-[calc(100vh-32px)]',
                         'fixed',
                         'bottom-4',
-                        'right-4',
+                        'left-1/2',
+                        '-translate-x-1/2',
                         'modern-panel',
                     );
                     fullscreenIconElement.textContent = 'fullscreen';
                     toggleButton.title = 'Enter Fullscreen';
+                    panelOverlay.classList.remove('devtools-panel-fullscreen'); // Remove fullscreen styles from overlay
                     tabLabels.forEach((label) => {
-                        //Ensure compact view labels are immediately visible after full screen
                         if (panel.classList.contains('devtools-panel-compact')) {
                             label.style.opacity = '1';
                         }
@@ -1152,10 +1121,14 @@
             });
             panelCloseBtn.addEventListener('click', () => {
                 panel.classList.remove('panel-visible');
-                // Optionally, you can hide it completely after the transition
+                panelOverlay.classList.remove('visible');
+                panel.classList.add('opacity-0', 'scale-95', 'translate-y-2.5');
                 setTimeout(() => {
-                    panel.style.display = 'none';
-                }, 300); // Match transition duration
+                    panel.classList.add('hidden');
+                    panel.classList.remove('flex');
+                    panelOverlay.classList.add('hidden');
+                    openDevToolsBtn.classList.remove('hidden');
+                }, 300);
             });
             const tabButtons = document.querySelectorAll('aside nav button');
             const tabPanes = document.querySelectorAll('main .tab-pane');
@@ -1230,7 +1203,6 @@
                                 saveIcon.classList.remove('text-[var(--status-success-text)]');
                                 target.classList.add('text-[var(--brand-primary)]');
                             }, 1500);
-                            // Relaunch app
                             if (
                                 window.MicroTSM &&
                                 window.MicroTSM.rootApp &&
@@ -1266,7 +1238,6 @@
                             persistedStatus.appendChild(document.createTextNode(' Changes Not Persisted'));
                             changesNeedRelaunch = false;
                             updateRelaunchIndicator();
-                            // Relaunch app
                             if (
                                 window.MicroTSM &&
                                 window.MicroTSM.rootApp &&
@@ -1327,7 +1298,7 @@
             });
             // Initial tab setup
             document.querySelector('aside nav button[data-tab="import-map-overrides"]').click();
-            updateRelaunchIndicator(); // Initial check
+            updateRelaunchIndicator();
             console.log('DevTools Panel Initialized - Standard Style');
         </script>
     </body>
