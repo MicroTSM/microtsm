@@ -1,5 +1,5 @@
 import layoutCss from './layout.css?raw';
-import {MicroTSMLayout} from './layoutCustomElement';
+import { MicroTSMLayout } from './layoutCustomElement';
 
 /**
  * Kick-starts MicroTSM by registering custom elements and injecting styles.

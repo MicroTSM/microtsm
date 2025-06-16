@@ -1,4 +1,4 @@
-import {LoaderLog} from "../module-loader";
+import { LoaderLog } from '../module-loader';
 
 export type EventType = string | symbol;
 export type Handler<T = unknown> = (event: T) => void;
