@@ -118,7 +118,7 @@ class MicroTSMModuleLoader {
     }
 
     disableDevTools() {
-        localStorage.devtoolsEnabled = false;
+        delete localStorage.devtoolsEnabled;
         this.uninstallDevTools();
     }
 
