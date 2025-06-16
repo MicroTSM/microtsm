@@ -57,7 +57,7 @@ const showTrace = (e: MouseEvent, log: LoaderLog) => {
 </script>
 
 <template>
-    <section class="tab-pane active grid grid-rows-[max-content,1fr] h-full" id="tab-content-module-loader-log">
+    <section class="tab-pane active grid grid-rows-[max-content_1fr] h-full" id="tab-content-module-loader-log">
         <div class="flex justify-between items-center mb-3">
             <h2 class="section-title">Module Loader Logs</h2>
         </div>

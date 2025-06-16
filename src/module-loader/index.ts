@@ -1,5 +1,6 @@
 import eventBus from '../event-bus';
 import { default as MicroTSMRootApp } from '../app/microTSMRootApp.ts';
+import type { App } from 'vue';
 
 interface ImportMap {
     imports: Record<string, string>;
@@ -18,6 +19,7 @@ const EMPTY_IMPORTMAP = Object.freeze({ imports: {} });
 
 class MicroTSMModuleLoader {
     static _loadingModules = new Map<string, boolean>();
+    static _devtoolsInstance: { mount: () => void; unmount: App['unmount'] };
     version = __VERSION__;
 
     constructor() {
@@ -40,7 +42,7 @@ class MicroTSMModuleLoader {
         MicroTSMModuleLoader._importMap = importMapData.imports;
 
         if (localStorage.getItem('devtoolsEnabled') === 'true') {
-            this.installDevtools();
+            this.installDevTools();
         }
 
         window.MicroTSM = this;
@@ -106,9 +108,18 @@ class MicroTSMModuleLoader {
         return MicroTSMModuleLoader._importMap;
     }
 
-    enableDevtools() {
-        localStorage.devtoolsEnabled = true;
-        this.installDevtools();
+    enableDevTools() {
+        if (!localStorage.devtoolsEnabled) {
+            localStorage.devtoolsEnabled = true;
+            this.installDevTools();
+        } else {
+            console.warn('DevTools already enabled');
+        }
+    }
+
+    disableDevTools() {
+        localStorage.devtoolsEnabled = false;
+        this.uninstallDevTools();
     }
 
     pushLogs(value: LoaderLog) {
@@ -184,10 +195,16 @@ class MicroTSMModuleLoader {
         );
     }
 
-    private installDevtools() {
-        import('../devtools/index.js').then(() => {
+    private installDevTools() {
+        import('../devtools/index.js').then((module) => {
+            MicroTSMModuleLoader._devtoolsInstance = module;
+            module.mount();
             this.pushLogs({ type: 'info', message: 'MicroTSM DevTools activated.' });
         });
+    }
+
+    private uninstallDevTools() {
+        MicroTSMModuleLoader._devtoolsInstance?.unmount();
     }
 }
 

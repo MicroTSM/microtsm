@@ -25,15 +25,6 @@ const initial = {
 provide('fullscreen', fullscreen);
 
 onMounted(() => {
-    // Inject Tailwind and fonts.
-    injectScript('https://cdn.tailwindcss.com?plugins=forms,container-queries');
-    injectLink('https://fonts.googleapis.com', 'preconnect');
-    injectLink('https://fonts.gstatic.com', 'preconnect', '');
-    injectLink('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap', 'stylesheet');
-    injectLink('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500&display=swap', 'stylesheet');
-    injectLink('https://fonts.googleapis.com/icon?family=Material+Icons+Outlined', 'stylesheet');
-    injectLink('https://fonts.googleapis.com/icon?family=Material+Icons+Round', 'stylesheet');
-
     window.addEventListener('keydown', handleKeyDown);
     window.addEventListener('keydown', handleKeyPress);
 });
@@ -121,20 +112,6 @@ const setCookie = (name: string, value: string) => {
 const getCookie = (name: string) => {
     const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
     return match ? match[2] : null;
-};
-
-const injectLink = (href: string, rel: string, crossOrigin?: string) => {
-    const link = document.createElement('link');
-    link.href = href;
-    link.rel = rel;
-    if (crossOrigin) link.crossOrigin = crossOrigin;
-    document.head.appendChild(link);
-};
-
-const injectScript = (src: string) => {
-    const script = document.createElement('script');
-    script.src = src;
-    document.head.appendChild(script);
 };
 
 const toggleFullscreen = (is?: boolean) => {
@@ -395,5 +372,10 @@ const handleKeyPress = (event: KeyboardEvent) => {
 
 .devtools-panel-fullscreen {
     border-radius: 0 !important;
+}
+
+#devtools-panel button,
+#confirm-dialog button {
+    cursor: pointer;
 }
 </style>

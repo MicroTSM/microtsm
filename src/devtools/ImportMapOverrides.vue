@@ -145,6 +145,7 @@ const resetOverride = (index: number) => {
         ...window.MicroTSM.importMapOverrides,
         [name]: '',
     };
+    changesNeedRelaunch.value = true;
 };
 
 const relaunchApp = () => {
