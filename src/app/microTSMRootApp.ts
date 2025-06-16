@@ -1,7 +1,7 @@
-import { kickstartEngine, twistThrottle } from '../layout/startLayoutEngine';
-import { gearUp } from '../importmaps/loadStyleheets';
-import { MicroTSMApplication } from './appCustomElement.ts';
-import { MicroTSMLayout } from '../layout/layoutCustomElement.ts';
+import {kickstartEngine, twistThrottle} from '../layout/startLayoutEngine';
+import {gearUp} from '../importmaps/loadStyleheets';
+import {MicroTSMApplication} from './appCustomElement.ts';
+import {MicroTSMLayout} from '../layout/layoutCustomElement.ts';
 
 /**
  * Type definitions for lifecycle events and route middleware
@@ -33,11 +33,11 @@ export interface MicroTSMRootAppConfig {
  * Handles lifecycle events, routing middleware and application initialization
  */
 export default class MicroTSMRootApp {
+    static _layoutString: string = '';
     /** Stores all micro-app elements referenced from `this.layout` */
     public registeredMicroApps: MicroTSMApplication[] = [];
     /** Base URL for the application */
     protected baseUrl: string | undefined;
-
     /**
      * The layout element before it is upgraded as a custom element.
      *
@@ -67,6 +67,7 @@ export default class MicroTSMRootApp {
      */
     constructor({ layout, baseUrl }: MicroTSMRootAppConfig) {
         this.baseUrl = baseUrl;
+        MicroTSMRootApp._layoutString = layout;
         this.registerMicroApps(layout);
     }
 
@@ -173,6 +174,8 @@ export default class MicroTSMRootApp {
 
     async relaunch() {
         document.querySelector('microtsm-layout')?.remove();
+        this.layout = null;
+        this.registerMicroApps(MicroTSMRootApp._layoutString);
         this.launched = false;
         await this.launch();
     }

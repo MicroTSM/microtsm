@@ -255,6 +255,7 @@ const handleKeyPress = (event: KeyboardEvent) => {
     -moz-osx-font-smoothing: grayscale;
     /* Enable smoother resizing by hinting to the browser which properties change */
     will-change: width, height;
+    z-index: 2147483647;
 }
 
 .devtools-panel-compact {

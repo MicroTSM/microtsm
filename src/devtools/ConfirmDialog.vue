@@ -77,6 +77,7 @@ eventBus.on('devtools:confirm-action', (e) => {
 <style>
 .dialog-overlay {
     background-color: var(--surface-overlay);
+    z-index: 2147483648;
 }
 
 .dialog-content {

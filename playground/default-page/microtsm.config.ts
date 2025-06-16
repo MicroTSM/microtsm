@@ -9,6 +9,11 @@ export default defineConfig({
             '@': fileURLToPath(new URL('./src', import.meta.url)),
         },
     },
+    build: {
+        rollupOptions: {
+            external: ['vue', '@microtsm/vue', 'vue-router'],
+        },
+    },
     server: {
         port: 4177,
     },
