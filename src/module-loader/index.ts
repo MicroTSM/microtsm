@@ -145,12 +145,16 @@ class MicroTSMModuleLoader {
      */
     async load(specifier: string, baseUrl = import.meta.url): Promise<any> {
         const startTime = performance.now();
+
+        const moduleSpecifier = // Resolved module specifier from importmap
+            MicroTSMModuleLoader._importMapOverrides[specifier] ||
+            MicroTSMModuleLoader._importMap[specifier] ||
+            specifier;
+
         const moduleUrl =
-            specifier.startsWith('.') || specifier.startsWith('/') // Relative URL
-                ? new URL(specifier, baseUrl).href
-                : MicroTSMModuleLoader._importMapOverrides[specifier] ||
-                  MicroTSMModuleLoader._importMap[specifier] ||
-                  specifier;
+            moduleSpecifier.startsWith('.') || moduleSpecifier.startsWith('/') // Relative URL
+                ? new URL(moduleSpecifier, baseUrl).href
+                : moduleSpecifier;
 
         if (!moduleUrl) {
             const message = `Module ${specifier} not found in MicroTSM import map.`;
