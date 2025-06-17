@@ -62,7 +62,7 @@ eventBus.on('devtools:confirm-action', (e) => {
                 <label class="dialog-checkbox-label" for="dont-show-again">Don't show this again</label>
             </div>
 
-            <div class="mt-6 flex justify-center space-x-3">
+            <div class="mt-6 flex justify-center gap-3">
                 <button class="button-secondary" id="confirm-dialog-cancel" type="button" @click="onCancel">
                     Cancel
                 </button>

@@ -177,6 +177,15 @@ export class MicroTSMLayout extends HTMLElement {
             this.handleRouteChange();
         };
 
+        window.addEventListener('popstate', (e: PopStateEvent) => {
+            // Prevent popstate events from triggering route changes, it can cause unexpected redirect to not-found
+            history.replaceState(
+                e.state,
+                '',
+                e.state.current ?? e.state.url ?? location.href.replace(location.origin, ''),
+            );
+        });
+
         window.addEventListener('beforeunload', this.restoreHistoryState.bind(this), { once: true });
     }
 
