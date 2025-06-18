@@ -56,10 +56,6 @@ class MicroTSMModuleLoader {
     }
 
     public set rootApp(value: MicroTSMRootApp) {
-        if (!new Error().stack?.includes('MicroTSMRootApp')) {
-            throw new Error('rootApp can only be set by MicroTSMRootApp class');
-        }
-
         MicroTSMModuleLoader._rootApp = value;
     }
 
