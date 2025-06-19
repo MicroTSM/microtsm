@@ -86,7 +86,7 @@ const getStatusIcon = (status: string) => {
     }
 };
 
-const onBeforeSaveOverride = (event: Event, module: Module, index: number) => {
+const onBeforeSaveOverride = (event: Event, module: Module) => {
     event.preventDefault();
     const target = event.target as HTMLElement;
     const dialogId = `saveOverride`;
@@ -110,37 +110,38 @@ const onBeforeSaveOverride = (event: Event, module: Module, index: number) => {
                 }, 1500);
             }
 
-            saveOverride(index);
+            saveOverride(module);
         },
     });
 };
 
-const saveOverride = (index: number) => {
-    const { temporaryOverrideUrl, name } = modules.value[index];
+const saveOverride = (module: Module) => {
+    const { temporaryOverrideUrl, name } = module;
     window.MicroTSM.importMapOverrides = {
         ...window.MicroTSM.importMapOverrides,
         [name]: temporaryOverrideUrl,
     };
 
-    modules.value[index].overrideUrl = temporaryOverrideUrl;
-    modules.value[index].persisted = true;
+    module.overrideUrl = temporaryOverrideUrl;
+    module.persisted = true;
     changesNeedRelaunch.value = true;
 };
 
-const onBeforeResetOverrides = (_: MouseEvent, module: Module, index: number) => {
+const onBeforeResetOverrides = (_: MouseEvent, module: Module) => {
     const dialogId = `resetOverride`;
     eventBus.emit('devtools:confirm-action', {
         id: dialogId,
         title: 'Reset Override',
         message: `Reset override for <strong>${module.name}</strong>? This will clear any custom URL.`,
-        onConfirm: () => resetOverride(index),
+        onConfirm: () => resetOverride(module),
     });
 };
-const resetOverride = (index: number) => {
-    modules.value[index].overrideUrl = '';
-    modules.value[index].temporaryOverrideUrl = '';
-    modules.value[index].persisted = true;
-    const { name } = modules.value[index];
+
+const resetOverride = (module: Module) => {
+    module.overrideUrl = '';
+    module.temporaryOverrideUrl = '';
+    module.persisted = true;
+    const { name } = module;
     window.MicroTSM.importMapOverrides = {
         ...window.MicroTSM.importMapOverrides,
         [name]: '',
@@ -246,7 +247,7 @@ defineExpose({ persistedStatus });
                 </thead>
 
                 <tbody id="modules-tbody">
-                    <tr v-for="(module, index) of filteredModules" :key="module.name">
+                    <tr v-for="module of filteredModules" :key="module.name">
                         <td class="font-medium text-[var(--text-primary)]">{{ module.name }}</td>
                         <td
                             class="text-xs max-w-[120px] truncate text-[var(--text-tertiary)]"
@@ -257,7 +258,7 @@ defineExpose({ persistedStatus });
                         <td>
                             <form
                                 :id="`override-url-form-${module.name}`"
-                                @submit="onBeforeSaveOverride($event, module, index)"
+                                @submit="onBeforeSaveOverride($event, module)"
                             >
                                 <input
                                     name="override-url"
@@ -310,7 +311,7 @@ defineExpose({ persistedStatus });
                                 ]"
                                 :disabled="!overridden(module)"
                                 title="Reset to Default"
-                                @click="onBeforeResetOverrides($event, module, index)"
+                                @click="onBeforeResetOverrides($event, module)"
                             >
                                 <span class="material-icons-outlined text-base">undo</span>
                             </button>
