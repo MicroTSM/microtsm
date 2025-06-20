@@ -143,18 +143,18 @@ class MicroTSMModuleLoader {
     async load(specifier: string, baseUrl = import.meta.url): Promise<any> {
         const startTime = performance.now();
 
-        const moduleSpecifier = // Resolved module specifier from importmap
+        const resolved = // Resolved module specifier from importmap
             MicroTSMModuleLoader._importMapOverrides[specifier] ||
             MicroTSMModuleLoader._importMap[specifier] ||
             specifier;
 
         const moduleUrl =
-            moduleSpecifier.startsWith('.') || moduleSpecifier.startsWith('/') // Relative URL
-                ? new URL(moduleSpecifier, baseUrl).href
-                : moduleSpecifier;
+            resolved.startsWith('.') || resolved.startsWith('/') // Relative URL
+                ? new URL(resolved, baseUrl).href
+                : resolved;
 
-        if (!moduleUrl) {
-            const message = `Module ${specifier} not found in MicroTSM import map.`;
+        if ((!moduleUrl || moduleUrl === specifier) && !moduleUrl.match(/^https?:/)) {
+            const message = `Unable to resolve module "${specifier}": not found in the MicroTSM import map and it is neither a relative specifier ('./', '../', or '/') nor an absolute URL (http/https).`;
             this.pushLogs({ type: 'error', message });
             throw new Error(message);
         }
