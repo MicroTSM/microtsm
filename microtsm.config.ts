@@ -47,6 +47,10 @@ export default defineConfig({
     },
     preview: {
         cors: true,
+        port: 4174,
+    },
+    server: {
+        port: 4174,
     },
     plugins: [dtsPlugin({ entryRoot: 'src' }), pluginVue()],
 });

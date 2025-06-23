@@ -139,13 +139,21 @@ const togglePanel = (open?: boolean) => {
     open ??= !panelVisible.value;
     if (open) {
         restorePanelSize();
-        panelVisible.value = true;
+        panel.value?.classList.remove('hidden');
+        setTimeout(() => {
+            panelVisible.value = true;
+        }, 0);
         window.addEventListener('resize', restorePanelSize);
     } else {
         panel.value?.classList.remove('panel-visible');
         setTimeout(() => {
             panelVisible.value = false;
         }, 300);
+
+        setTimeout(() => {
+            panel.value?.classList.add('hidden');
+        }, 400);
+
         window.removeEventListener('resize', restorePanelSize);
     }
 };
