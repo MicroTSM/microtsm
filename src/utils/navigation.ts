@@ -36,6 +36,12 @@ export function navigateToUrl(obj: string | Event): void {
     const currentUrl = new URL(window.location.href);
     const destinationUrl = new URL(url, window.location.href);
 
+    window.dispatchEvent(
+        new CustomEvent('microtsm:before-navigation-event', {
+            detail: { from: currentUrl, to: destinationUrl },
+        }),
+    );
+
     // Case 1: Navigation is just a hash change.
     if (url.startsWith('#')) {
         window.location.hash = destinationUrl.hash;
@@ -55,4 +61,10 @@ export function navigateToUrl(obj: string | Event): void {
     else {
         window.history.pushState(history.state, '', url);
     }
+
+    window.dispatchEvent(
+        new CustomEvent('microtsm:navigation-event', {
+            detail: { from: currentUrl, to: destinationUrl },
+        }),
+    );
 }
