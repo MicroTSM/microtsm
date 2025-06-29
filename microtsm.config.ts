@@ -26,6 +26,7 @@ export default defineConfig({
                 'main': './src/main.ts',
                 'module-loader/index': './src/module-loader/index.ts',
                 'devtools/index': './src/devtools/index.ts',
+                'misc/unsupported-browser.html': './misc/unsupported-browser.html',
             },
             output: {
                 banner: ({ name, isEntry }) => (isEntry && banner(name)) || undefined,
