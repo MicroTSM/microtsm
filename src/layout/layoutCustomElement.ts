@@ -196,13 +196,16 @@ export class MicroTSMLayout extends HTMLElement {
      * This ensures `updateApplications()` is only triggered when switching between apps,
      * not when navigating internally within the same app.
      */
-    private microAppChanged(currentMicroAppRoute: string): boolean {
+    private microAppChanged(currentPath: string): boolean {
         // 🚀 Only update if switching micro-apps
-        if (this.previousMicroAppRoute !== currentMicroAppRoute) {
-            return true;
+        if (
+            this.previousMicroAppRoute &&
+            this.isRouteMatched(this.previousMicroAppRoute, { currentPath })
+        ) {
+            return false;
         }
 
-        return false;
+        return true;
     }
 
     /**
@@ -226,9 +229,12 @@ export class MicroTSMLayout extends HTMLElement {
      * @param {boolean} [options.caseSensitive=false] - If false, ignores case when comparing.
      * @returns {boolean} **`true`** if the route matches, otherwise **`false`**.
      */
-    private isRouteMatched(route: string, options: { exactMatch?: boolean; caseSensitive?: boolean } = {}): boolean {
+    private isRouteMatched(
+        route: string,
+        options: { exactMatch?: boolean; caseSensitive?: boolean; currentPath?: string } = {},
+    ): boolean {
         const { exactMatch = false, caseSensitive = false } = options;
-        let currentPath = this.currentRoute;
+        let currentPath = options.currentPath || this.currentRoute;
 
         if (!caseSensitive) {
             route = route.toLowerCase();
