@@ -123,6 +123,8 @@ export class MicroTSMLayout extends HTMLElement {
             const shouldBeMounted = isRouteMatched && shouldMountHookPassed;
 
             hasRoutedAppMatch = (!!route && shouldBeMounted) || hasRoutedAppMatch;
+            if (hasRoutedAppMatch && route) this.previousMicroAppRoute = route;
+
             console.log(`🔎 Checking route: "${route}" | Name: "${name}" | Should Mount: ${shouldBeMounted}`);
 
             if (shouldBeMounted && !currentInstance) {
@@ -194,24 +196,13 @@ export class MicroTSMLayout extends HTMLElement {
      * This ensures `updateApplications()` is only triggered when switching between apps,
      * not when navigating internally within the same app.
      */
-    private microAppChanged(newRoute: string): boolean {
-        const currentMicroAppRoute = this.getMicroAppRoute(newRoute);
-
+    private microAppChanged(currentMicroAppRoute: string): boolean {
         // 🚀 Only update if switching micro-apps
         if (this.previousMicroAppRoute !== currentMicroAppRoute) {
-            this.previousMicroAppRoute = currentMicroAppRoute;
             return true;
         }
 
         return false;
-    }
-
-    /**
-     * Extracts the micro-app route prefix from a given URL.
-     * Adjust this logic based on your app's routing structure.
-     */
-    private getMicroAppRoute(route: string): string {
-        return route.split('/')[1] || ''; // Assumes micro-apps are at the first path segment ("/dashboard", "/settings", etc.)
     }
 
     /**
