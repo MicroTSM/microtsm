@@ -67,7 +67,7 @@ export default class MicroTSMRootApp {
      */
     constructor({ layout, baseUrl }: MicroTSMRootAppConfig) {
         this.baseUrl = baseUrl;
-        MicroTSMRootApp._layoutString = layout.replace(/>([\s\r\n]+)</g, '><').trim();
+        MicroTSMRootApp._layoutString = layout;
         this.registerMicroApps(MicroTSMRootApp._layoutString);
     }
 
