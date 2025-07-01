@@ -36,9 +36,13 @@ export function navigateToUrl(obj: string | Event): void {
     const currentUrl = new URL(window.location.href);
     const destinationUrl = new URL(url, window.location.href);
 
+    const cancelNavigation = () => {
+        window.history.replaceState(history.state, '', currentUrl.href.replace(currentUrl.origin, ''));
+    };
+
     window.dispatchEvent(
         new CustomEvent('microtsm:before-navigation-event', {
-            detail: { from: currentUrl, to: destinationUrl },
+            detail: { from: currentUrl, to: destinationUrl, cancelNavigation },
         }),
     );
 
@@ -67,4 +71,11 @@ export function navigateToUrl(obj: string | Event): void {
             detail: { from: currentUrl, to: destinationUrl },
         }),
     );
+}
+
+declare global {
+    interface WindowEventMap {
+        'microtsm:before-navigation-event': CustomEvent<{ to: URL; from: URL; cancelNavigation: () => void }>;
+        'microtsm:navigation-event': CustomEvent<{ to: URL; from: URL; cancelNavigation: () => void }>;
+    }
 }
