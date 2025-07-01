@@ -1,3 +1,10 @@
+export function dispatchNavigationEvent(
+    eventName: keyof WindowEventMap,
+    detail: { from: URL; to: URL; cancelNavigation: () => void },
+) {
+    window.dispatchEvent(new CustomEvent(eventName, { detail }));
+}
+
 /**
  * Navigates to a specified URL. The function accepts a string URL,
  * an event (from which it uses event.currentTarget.href), or, if called with an anchor element as context, it uses that element’s href.
@@ -36,16 +43,6 @@ export function navigateToUrl(obj: string | Event): void {
     const currentUrl = new URL(window.location.href);
     const destinationUrl = new URL(url, window.location.href);
 
-    const cancelNavigation = () => {
-        window.history.replaceState(history.state, '', currentUrl.href.replace(currentUrl.origin, ''));
-    };
-
-    window.dispatchEvent(
-        new CustomEvent('microtsm:before-navigation-event', {
-            detail: { from: currentUrl, to: destinationUrl, cancelNavigation },
-        }),
-    );
-
     // Case 1: Navigation is just a hash change.
     if (url.startsWith('#')) {
         window.location.hash = destinationUrl.hash;
@@ -65,17 +62,11 @@ export function navigateToUrl(obj: string | Event): void {
     else {
         window.history.pushState(history.state, '', url);
     }
-
-    window.dispatchEvent(
-        new CustomEvent('microtsm:navigation-event', {
-            detail: { from: currentUrl, to: destinationUrl },
-        }),
-    );
 }
 
 declare global {
     interface WindowEventMap {
         'microtsm:before-navigation-event': CustomEvent<{ to: URL; from: URL; cancelNavigation: () => void }>;
-        'microtsm:navigation-event': CustomEvent<{ to: URL; from: URL; cancelNavigation: () => void }>;
+        'microtsm:navigation-event': CustomEvent<{ to: URL; from: URL }>;
     }
 }

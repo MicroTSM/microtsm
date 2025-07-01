@@ -1,5 +1,6 @@
 import { MicroTSMApplication } from '../app/appCustomElement.ts';
 import crypto from '../utils/crypto.ts';
+import { dispatchNavigationEvent } from '../utils/navigation.ts';
 
 export interface AppTemplateInfo {
     template: MicroTSMApplication;
@@ -22,6 +23,7 @@ export class MicroTSMLayout extends HTMLElement {
     private previousMicroAppRoute: string | null = null;
     private readonly isReadyPromise: Promise<void> | null = null;
     private isReadyPromiseResolve: (() => void) | null = null;
+    private isNavigationCanceled: boolean = false;
 
     /** Initializes the layout element */
     constructor() {
@@ -166,15 +168,57 @@ export class MicroTSMLayout extends HTMLElement {
         const historyReplaceState = history.replaceState;
 
         history.pushState = (...args) => {
-            console.log('📢 pushState triggered:', args);
-            historyPushState.apply(history, args);
-            this.handleRouteChange();
+            const payload = {
+                to: new URL(args[2] ?? window.location.pathname, window.location.origin),
+                from: new URL(window.location.href),
+                cancelNavigation: () => {
+                    this.isNavigationCanceled = true;
+                },
+            };
+
+            if (payload.to.href !== payload.from.href) {
+                dispatchNavigationEvent('microtsm:before-navigation-event', payload);
+            }
+
+            if (!this.isNavigationCanceled) {
+                console.log('📢 pushState triggered:', args);
+                historyPushState.apply(history, args);
+
+                if (payload.to.href !== payload.from.href) {
+                    dispatchNavigationEvent('microtsm:navigation-event', payload);
+                }
+
+                this.handleRouteChange();
+            }
+
+            this.isNavigationCanceled = false;
         };
 
         history.replaceState = (...args) => {
-            console.log('📢 replaceState triggered:', args);
-            historyReplaceState.apply(history, args);
-            this.handleRouteChange();
+            const payload = {
+                to: new URL(args[2] ?? window.location.pathname, window.location.origin),
+                from: new URL(window.location.href),
+                cancelNavigation: () => {
+                    this.isNavigationCanceled = true;
+                },
+            };
+
+            if (payload.to.href !== payload.from.href) {
+                dispatchNavigationEvent('microtsm:before-navigation-event', payload);
+            }
+
+            if (!this.isNavigationCanceled) {
+                console.log('📢 replaceState triggered:', args);
+                historyReplaceState.apply(history, args);
+
+                if (payload.to.href !== payload.from.href) {
+                    dispatchNavigationEvent('microtsm:navigation-event', payload);
+                }
+
+                this.handleRouteChange();
+            }
+
+            this.isNavigationCanceled = false;
         };
 
         window.addEventListener('popstate', (e: PopStateEvent) => {
