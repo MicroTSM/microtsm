@@ -5,11 +5,11 @@ import eventBus, { MicroTSMEventMap } from '../event-bus';
 interface Module {
     name: string;
     originalUrl: string;
-    overrideUrl: string;
+    overrideUrl?: string;
     status: string;
     loadTime?: string;
     persisted?: boolean;
-    temporaryOverrideUrl: string;
+    temporaryOverrideUrl?: string;
 }
 
 onMounted(() => {
@@ -119,7 +119,7 @@ const saveOverride = (module: Module) => {
     const { temporaryOverrideUrl, name } = module;
     window.MicroTSM.importMapOverrides = {
         ...window.MicroTSM.importMapOverrides,
-        [name]: temporaryOverrideUrl,
+        [name]: temporaryOverrideUrl as string, // Validated by input url
     };
 
     module.overrideUrl = temporaryOverrideUrl;
@@ -138,14 +138,13 @@ const onBeforeResetOverrides = (_: MouseEvent, module: Module) => {
 };
 
 const resetOverride = (module: Module) => {
-    module.overrideUrl = '';
-    module.temporaryOverrideUrl = '';
+    delete module.overrideUrl;
+    delete module.temporaryOverrideUrl;
     module.persisted = true;
     const { name } = module;
-    window.MicroTSM.importMapOverrides = {
-        ...window.MicroTSM.importMapOverrides,
-        [name]: '',
-    };
+    const newOverrides = structuredClone(window.MicroTSM.importMapOverrides);
+    delete newOverrides[name];
+    window.MicroTSM.importMapOverrides = newOverrides;
     changesNeedRelaunch.value = true;
 };
 
