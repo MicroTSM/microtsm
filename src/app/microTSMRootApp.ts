@@ -67,10 +67,7 @@ export default class MicroTSMRootApp {
      */
     constructor({ layout, baseUrl }: MicroTSMRootAppConfig) {
         this.baseUrl = baseUrl;
-        MicroTSMRootApp._layoutString = layout
-            .replace(/\s*\n\s*/g, '') // Remove line breaks and leading/trailing spaces
-            .replace(/>\s+</g, '><') // Remove space between tags
-            .trim(); // Remove any remaining outer whitespace
+        MicroTSMRootApp._layoutString = layout.replace(/>([\s\r\n]+)</g, '><').trim();
         this.registerMicroApps(MicroTSMRootApp._layoutString);
     }
 
