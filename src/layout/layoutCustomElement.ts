@@ -4,7 +4,6 @@ import crypto from '../utils/crypto.ts';
 export interface AppTemplateInfo {
     template: MicroTSMApplication;
     parent: Node;
-    nextSibling: ChildNode | null;
 }
 
 const microtsmIdSym = Symbol('microtsmId');
@@ -70,7 +69,6 @@ export class MicroTSMLayout extends HTMLElement {
             this.appTemplates.set(id, {
                 template: app,
                 parent: app.parentNode as Node,
-                nextSibling: app.nextSibling,
             });
         });
     }
@@ -101,7 +99,7 @@ export class MicroTSMLayout extends HTMLElement {
         let defaultApp: AppTemplateInfo | null = null;
 
         console.log('🔄 Checking which apps should be mounted/unmounted.');
-        for (const [id, { template, parent, nextSibling }] of this.appTemplates) {
+        for (const [id, { template, parent }] of this.appTemplates) {
             const currentInstance = Array.from(this.querySelectorAll('microtsm-application')).find(
                 (child) => (child as any)[microtsmIdSym] === id,
             );
@@ -113,7 +111,7 @@ export class MicroTSMLayout extends HTMLElement {
             } = template;
 
             if (isDefault) {
-                defaultApp = { template, parent, nextSibling };
+                defaultApp = { template, parent };
                 currentInstance?.remove();
                 continue;
             }
@@ -129,12 +127,11 @@ export class MicroTSMLayout extends HTMLElement {
 
             if (shouldBeMounted && !currentInstance) {
                 console.log(`🟢 Mounting app with route: ${route}`);
-                parent.insertBefore(template, nextSibling);
+                parent.appendChild(template);
             } else if (!shouldBeMounted && currentInstance) {
                 console.log(`🔴 Unmounting app with route: ${route}`);
                 currentInstance.remove();
                 name && window.MicroTSM.unload(name);
-                this.sanitizeParentInnerHTML(parent);
             }
         }
 
@@ -142,7 +139,7 @@ export class MicroTSMLayout extends HTMLElement {
         if (!hasRoutedAppMatch && defaultApp) {
             console.log(`🟢 No matches found—Mounting default app`);
             defaultApp = defaultApp as AppTemplateInfo;
-            defaultApp.parent.insertBefore(defaultApp.template, defaultApp.nextSibling);
+            defaultApp.parent.appendChild(defaultApp.template);
         }
     }
 
@@ -251,17 +248,6 @@ export class MicroTSMLayout extends HTMLElement {
 
         // Match any valid sub-path (e.g., "dashboard" matches "/dashboard/settings")
         return currentPath.startsWith(route + '/') || currentPath === route;
-    }
-
-    /**
-     * When the parent only have space or line break child nodes, removes it.
-     * It is necesarry since sidebar, navbar, may conditionally styled by :empty ness of this el.
-     * @param parent
-     */
-    private sanitizeParentInnerHTML(parent: Node) {
-        if (parent instanceof HTMLElement) {
-            parent.innerText === '' && (parent.innerHTML = '');
-        }
     }
 }
 
