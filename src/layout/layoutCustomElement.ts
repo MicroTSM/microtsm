@@ -134,6 +134,7 @@ export class MicroTSMLayout extends HTMLElement {
                 console.log(`🔴 Unmounting app with route: ${route}`);
                 currentInstance.remove();
                 name && window.MicroTSM.unload(name);
+                this.sanitizeParentInnerHTML(parent);
             }
         }
 
@@ -198,10 +199,7 @@ export class MicroTSMLayout extends HTMLElement {
      */
     private microAppChanged(currentPath: string): boolean {
         // 🚀 Only update if switching micro-apps
-        if (
-            this.previousMicroAppRoute &&
-            this.isRouteMatched(this.previousMicroAppRoute, { currentPath })
-        ) {
+        if (this.previousMicroAppRoute && this.isRouteMatched(this.previousMicroAppRoute, { currentPath })) {
             return false;
         }
 
@@ -253,6 +251,17 @@ export class MicroTSMLayout extends HTMLElement {
 
         // Match any valid sub-path (e.g., "dashboard" matches "/dashboard/settings")
         return currentPath.startsWith(route + '/') || currentPath === route;
+    }
+
+    /**
+     * When the parent only have space or line break child nodes, removes it.
+     * It is necesarry since sidebar, navbar, may conditionally styled by :empty ness of this el.
+     * @param parent
+     */
+    private sanitizeParentInnerHTML(parent: Node) {
+        if (parent instanceof HTMLElement) {
+            parent.innerText === '' && (parent.innerHTML = '');
+        }
     }
 }
 

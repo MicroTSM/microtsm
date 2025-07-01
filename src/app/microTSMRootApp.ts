@@ -173,6 +173,7 @@ export default class MicroTSMRootApp {
     }
 
     async relaunch() {
+        window.dispatchEvent(new CustomEvent('microtsm:root-app-relaunch')); // Used in Register Worker script to update importmap on service worker
         document.querySelector('microtsm-layout')?.remove();
         this.layout = null;
         this.registerMicroApps(MicroTSMRootApp._layoutString);
