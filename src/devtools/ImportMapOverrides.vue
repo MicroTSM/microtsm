@@ -163,7 +163,7 @@ const changed = (module: Module) => {
 };
 
 const overridden = (module: Module) => {
-    return !module.overrideUrl;
+    return !!module.overrideUrl;
 };
 
 const onInputOverrides = (module: Module) => {
