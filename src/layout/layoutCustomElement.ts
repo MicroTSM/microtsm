@@ -97,7 +97,7 @@ export class MicroTSMLayout extends HTMLElement {
      * Updates applications based on the current route.
      */
     private async updateApplications() {
-        let hasRoutedAppMatch = false;
+        let hasRoutedAppMatch = false; // Wether any application route property is match with current location pathname
         let defaultApp: AppTemplateInfo | null = null;
 
         console.log('🔄 Checking which apps should be mounted/unmounted.');
@@ -122,8 +122,9 @@ export class MicroTSMLayout extends HTMLElement {
             const shouldMountHookPassed = template.shouldMount?.({ currentRoute: this.currentRoute }) ?? true;
             const shouldBeMounted = isRouteMatched && shouldMountHookPassed;
 
-            hasRoutedAppMatch = (!!route && shouldBeMounted) || hasRoutedAppMatch;
-            if (hasRoutedAppMatch && route) this.previousMicroAppRoute = route;
+            const currentAppRouteMatch = !!route && shouldBeMounted;
+            hasRoutedAppMatch = currentAppRouteMatch || hasRoutedAppMatch;
+            if (currentAppRouteMatch) this.previousMicroAppRoute = route;
 
             console.log(`🔎 Checking route: "${route}" | Name: "${name}" | Should Mount: ${shouldBeMounted}`);
 
