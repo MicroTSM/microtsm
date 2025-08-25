@@ -1,6 +1,17 @@
 import { MicroTSMRootApp } from 'microtsm';
 import layout from './layout.html?raw';
 
+// window.onbeforeunload = (e: Event) => {
+//     console.log('before unload')
+//     e.preventDefault()
+// }
+
+window.addEventListener('microtsm:before-navigation-event', (e) => {
+    e.detail.cancelNavigation()
+
+    alert("Navigation canceled");
+});
+
 // Initialize the MicroTSM app with the required layout
 const App = new MicroTSMRootApp({ layout });
 

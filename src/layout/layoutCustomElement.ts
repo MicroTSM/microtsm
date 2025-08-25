@@ -24,6 +24,7 @@ export class MicroTSMLayout extends HTMLElement {
     private readonly isReadyPromise: Promise<void> | null = null;
     private isReadyPromiseResolve: (() => void) | null = null;
     private isNavigationCanceled: boolean = false;
+    private performingPopstateReplace: boolean = false;
 
     /** Initializes the layout element */
     constructor() {
@@ -204,7 +205,8 @@ export class MicroTSMLayout extends HTMLElement {
                 },
             };
 
-            if (payload.to.href !== payload.from.href) {
+            const canDispatchNavigationEvent = payload.to.href !== payload.from.href || this.performingPopstateReplace;
+            if (canDispatchNavigationEvent) {
                 dispatchNavigationEvent('microtsm:before-navigation-event', payload);
             }
 
@@ -212,26 +214,37 @@ export class MicroTSMLayout extends HTMLElement {
                 console.log('📢 replaceState triggered:', args);
                 historyReplaceState.apply(history, args);
 
-                if (payload.to.href !== payload.from.href) {
+                if (canDispatchNavigationEvent) {
                     dispatchNavigationEvent('microtsm:navigation-event', payload);
                 }
 
                 this.handleRouteChange();
+            } else if (this.performingPopstateReplace) {
+                history.forward()
             }
 
             this.isNavigationCanceled = false;
+            this.performingPopstateReplace = false;
         };
 
-        window.addEventListener('popstate', (e: PopStateEvent) => {
+        const popstateHandler = (e: PopStateEvent) => {
+            console.log(e)
+            this.performingPopstateReplace = true;
             // Prevent popstate events from triggering route changes, it can cause unexpected redirect to not-found
-            history.replaceState(
-                e.state,
-                '',
-                e.state.current ?? e.state.url ?? location.href.replace(location.origin, ''),
-            );
-        });
+            const url = e.state?.current ?? e.state?.url ?? location.href.replace(location.origin, '');
+            console.log(url);
+            history.replaceState(e.state, '', url); // This will call patched replaceState above
+        };
 
+        window.addEventListener('popstate', popstateHandler);
         window.addEventListener('beforeunload', this.restoreHistoryState.bind(this), { once: true });
+        window.addEventListener(
+            'beforeunload',
+            () => {
+                window.removeEventListener('popstate', popstateHandler);
+            },
+            { once: true },
+        );
     }
 
     /**
