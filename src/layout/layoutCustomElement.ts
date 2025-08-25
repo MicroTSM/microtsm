@@ -24,6 +24,7 @@ export class MicroTSMLayout extends HTMLElement {
     private readonly isReadyPromise: Promise<void> | null = null;
     private isReadyPromiseResolve: (() => void) | null = null;
     private isNavigationCanceled: boolean = false;
+    private isHistoryPatched: boolean = false; // To prevent multiple patches
 
     /** Initializes the layout element */
     constructor() {
@@ -91,6 +92,14 @@ export class MicroTSMLayout extends HTMLElement {
     private initialize() {
         this.cacheLayout();
         this.updateApplications().then(this.isReadyPromiseResolve);
+
+        // FIX: When navigating back/forward with bfcache,
+        // the history methods need to be re-patched, since its restored by beforeunload event
+        window.onpageshow = (event) => {
+            if (event.persisted && !this.isHistoryPatched) {
+                this.patchHistoryStateEvents();
+            }
+        };
     }
 
     /**
@@ -159,6 +168,7 @@ export class MicroTSMLayout extends HTMLElement {
         history.pushState = this.originalPushState;
         history.replaceState = this.originalReplaceState;
         console.log('♻️ restoreHistoryState: History state reset before unload.');
+        this.isHistoryPatched = false;
     }
 
     /** Overrides history methods to track navigation changes */
@@ -232,6 +242,8 @@ export class MicroTSMLayout extends HTMLElement {
         });
 
         window.addEventListener('beforeunload', this.restoreHistoryState.bind(this), { once: true });
+
+        this.isHistoryPatched = true;
     }
 
     /**
