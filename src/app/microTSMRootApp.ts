@@ -167,8 +167,8 @@ export default class MicroTSMRootApp {
         }
 
         console.log('🚀 Launching MicroTSMRootApp...');
-        this.attachMiddleware();
         await twistThrottle(this.layout!);
+        this.attachMiddleware();
         this.launched = true;
         await this.trigger('onLaunch');
         console.log('✅ App is live!');
@@ -274,6 +274,7 @@ export default class MicroTSMRootApp {
      * ERR: chunk-[hash].js:132 Throttling navigation to prevent the browser from hanging.
      * See https://crbug.com/1038223. Command line switch --disable-ipc-flooding-protection
      * can be used to bypass the protection
+     * RESOLVED! TODO: Add integration with vue-router
      * @private
      */
     private attachMiddleware() {

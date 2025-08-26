@@ -1,4 +1,5 @@
 import { MicroTSMApplication } from '../app/appCustomElement.ts';
+import { RouteMiddleware } from '../app/microTSMRootApp.ts';
 import crypto from '../utils/crypto.ts';
 import { dispatchNavigationEvent } from '../utils/navigation.ts';
 
@@ -25,6 +26,7 @@ export class MicroTSMLayout extends HTMLElement {
     private isReadyPromiseResolve: (() => void) | null = null;
     private isNavigationCanceled: boolean = false;
     private isHistoryPatched: boolean = false; // To prevent multiple patches
+    private routeMiddleware: RouteMiddleware = () => true;
 
     /**
      * Initializes the layout element
@@ -85,7 +87,7 @@ export class MicroTSMLayout extends HTMLElement {
      * @param middleware
      */
     public attachRouteMiddleware(middleware: (url: URL) => boolean | Promise<boolean>) {
-        return middleware;
+        this.routeMiddleware = middleware;
     }
 
     public async waitForReady() {
@@ -194,18 +196,22 @@ export class MicroTSMLayout extends HTMLElement {
                 dispatchNavigationEvent('microtsm:before-navigation-event', payload);
             }
 
-            if (!this.isNavigationCanceled) {
-                console.log('📢 pushState triggered:', args);
-                historyPushState.apply(history, args);
+            new Promise<boolean>((resolve) => resolve(this.routeMiddleware(payload.to))).then((isAllowed) => {
+                if (isAllowed) {
+                    if (!this.isNavigationCanceled) {
+                        console.log('📢 pushState triggered:', args);
+                        historyPushState.apply(history, args);
 
-                if (payload.to.href !== payload.from.href) {
-                    dispatchNavigationEvent('microtsm:navigation-event', payload);
+                        if (payload.to.href !== payload.from.href) {
+                            dispatchNavigationEvent('microtsm:navigation-event', payload);
+                        }
+
+                        this.handleRouteChange();
+                    }
+
+                    this.isNavigationCanceled = false;
                 }
-
-                this.handleRouteChange();
-            }
-
-            this.isNavigationCanceled = false;
+            });
         };
 
         history.replaceState = (...args) => {
@@ -221,18 +227,22 @@ export class MicroTSMLayout extends HTMLElement {
                 dispatchNavigationEvent('microtsm:before-navigation-event', payload);
             }
 
-            if (!this.isNavigationCanceled) {
-                console.log('📢 replaceState triggered:', args);
-                historyReplaceState.apply(history, args);
+            new Promise<boolean>((resolve) => resolve(this.routeMiddleware(payload.to))).then((isAllowed) => {
+                if (isAllowed) {
+                    if (!this.isNavigationCanceled) {
+                        console.log('📢 replaceState triggered:', args);
+                        historyReplaceState.apply(history, args);
 
-                if (payload.to.href !== payload.from.href) {
-                    dispatchNavigationEvent('microtsm:navigation-event', payload);
+                        if (payload.to.href !== payload.from.href) {
+                            dispatchNavigationEvent('microtsm:navigation-event', payload);
+                        }
+
+                        this.handleRouteChange();
+                    }
+
+                    this.isNavigationCanceled = false;
                 }
-
-                this.handleRouteChange();
-            }
-
-            this.isNavigationCanceled = false;
+            });
         };
 
         window.addEventListener('popstate', (e: PopStateEvent) => {
