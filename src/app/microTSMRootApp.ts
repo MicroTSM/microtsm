@@ -224,6 +224,11 @@ export default class MicroTSMRootApp {
     private reconfigureMicroApps(): void {
         this.microAppsConfigurationCallback.forEach((callback) => {
             this.registeredMicroApps.forEach((microApp) => {
+                const name = microApp.getAttribute('name');
+                const route = microApp.getAttribute('route');
+                const isDefault = microApp.hasAttribute('default');
+
+                Object.assign(microApp, { name, route, isDefault });
                 callback(microApp);
             });
         });
