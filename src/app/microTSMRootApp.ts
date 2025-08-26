@@ -16,6 +16,7 @@ export type LifecycleEvent =
 
 export type RouteMiddleware = (route: URL) => Promise<boolean> | boolean;
 export type LifeCycleCallback = () => Promise<void> | void;
+export type MicroAppConfigurationCallback = (microApp: MicroTSMApplication) => void;
 
 export interface MicroTSMRootAppConfig {
     /**
@@ -61,6 +62,10 @@ export default class MicroTSMRootApp {
     private engineStarted: Promise<any> | undefined;
     /** Flag indicating if the app has been launched */
     private launched = false;
+    /**
+     * Stores configuration callbacks for micro-apps to be reapplied on relaunch
+     */
+    private microAppsConfigurationCallback: MicroAppConfigurationCallback[] = [];
 
     /**
      * Creates a new MicroTSMRootApp instance
@@ -68,7 +73,8 @@ export default class MicroTSMRootApp {
     constructor({ layout, baseUrl }: MicroTSMRootAppConfig) {
         this.baseUrl = baseUrl;
         MicroTSMRootApp._layoutString = layout.replace(/>([\s\r\n]+)</g, '><').trim();
-        this.registerMicroApps(MicroTSMRootApp._layoutString);
+        this.createLayoutElement();
+        this.registerMicroApps();
     }
 
     /**
@@ -176,7 +182,9 @@ export default class MicroTSMRootApp {
         window.dispatchEvent(new CustomEvent('microtsm:root-app-relaunch')); // Used in Register Worker script to update importmap on service worker
         document.querySelector('microtsm-layout')?.remove();
         this.layout = null;
-        this.registerMicroApps(MicroTSMRootApp._layoutString);
+        this.createLayoutElement();
+        this.registerMicroApps();
+        this.reconfigureMicroApps();
         this.launched = false;
         await this.launch();
     }
@@ -198,7 +206,7 @@ export default class MicroTSMRootApp {
      * });
      * app.startEngine();
      */
-    public configureMicroApps(callback: (microApp: MicroTSMApplication) => void) {
+    public configureMicroApps(callback: MicroAppConfigurationCallback): void {
         console.log('🔄 Configuring micro-apps...');
 
         this.registeredMicroApps.forEach((microApp) => {
@@ -209,24 +217,37 @@ export default class MicroTSMRootApp {
             Object.assign(microApp, { name, route, isDefault });
             callback(microApp);
         });
+
+        this.microAppsConfigurationCallback.push(callback);
+    }
+
+    private reconfigureMicroApps(): void {
+        this.microAppsConfigurationCallback.forEach((callback) => {
+            this.registeredMicroApps.forEach((microApp) => {
+                callback(microApp);
+            });
+        });
     }
 
     /**
      * Parses the provided layout string and updates `registeredMicroApps`.
-     *
+     */
+    private createLayoutElement(): void {
+        let container: HTMLDivElement | null = document.createElement('div');
+        container.innerHTML = MicroTSMRootApp._layoutString;
+
+        this.layout = container.querySelector('microtsm-layout')?.cloneNode(true) as MicroTSMLayout;
+        container = null; // Frees up memory
+    }
+
+    /**
      * This method extracts all `<microtsm-application>` elements from the given layout string
      * and stores them in `registeredMicroApps`.
      *
-     * @param {string} layout - The HTML string defining the application structure.
      * @throws {Error} If no layout is provided, preventing invalid initialization.
      */
-    private registerMicroApps(layout: string) {
-        let container: HTMLDivElement | null = document.createElement('div');
-        container.innerHTML = layout;
-
-        this.layout = container.querySelector('microtsm-layout')?.cloneNode(true) as MicroTSMLayout;
-
-        if (!layout) {
+    private registerMicroApps(): void {
+        if (!this.layout) {
             throw new Error(
                 '🚨 MicroTSM initialization failed: No layout provided! ' +
                     'Ensure a <microtsm-layout> element is defined and passed into MicroTSMRootApp.',
@@ -234,8 +255,6 @@ export default class MicroTSMRootApp {
         }
 
         this.registeredMicroApps = Array.from(this.layout.querySelectorAll('microtsm-application'));
-
-        container = null; // Frees up memory
     }
 
     /**
