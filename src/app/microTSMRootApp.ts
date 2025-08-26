@@ -62,10 +62,6 @@ export default class MicroTSMRootApp {
     private engineStarted: Promise<any> | undefined;
     /** Flag indicating if the app has been launched */
     private launched = false;
-    /**
-     * Stores configuration callbacks for micro-apps to be reapplied on relaunch
-     */
-    private microAppsConfigurationCallback: MicroAppConfigurationCallback[] = [];
 
     /**
      * Creates a new MicroTSMRootApp instance
@@ -178,15 +174,11 @@ export default class MicroTSMRootApp {
         console.log('✅ App is live!');
     }
 
+    /**
+     * Relaunches the app when importmaps are updated.
+     */
     async relaunch() {
-        window.dispatchEvent(new CustomEvent('microtsm:root-app-relaunch')); // Used in Register Worker script to update importmap on service worker
-        document.querySelector('microtsm-layout')?.remove();
-        this.layout = null;
-        this.createLayoutElement();
-        this.registerMicroApps();
-        this.reconfigureMicroApps();
-        this.launched = false;
-        await this.launch();
+        window.dispatchEvent(new CustomEvent('microtsm:root-app-relaunch')); // Also used in Register Worker script to update importmap on service worker
     }
 
     /**
@@ -216,21 +208,6 @@ export default class MicroTSMRootApp {
 
             Object.assign(microApp, { name, route, isDefault });
             callback(microApp);
-        });
-
-        this.microAppsConfigurationCallback.push(callback);
-    }
-
-    private reconfigureMicroApps(): void {
-        this.microAppsConfigurationCallback.forEach((callback) => {
-            this.registeredMicroApps.forEach((microApp) => {
-                const name = microApp.getAttribute('name');
-                const route = microApp.getAttribute('route');
-                const isDefault = microApp.hasAttribute('default');
-
-                Object.assign(microApp, { name, route, isDefault });
-                callback(microApp);
-            });
         });
     }
 

@@ -26,7 +26,10 @@ export class MicroTSMLayout extends HTMLElement {
     private isNavigationCanceled: boolean = false;
     private isHistoryPatched: boolean = false; // To prevent multiple patches
 
-    /** Initializes the layout element */
+    /**
+     * Initializes the layout element
+     * This block will be called when the element is created and the customElements.upgrade is called
+     */
     constructor() {
         super();
         this.isReadyPromise = new Promise((resolve) => {

@@ -33,6 +33,11 @@ export class MicroTSMApplication extends HTMLElement {
 
         this.removeAttribute('route');
         this.removeAttribute('default');
+
+        window.addEventListener('microtsm:root-app-relaunch', async () => {
+            await this.unmountMicroApp(false);
+            await this.renderMicroApp();
+        });
     }
 
     /**
@@ -98,7 +103,7 @@ export class MicroTSMApplication extends HTMLElement {
      * @async
      * @returns {Promise<void>}
      */
-    async unmountMicroApp(): Promise<void> {
+    async unmountMicroApp(remove = true): Promise<void> {
         if (this.app?.unmount) {
             await this.app.unmount();
             this.app = null;
@@ -106,7 +111,7 @@ export class MicroTSMApplication extends HTMLElement {
         }
 
         // Completely remove this element from the DOM.
-        this.remove();
+        if (remove) this.remove();
     }
 
     /**
