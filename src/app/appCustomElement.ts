@@ -35,8 +35,12 @@ export class MicroTSMApplication extends HTMLElement {
         this.removeAttribute('default');
 
         window.addEventListener('microtsm:root-app-relaunch', async () => {
-            await this.unmountMicroApp(false);
-            await this.renderMicroApp();
+            if (
+                this.app != null // Re-mount only if currently mounted
+            ) {
+                await this.unmountMicroApp(false);
+                await this.renderMicroApp();
+            }
         });
     }
 
