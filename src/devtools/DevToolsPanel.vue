@@ -291,6 +291,10 @@ microtsm-devtools #devtools-panel {
     transform: scale(0.95) translate(10px, 10px) !important;
 }
 
+microtsm-devtools #devtools-panel.hidden {
+    display: none !important;
+}
+
 microtsm-devtools .devtools-panel-compact {
     @apply fixed bottom-4 right-4 w-[800px] h-[78vh] max-h-[calc(100vh-32px)] max-w-[calc(100vw-32px)];
     background-color: var(--surface-elevated) !important;
